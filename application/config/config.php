@@ -366,7 +366,7 @@ $config['encryption_key'] = '';
 | Other session cookie settings are shared with the rest of the application,
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
-*/
+
 $config['sess_driver'] = $env_config['sess_driver'];
 $config['sess_cookie_name'] = 'BoxToken';
 $config['sess_expiration'] = 604800;//默认保存7天
@@ -375,7 +375,7 @@ $config['sess_save_path'] = $env_config['sess_save_path'];
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
-
+*/
 /*
 |--------------------------------------------------------------------------
 | Cookie Related Variables
