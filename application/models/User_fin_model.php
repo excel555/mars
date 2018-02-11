@@ -23,7 +23,7 @@ class User_fin_model extends MY_Model
             $where = array('id'=>$re['user_id']);
             $this->db->select("user_name");
             $this->db->where($where);
-            $this->db->from($this->table_name());
+            $this->db->from('user');
             $u = $this->db->get()->row_array();
             $re['user_name'] = $u['user_name'];
         }
