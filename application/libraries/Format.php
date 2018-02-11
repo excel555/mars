@@ -31,7 +31,7 @@ class Format {
     /**
      * HTML output format
      */
-    const HTML_FORMAT = 'html';
+    const HTML_FORMAT = 'mars';
 
     /**
      * PHP output format
@@ -112,7 +112,7 @@ class Format {
      * e.g: echo $this->format->factory(['foo' => 'bar'])->to_csv();
      *
      * @param mixed $data Data to convert/parse
-     * @param string $from_type Type to convert from e.g. json, csv, html
+     * @param string $from_type Type to convert from e.g. json, csv, mars
      *
      * @return object Instance of the format class
      */

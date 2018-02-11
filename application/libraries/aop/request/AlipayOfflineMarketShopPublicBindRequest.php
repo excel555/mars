@@ -51,7 +51,7 @@ class AlipayOfflineMarketShopPublicBindRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.offline.market.shop.public.bind";
+		return "alipay.offline.market.shop.mars.bind";
 	}
 
 	public function setNotifyUrl($notifyUrl)

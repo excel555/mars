@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.open.public.account.delete request
+ * ALIPAY API: alipay.open.mars.account.delete request
  *
  * @author auto create
  * @since 1.0, 2016-12-08 11:46:14
@@ -35,7 +35,7 @@ class AlipayOpenPublicAccountDeleteRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.open.public.account.delete";
+		return "alipay.open.mars.account.delete";
 	}
 
 	public function setNotifyUrl($notifyUrl)

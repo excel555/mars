@@ -10,8 +10,8 @@ $config['charset'] = 'GBK';
 $config['gatewayUrl'] = "https://openapi.alipay.com/gateway.do";
 $config['sign_type'] = 'RSA';
 $config['notify_url'] = $env_config['base_url'].'/index.php/api/order/notify_alipay_wap';
-$config['retrun_url'] = $env_config['base_url'].'/public/order.html?orderId=';
-$config['recharge_retrun_url'] = $env_config['base_url'].'/public/recharge.html';
+$config['retrun_url'] = $env_config['base_url'].'/mars/order.mars?orderId=';
+$config['recharge_retrun_url'] = $env_config['base_url'].'/mars/recharge.mars';
 $config['pay_sell_id'] = '';
 $config['pay_succ_tpl_id'] = $env_config['pay_succ_tpl_id'];
 $config['pay_fail_tpl_id'] = $env_config['pay_fail_tpl_id'];
@@ -63,10 +63,10 @@ $config['mapi_sign_type'] = "MD5";
 
 $config['mapi_box_host'] = $env_config['mapi_box_host'];
 
-$config['mapi_qr_code_go_url'] = $config['mapi_box_host']."/public/auth.html"; //二维码跳转页面
+$config['mapi_qr_code_go_url'] = $config['mapi_box_host']."/mars/auth.mars"; //二维码跳转页面
 
-$config['mapi_agreement_return_url'] = $env_config['mapi_box_host']."/public/open.html";
-$config['mapi_isv_agreement_return_url'] = $env_config['mapi_box_host']."/public/p.html";
+$config['mapi_agreement_return_url'] = $env_config['mapi_box_host']."/public/open.mars";
+$config['mapi_isv_agreement_return_url'] = $env_config['mapi_box_host']."/public/p.mars";
 
 //免密签约异步提醒
 $config['mapi_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/api/account/notify_agree";
@@ -79,7 +79,7 @@ $config['mapi_isv_notify_url'] = $config['mapi_box_host'] . "/index.php/api/koub
 
 $config['mapi_return_url'] = $config['mapi_box_host'] . "/index.php/api/order/notify";
 //签约跳转页面
-$config['mapi_sign_url'] = $config['mapi_box_host'] . "/public/sign.html";
+$config['mapi_sign_url'] = $config['mapi_box_host'] . "/public/sign.mars";
 
 $config['mapi_agreement_product_code'] = "GENERAL_WITHHOLDING_P"; //签约product_code
 $config['mapi_agreement_scene'] = "INDUSTRY|SUPERMARKET"; //签约scene
@@ -119,7 +119,7 @@ $config['refers'] = array("alipay","wechat","fruitday-app","gat","cmb","sodexo",
 $config['error_msg'] = "请使用微信、支付宝扫码";
 $config['error_url'] = "";
 $config['use_yue'] = 1;
-$config['common_pr'] = $env_config['base_url'].'/public/p.html?d=DEVICEID';//二维码是前缀
+$config['common_pr'] = $env_config['base_url'].'/public/p.mars?d=DEVICEID';//二维码是前缀
 
 //-------------支付宝设备入驻配置------------------
 $config['product_user_id'] = '2088221926206318';//厂商支付宝id

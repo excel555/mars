@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.open.public.label.delete request
+ * ALIPAY API: alipay.open.mars.label.delete request
  *
  * @author auto create
  * @since 1.0, 2016-12-08 11:58:30

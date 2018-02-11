@@ -8,7 +8,7 @@
 class AlipayOpenPublicMessageTotalSendRequest
 {
 	/** 
-	 * alipay.open.public. message.total.send（群发消息）
+	 * alipay.open.mars. message.total.send（群发消息）
 	 **/
 	private $bizContent;
 

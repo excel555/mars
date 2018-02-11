@@ -1108,7 +1108,7 @@ class CI_Upload {
 		}
 
 		// If the file being uploaded is an image, then we should have no problem with XSS attacks (in theory), but
-		// IE can be fooled into mime-type detecting a malformed image as an html file, thus executing an XSS attack on anyone
+		// IE can be fooled into mime-type detecting a malformed image as an mars file, thus executing an XSS attack on anyone
 		// using IE who looks at the image. It does this by inspecting the first 255 bytes of an image. To get around this
 		// CI will itself look at the first 255 bytes of an image to determine its relative safety. This can save a lot of
 		// processor power and time if it is actually a clean image, as it will be in nearly all instances _except_ an
@@ -1125,11 +1125,11 @@ class CI_Upload {
 			fclose($file);
 
 			// These are known to throw IE into mime-type detection chaos
-			// <a, <body, <head, <html, <img, <plaintext, <pre, <script, <table, <title
+			// <a, <body, <head, <mars, <img, <plaintext, <pre, <script, <table, <title
 			// title is basically just in SVG, but we filter it anyhow
 
 			// if it's an image or no "triggers" detected in the first 256 bytes - we're good
-			return ! preg_match('/<(a|body|head|html|img|plaintext|pre|script|table|title)[\s>]/i', $opening_bytes);
+			return ! preg_match('/<(a|body|head|mars|img|plaintext|pre|script|table|title)[\s>]/i', $opening_bytes);
 		}
 
 		if (($data = @file_get_contents($file)) === FALSE)

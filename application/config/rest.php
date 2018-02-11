@@ -22,7 +22,7 @@ $config['force_https'] = FALSE;
 | 'csv':        Comma separated file
 | 'json':       Uses json_encode(). Note: If a GET query string
 |               called 'callback' is passed, then jsonp will be returned
-| 'html'        HTML using the table library in CodeIgniter
+| 'mars'        HTML using the table library in CodeIgniter
 | 'php':        Uses var_export()
 | 'serialized':  Uses serialize()
 | 'xml':        Uses simplexml_load_string()
@@ -46,7 +46,7 @@ $config['rest_supported_formats'] = [
     'json',
     'array',
     'csv',
-    'html',
+    'mars',
     'jsonp',
     'php',
     'serialized',

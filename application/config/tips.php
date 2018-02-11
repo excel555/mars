@@ -25,7 +25,7 @@ $config['open_door_succ_admin_msg'] = array(
     'keyword4' => ''
 );
 $config['open_door_succ_admin_finish_msg'] = array(
-    'url' => $env_config['mapi_box_host'] . '/public/deliver_log.html?deliver_no=',
+    'url' => $env_config['mapi_box_host'] . '/mars/deliver_log.mars?deliver_no=',
     'action' => '查看上下货日志',
     'first' => '配送员操作上下货！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -81,7 +81,7 @@ $config['box_busy_msg'] = array(
     'biz_type' => 2
 );
 $config['no_pay_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/orders.html?status=0',
+    'url' => $env_config['mapi_box_host'].'/mars/orders.mars?status=0',
     'action' => '点击支付',
     'first' => '感谢您使用魔盒CityBox购买商品，您有未支付的订单，请先支付，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -105,7 +105,7 @@ $config['user_black_msg'] = array(
     'biz_type' => 2
 );
 $config['pay_succ_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击查看订单',
     'first' => '感谢您使用魔盒CityBox购买商品，系统自动扣款成功！订单号：',
     'remark' => '魔盒期待着与您再次邂逅',
@@ -117,7 +117,7 @@ $config['pay_succ_msg'] = array(
     'biz_type' => 1
 );
 $config['pay_fail_msg'] = array(
-    'url' => $env_config['mapi_box_host'] . '/public/sign.html',
+    'url' => $env_config['mapi_box_host'] . '/mars/sign.mars',
     'action' => '点击开通免密支付',
     'first' => '感谢您使用魔盒CityBox，购买商品前需开通支付宝免密支付，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -130,7 +130,7 @@ $config['pay_fail_msg'] = array(
  * 用户余额不足，正常都是切换支付方式
  */
 $config['pay_blance_not_enough_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '已更改支付设置，点击支付',
     'first' => '感谢您使用魔盒CityBox购买商品，您的账号余额不足，请更改支付设置--扣款顺序，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -144,7 +144,7 @@ $config['pay_blance_not_enough_msg'] = array(
  * 产品额度超限
  */
 $config['product_amount_limit_error_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击手动支付',
     'first' => '感谢您使用魔盒CityBox购买商品，您的购买的金额已超过免密支付的额度，请点击支付，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -155,7 +155,7 @@ $config['product_amount_limit_error_msg'] = array(
 );
 //微信支付- 每天5次,金额，超过限制次数
 $config['wechat_rule_limit'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击手动支付',
     'first' => '感谢您使用魔盒CityBox购买商品，交易金额或次数超出限制，请点击支付，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -166,7 +166,7 @@ $config['wechat_rule_limit'] = array(
 );
 
 $config['pay_fail_unkonw_msg'] = array(
-    'url' => $config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击手动支付',
     'first' => '感谢您使用魔盒CityBox，订单支付失败，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -179,7 +179,7 @@ $config['pay_fail_unkonw_msg'] = array(
 );
 
 $config['pay_inprocess'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击查看订单',
     'first' => '感谢您使用魔盒CityBox购买商品，您的订单下单成功支付处理中，回复短信确认支付，也点击查看订单手动支付，如有疑问请在首页联系我们，谢谢！',
     'remark' => '感谢您的使用，祝您购物愉快',
@@ -190,7 +190,7 @@ $config['pay_inprocess'] = array(
 );
 
 $config['refund_succ_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击查看订单',
     'first' => '感谢您使用魔盒CityBox购买商品，您的申请退款已审核通过。退款金额将会原路返回，若为银行卡支付，受银行结算系统限制，通常需要3-5个工作日到账。',
     'remark' => '如有疑问请在首页联系我们，谢谢！',
@@ -205,7 +205,7 @@ $config['refund_succ_msg'] = array(
  * 退款申请驳回
  */
 $config['refund_against_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '点击查看订单',
     'first' => '感谢您使用魔盒CityBox购买商品，您的申请退款已审核已被驳回。',
     'remark' => '如有疑问请在首页联系我们，谢谢！',
@@ -276,7 +276,7 @@ $config['gat_refund_error_msg'] = array(
 );
 
 $config['gat_pay_succ_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '',
     'first' => '感谢您使用魔盒CityBox购买商品，扣款成功！订单号：',
     'remark' => '魔盒期待着与您再次邂逅',
@@ -288,7 +288,7 @@ $config['gat_pay_succ_msg'] = array(
     'biz_type' => 1
 );
 $config['gat_pay_fail_msg'] = array(
-    'url' => $env_config['mapi_box_host'].'/public/order.html?orderId=',
+    'url' => $env_config['mapi_box_host'].'/mars/order.mars?orderId=',
     'action' => '',
     'first' => '感谢您使用魔盒CityBox，扣款失败！订单号：',
     'remark' => '感谢您的使用，祝您购物愉快',

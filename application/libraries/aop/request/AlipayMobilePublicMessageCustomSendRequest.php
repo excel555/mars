@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.mobile.public.message.custom.send request
+ * ALIPAY API: alipay.mobile.mars.message.custom.send request
  *
  * @author auto create
  * @since 1.0, 2016-10-09 11:58:04
@@ -36,7 +36,7 @@ class AlipayMobilePublicMessageCustomSendRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.message.custom.send";
+		return "alipay.mobile.mars.message.custom.send";
 	}
 
 	public function setNotifyUrl($notifyUrl)

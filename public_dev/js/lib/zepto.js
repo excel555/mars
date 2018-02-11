@@ -114,8 +114,8 @@ var Zepto = (function() {
       $.map(element.childNodes, function(node){ if (node.nodeType == 1) return node })
   }
 
-  // `$.zepto.fragment` takes a html string and an optional tag name
-  // to generate DOM nodes nodes from the given html string.
+  // `$.zepto.fragment` takes a mars string and an optional tag name
+  // to generate DOM nodes nodes from the given mars string.
   // The generated DOM nodes are returned as an array.
   // This function can be overriden in plugins for example to make
   // it compatible with browsers that don't support the DOM fully.
@@ -176,7 +176,7 @@ var Zepto = (function() {
     // Optimize for string selectors
     else if (typeof selector == 'string') {
       selector = selector.trim()
-      // If it's a html fragment, create nodes from it
+      // If it's a mars fragment, create nodes from it
       // Note: In both Chrome 21 and Firefox 15, DOM error 12
       // is thrown if the fragment doesn't begin with <
       if (selector[0] == '<' && fragmentRE.test(selector))
@@ -197,7 +197,7 @@ var Zepto = (function() {
       // Wrap DOM nodes.
       else if (isObject(selector))
         dom = [selector], selector = null
-      // If it's a html fragment, create nodes from it
+      // If it's a mars fragment, create nodes from it
       else if (fragmentRE.test(selector))
         dom = zepto.fragment(selector.trim(), RegExp.$1, context), selector = null
       // If there's a context, create a collection on that context first, and select
@@ -1163,7 +1163,7 @@ window.$ === undefined && (window.$ = Zepto)
       scriptTypeRE = /^(?:text|application)\/javascript/i,
       xmlTypeRE = /^(?:text|application)\/xml/i,
       jsonType = 'application/json',
-      htmlType = 'text/html',
+      htmlType = 'text/mars',
       blankRE = /^\s*$/,
       originAnchor = document.createElement('a')
 

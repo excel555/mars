@@ -171,7 +171,7 @@ class CI_Exceptions {
 		{
 			set_status_header($status_code);
 			$message = '<p>'.(is_array($message) ? implode('</p><p>', $message) : $message).'</p>';
-			$template = 'html'.DIRECTORY_SEPARATOR.$template;
+			$template = 'mars'.DIRECTORY_SEPARATOR.$template;
 		}
 
 		if (ob_get_level() > $this->ob_level + 1)
@@ -207,7 +207,7 @@ class CI_Exceptions {
 		}
 		else
 		{
-			$templates_path .= 'html'.DIRECTORY_SEPARATOR;
+			$templates_path .= 'mars'.DIRECTORY_SEPARATOR;
 		}
 
 		if (ob_get_level() > $this->ob_level + 1)
@@ -253,7 +253,7 @@ class CI_Exceptions {
 				$filepath = $x[count($x)-2].'/'.end($x);
 			}
 
-			$template = 'html'.DIRECTORY_SEPARATOR.'error_php';
+			$template = 'mars'.DIRECTORY_SEPARATOR.'error_php';
 		}
 		else
 		{

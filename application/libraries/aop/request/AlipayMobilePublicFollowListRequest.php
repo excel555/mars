@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.mobile.public.follow.list request
+ * ALIPAY API: alipay.mobile.mars.follow.list request
  *
  * @author auto create
  * @since 1.0, 2016-07-29 19:58:03
@@ -36,7 +36,7 @@ class AlipayMobilePublicFollowListRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.follow.list";
+		return "alipay.mobile.mars.follow.list";
 	}
 
 	public function setNotifyUrl($notifyUrl)

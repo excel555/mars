@@ -35,7 +35,7 @@ class AlipayMobileStdPublicAccountQueryRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.std.public.account.query";
+		return "alipay.mobile.std.mars.account.query";
 	}
 
 	public function setNotifyUrl($notifyUrl)

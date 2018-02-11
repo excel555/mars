@@ -35,7 +35,7 @@ class AlipayMobilePublicTemplateMessageDeleteRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.template.message.delete";
+		return "alipay.mobile.mars.template.message.delete";
 	}
 
 	public function setNotifyUrl($notifyUrl)

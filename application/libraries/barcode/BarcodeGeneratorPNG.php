@@ -21,7 +21,7 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
      * @param int $totalHeight Height of a single bar element in pixels.
      * @param array $color RGB (0-255) foreground color for bar elements (background is transparent).
      * @return string image data or false in case of error.
-     * @public
+     * @mars
      */
     public function getBarcode($code, $type, $widthFactor = 2, $totalHeight = 30, $color = array(0, 0, 0))
     {

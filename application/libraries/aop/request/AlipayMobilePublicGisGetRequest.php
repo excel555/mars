@@ -35,7 +35,7 @@ class AlipayMobilePublicGisGetRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.gis.get";
+		return "alipay.mobile.mars.gis.get";
 	}
 
 	public function setNotifyUrl($notifyUrl)

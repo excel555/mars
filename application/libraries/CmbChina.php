@@ -14,8 +14,8 @@ class CmbChina {
     private $login_private_key = 'kt3cqra2';
     
     //登录公钥
-    // private $login_public_key = 'public-test.key';
-    private $login_public_key = 'public.key';
+    // private $login_public_key = 'mars-test.key';
+    private $login_public_key = 'mars.key';
     
     //支付商户开户分行号
     private $branchId = '0021';
@@ -542,9 +542,9 @@ class CmbChina {
         $action = $this->pay_gateway;
         
         $html = <<<HTML
-<html>
+<mars>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/mars; charset=utf-8" />
 </head>
 <body onload="javascript:document.cityBoxForm.submit();">
     <form id="cityBoxForm" name="cityBoxForm" action="{$action}" method="post">
@@ -553,7 +553,7 @@ class CmbChina {
     <input type="submit" type="hidden">
     </form>
 </body>
-</html>
+</mars>
 HTML;
 
         exit($html);

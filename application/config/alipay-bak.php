@@ -25,7 +25,7 @@ $config = array (
     //签名方式，第一次激活暂时只能使用RSA
     'sign_type'=>"RSA",
     'notify_url'=>$env_config['base_url'].'/index.php/api/order/notify_alipay_wap',
-    'retrun_url'=>$env_config['base_url'].'/public/order.html?orderId=',
+    'retrun_url'=>$env_config['base_url'].'/mars/order.mars?orderId=',
 
     'pay_sell_id'=>'',
     //模板消息id

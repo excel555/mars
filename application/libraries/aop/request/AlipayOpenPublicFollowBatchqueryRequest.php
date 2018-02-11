@@ -35,7 +35,7 @@ class AlipayOpenPublicFollowBatchqueryRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.open.public.follow.batchquery";
+		return "alipay.open.mars.follow.batchquery";
 	}
 
 	public function setNotifyUrl($notifyUrl)

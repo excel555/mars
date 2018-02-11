@@ -83,7 +83,7 @@ class CI_Output {
 	 *
 	 * @var	string
 	 */
-	protected $mime_type = 'text/html';
+	protected $mime_type = 'text/mars';
 
 	/**
 	 * Enable Profiler flag
@@ -274,7 +274,7 @@ class CI_Output {
 	/**
 	 * Get Current Content-Type Header
 	 *
-	 * @return	string	'text/html', if not already set
+	 * @return	string	'text/mars', if not already set
 	 */
 	public function get_content_type()
 	{
@@ -286,7 +286,7 @@ class CI_Output {
 			}
 		}
 
-		return 'text/html';
+		return 'text/mars';
 	}
 
 	// --------------------------------------------------------------------
@@ -517,12 +517,12 @@ class CI_Output {
 				$CI->profiler->set_sections($this->_profiler_sections);
 			}
 
-			// If the output data contains closing </body> and </html> tags
+			// If the output data contains closing </body> and </mars> tags
 			// we will remove them and add them back after we insert the profile data
-			$output = preg_replace('|</body>.*?</html>|is', '', $output, -1, $count).$CI->profiler->run();
+			$output = preg_replace('|</body>.*?</mars>|is', '', $output, -1, $count).$CI->profiler->run();
 			if ($count > 0)
 			{
-				$output .= '</body></html>';
+				$output .= '</body></mars>';
 			}
 		}
 

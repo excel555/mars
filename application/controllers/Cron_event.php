@@ -294,7 +294,7 @@ class Cron_event extends CI_Controller
     /**
      * 心跳监测
      */
-//    public function box_heart_check()
+//    mars function box_heart_check()
 //    {
 //        write_log('box_heart_check in ....');
 //        $hour = date("H");

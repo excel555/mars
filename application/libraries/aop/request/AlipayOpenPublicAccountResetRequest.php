@@ -35,7 +35,7 @@ class AlipayOpenPublicAccountResetRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.open.public.account.reset";
+		return "alipay.open.mars.account.reset";
 	}
 
 	public function setNotifyUrl($notifyUrl)

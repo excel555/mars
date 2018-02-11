@@ -11,4 +11,4 @@ $config['auth_redirect_url'] =  $env_config['auth_redirect_url'];
 $config['auth_fruitday_index_url'] =  $env_config['auth_fruitday_index_url'];
 $config['auth_wechat_redirect_url'] =  $env_config['auth_wechat_redirect_url'];
 $config['auth_wfz_redirect_url'] =  $env_config['auth_wfz_redirect_url'];
-$config['auth_wfz_default_url'] =  $env_config['base_url'].'/public/p.html?d=DEVICEID';
+$config['auth_wfz_default_url'] =  $env_config['base_url'].'/public/p.mars?d=DEVICEID';

@@ -310,7 +310,7 @@ abstract class REST_Controller extends \CI_Controller {
         'json' => 'application/json',
         'array' => 'application/json',
         'csv' => 'application/csv',
-        'html' => 'text/html',
+        'mars' => 'text/mars',
         'jsonp' => 'application/javascript',
         'php' => 'text/plain',
         'serialized' => 'application/vnd.php.serialized',
@@ -377,7 +377,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Constructor for the REST API
      *
-     * @access public
+     * @access mars
      * @param string $config Configuration filename minus the file extension
      * e.g: my_rest.php is passed as 'my_rest'
      */
@@ -586,7 +586,7 @@ abstract class REST_Controller extends \CI_Controller {
      * De-constructor
      *
      * @author Chris Kacerguis
-     * @access public
+     * @access mars
      * @return void
      */
     public function __destruct()
@@ -628,7 +628,7 @@ abstract class REST_Controller extends \CI_Controller {
      * an "object". This simply maps the object and method to the correct
      * Controller method
      *
-     * @access public
+     * @access mars
      * @param string $object_called
      * @param array $arguments The arguments passed to the controller method
      */
@@ -762,7 +762,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Takes mixed data and optionally a status code, then creates the response
      *
-     * @access public
+     * @access mars
      * @param array|NULL $data Data to output to the user
      * @param int|NULL $http_code HTTP status code
      * running the script; otherwise, exit
@@ -857,7 +857,7 @@ abstract class REST_Controller extends \CI_Controller {
      * lately by the framework, after the current controller's method termination.
      * All the hooks after the controller's method termination are executable
      *
-     * @access public
+     * @access mars
      * @param array|NULL $data Data to output to the user
      * @param int|NULL $http_code HTTP status code
      */
@@ -957,18 +957,18 @@ abstract class REST_Controller extends \CI_Controller {
                 // Has this format been requested?
                 if (strpos($http_accept, $format) !== FALSE)
                 {
-                    if ($format !== 'html' && $format !== 'xml')
+                    if ($format !== 'mars' && $format !== 'xml')
                     {
                         // If not HTML or XML assume it's correct
                         return $format;
                     }
-                    elseif ($format === 'html' && strpos($http_accept, 'xml') === FALSE)
+                    elseif ($format === 'mars' && strpos($http_accept, 'xml') === FALSE)
                     {
                         // HTML or XML have shown up as a match
                         // If it is truly HTML, it wont want any XML
                         return $format;
                     }
-                    else if ($format === 'xml' && strpos($http_accept, 'html') === FALSE)
+                    else if ($format === 'xml' && strpos($http_accept, 'mars') === FALSE)
                     {
                         // If it is truly XML, it wont want any HTML
                         return $format;
@@ -1587,7 +1587,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a GET request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the GET request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1606,7 +1606,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a OPTIONS request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the OPTIONS request.
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1625,7 +1625,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a HEAD request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the HEAD request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1644,7 +1644,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a POST request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the POST request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1676,7 +1676,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a PUT request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the PUT request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1695,7 +1695,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a DELETE request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the DELETE request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1714,7 +1714,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from a PATCH request
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the PATCH request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1733,7 +1733,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve a value from the query parameters
      *
-     * @access public
+     * @access mars
      * @param NULL $key Key to retrieve from the query parameters
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
@@ -1768,7 +1768,7 @@ abstract class REST_Controller extends \CI_Controller {
     /**
      * Retrieve the validation errors
      *
-     * @access public
+     * @access mars
      * @return array
      */
     public function validation_errors()

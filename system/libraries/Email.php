@@ -138,7 +138,7 @@ class CI_Email {
 	/**
 	 * Message format.
 	 *
-	 * @var	string	'text' or 'html'
+	 * @var	string	'text' or 'mars'
 	 */
 	public $mailtype	= 'text';
 
@@ -822,7 +822,7 @@ class CI_Email {
 	 */
 	public function set_mailtype($type = 'text')
 	{
-		$this->mailtype = ($type === 'html') ? 'html' : 'text';
+		$this->mailtype = ($type === 'mars') ? 'mars' : 'text';
 		return $this;
 	}
 
@@ -957,15 +957,15 @@ class CI_Email {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get content type (text/html/attachment)
+	 * Get content type (text/mars/attachment)
 	 *
 	 * @return	string
 	 */
 	protected function _get_content_type()
 	{
-		if ($this->mailtype === 'html')
+		if ($this->mailtype === 'mars')
 		{
-			return empty($this->_attachments) ? 'html' : 'html-attach';
+			return empty($this->_attachments) ? 'mars' : 'mars-attach';
 		}
 		elseif	($this->mailtype === 'text' && ! empty($this->_attachments))
 		{
@@ -1268,7 +1268,7 @@ class CI_Email {
 	 */
 	protected function _build_message()
 	{
-		if ($this->wordwrap === TRUE && $this->mailtype !== 'html')
+		if ($this->wordwrap === TRUE && $this->mailtype !== 'mars')
 		{
 			$this->_body = $this->word_wrap($this->_body);
 		}
@@ -1297,11 +1297,11 @@ class CI_Email {
 
 				return;
 
-			case 'html':
+			case 'mars':
 
 				if ($this->send_multipart === FALSE)
 				{
-					$hdr .= 'Content-Type: text/html; charset='.$this->charset.$this->newline
+					$hdr .= 'Content-Type: text/mars; charset='.$this->charset.$this->newline
 						.'Content-Transfer-Encoding: quoted-printable';
 				}
 				else
@@ -1317,7 +1317,7 @@ class CI_Email {
 						.$this->_get_alt_message().$this->newline.$this->newline
 						.'--'.$boundary.$this->newline
 
-						.'Content-Type: text/html; charset='.$this->charset.$this->newline
+						.'Content-Type: text/mars; charset='.$this->charset.$this->newline
 						.'Content-Transfer-Encoding: quoted-printable'.$this->newline.$this->newline;
 				}
 
@@ -1360,7 +1360,7 @@ class CI_Email {
 				$this->_append_attachments($body, $boundary);
 
 				break;
-			case 'html-attach':
+			case 'mars-attach':
 
 				$alt_boundary = uniqid('B_ALT_');
 				$last_boundary = NULL;
@@ -1406,7 +1406,7 @@ class CI_Email {
 					.$this->_get_alt_message().$this->newline.$this->newline
 					.'--'.$alt_boundary.$this->newline
 
-					.'Content-Type: text/html; charset='.$this->charset.$this->newline
+					.'Content-Type: text/mars; charset='.$this->charset.$this->newline
 					.'Content-Transfer-Encoding: quoted-printable'.$this->newline.$this->newline
 
 					.$this->_prep_quoted_printable($this->_body).$this->newline.$this->newline

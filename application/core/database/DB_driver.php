@@ -167,7 +167,7 @@ class CI_DB_driver {
 	/**
 	 * Set client character set
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string
 	 * @param	string
 	 * @return	resource
@@ -194,7 +194,7 @@ class CI_DB_driver {
 	/**
 	 * The name of the platform in use (mysql, mssql, etc...)
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	string
 	 */
 	function platform()
@@ -208,7 +208,7 @@ class CI_DB_driver {
 	 * Database Version Number.  Returns a string containing the
 	 * version of the database being used
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	string
 	 */
 	function version()
@@ -248,7 +248,7 @@ class CI_DB_driver {
 	 * FALSE upon failure, and if the $db_debug variable is set to TRUE
 	 * will raise an error.
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	An SQL query string
 	 * @param	array	An array of binding data
 	 * @return	mixed
@@ -420,7 +420,7 @@ class CI_DB_driver {
 	/**
 	 * Load the result drivers
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	string	the name of the result class
 	 */
 	function load_rdriver()
@@ -444,7 +444,7 @@ class CI_DB_driver {
 	 * we only use it when running transaction commands since they do
 	 * not require all the features of the main query() function.
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the sql query
 	 * @return	mixed
 	 */
@@ -531,7 +531,7 @@ class CI_DB_driver {
 	 * Disable Transactions
 	 * This permits transactions to be disabled at run-time.
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function trans_off()
@@ -548,7 +548,7 @@ class CI_DB_driver {
 	 * If strict mode is disabled, each group is treated autonomously, meaning
 	 * a failure of one group will not affect any others
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function trans_strict($mode = TRUE)
@@ -561,7 +561,7 @@ class CI_DB_driver {
 	/**
 	 * Start Transaction
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function trans_start($test_mode = FALSE)
@@ -586,7 +586,7 @@ class CI_DB_driver {
 	/**
 	 * Complete Transaction
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	bool
 	 */
 	function trans_complete()
@@ -629,7 +629,7 @@ class CI_DB_driver {
 	/**
 	 * Lets you retrieve the transaction flag to determine if it has failed
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	bool
 	 */
 	function trans_status()
@@ -642,7 +642,7 @@ class CI_DB_driver {
 	/**
 	 * Compile Bindings
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the sql statement
 	 * @param	array	an array of bind data
 	 * @return	string
@@ -685,7 +685,7 @@ class CI_DB_driver {
 	/**
 	 * Determines if a query is a "write" type.
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	An SQL query string
 	 * @return	boolean
 	 */
@@ -703,7 +703,7 @@ class CI_DB_driver {
 	/**
 	 * Calculate the aggregate query elapsed time
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	integer	The number of decimal places
 	 * @return	integer
 	 */
@@ -717,7 +717,7 @@ class CI_DB_driver {
 	/**
 	 * Returns the total number of queries
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	integer
 	 */
 	function total_queries()
@@ -730,7 +730,7 @@ class CI_DB_driver {
 	/**
 	 * Returns the last query that was executed
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function last_query()
@@ -746,7 +746,7 @@ class CI_DB_driver {
 	 * Escapes data based on type
 	 * Sets boolean and null types
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string
 	 * @return	mixed
 	 */
@@ -776,7 +776,7 @@ class CI_DB_driver {
 	 * Calls the individual driver for platform
 	 * specific escaping for LIKE conditions
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string
 	 * @return	mixed
 	 */
@@ -793,7 +793,7 @@ class CI_DB_driver {
 	 * Retrieves the primary key.  It assumes that the row in the first
 	 * position is the primary key
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @return	string
 	 */
@@ -814,7 +814,7 @@ class CI_DB_driver {
 	/**
 	 * Returns an array of table names
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	array
 	 */
 	function list_tables($constrain_by_prefix = FALSE)
@@ -860,7 +860,7 @@ class CI_DB_driver {
 
 	/**
 	 * Determine if a particular table exists
-	 * @access	public
+	 * @access	mars
 	 * @return	boolean
 	 */
 	function table_exists($table_name)
@@ -873,7 +873,7 @@ class CI_DB_driver {
 	/**
 	 * Fetch MySQL Field Names
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @return	array
 	 */
@@ -926,7 +926,7 @@ class CI_DB_driver {
 
 	/**
 	 * Determine if a particular field exists
-	 * @access	public
+	 * @access	mars
 	 * @param	string
 	 * @param	string
 	 * @return	boolean
@@ -941,7 +941,7 @@ class CI_DB_driver {
 	/**
 	 * Returns an object with field data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @return	object
 	 */
@@ -966,7 +966,7 @@ class CI_DB_driver {
 	/**
 	 * Generate an insert string
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table upon which the query will be performed
 	 * @param	array	an associative array data of key/values
 	 * @return	string
@@ -990,7 +990,7 @@ class CI_DB_driver {
 	/**
 	 * Generate an update string
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table upon which the query will be performed
 	 * @param	array	an associative array data of key/values
 	 * @param	mixed	the "where" statement
@@ -1062,7 +1062,7 @@ class CI_DB_driver {
 	/**
 	 * Enables a native PHP function to be run, using a platform agnostic wrapper.
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the function name
 	 * @param	mixed	any parameters needed by the function
 	 * @return	mixed
@@ -1103,7 +1103,7 @@ class CI_DB_driver {
 	/**
 	 * Set Cache Directory Path
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the path to the cache directory
 	 * @return	void
 	 */
@@ -1117,7 +1117,7 @@ class CI_DB_driver {
 	/**
 	 * Enable Query Caching
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function cache_on()
@@ -1131,7 +1131,7 @@ class CI_DB_driver {
 	/**
 	 * Disable Query Caching
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function cache_off()
@@ -1146,7 +1146,7 @@ class CI_DB_driver {
 	/**
 	 * Delete the cache files associated with a particular URI
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function cache_delete($segment_one = '', $segment_two = '')
@@ -1163,7 +1163,7 @@ class CI_DB_driver {
 	/**
 	 * Delete All cache files
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function cache_delete_all()
@@ -1208,7 +1208,7 @@ class CI_DB_driver {
 	/**
 	 * Close DB Connection
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function close()
@@ -1226,7 +1226,7 @@ class CI_DB_driver {
 	/**
 	 * Display an error message
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the error message
 	 * @param	string	any "swap" values
 	 * @param	boolean	whether to localize the message

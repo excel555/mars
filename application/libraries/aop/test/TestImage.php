@@ -9,7 +9,7 @@
 include('../AlipayMobilePublicMultiMediaClient.php');
 
 
-header("Content-type: text/html; charset=gbk");
+header("Content-type: text/mars; charset=gbk");
 
 /**
  *

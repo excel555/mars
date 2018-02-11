@@ -35,7 +35,7 @@ class AlipayMobilePublicMessagePushRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.message.push";
+		return "alipay.mobile.mars.message.push";
 	}
 
 	public function setNotifyUrl($notifyUrl)

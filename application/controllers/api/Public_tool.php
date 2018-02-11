@@ -68,7 +68,7 @@ class Public_tool extends REST_Controller
         }
 //        else{
 //            $base_url = $this->config->item("base_url");
-//            $qr_str = $base_url.'/public/platform_auth.html?deviceId='.$box_id.'&scan_platform='.$refer;
+//            $qr_str = $base_url.'/mars/platform_auth.mars?deviceId='.$box_id.'&scan_platform='.$refer;
 //            $img = general_qr_code($qr_str);
 //            $this->send_ok_response(array("qr_img"=>$base_url.'/uploads/'.$img));
 //            //$short_url = general_short_url($qr_str);
@@ -135,7 +135,7 @@ class Public_tool extends REST_Controller
         $this->load->helper("message");
         $data = array(
             'buyer_id'=>'oCUeIwo4R1esx5bJZxu1R2y9vbK0',
-            'url'=>'https://cityboxapi.fruitday.com/public/clear.html',
+            'url'=>'https://cityboxapi.fruitday.com/mars/clear.mars',
             'first'=>'测试是否能发送微信msg',
             'keyword1'=>'12',
             'keyword2'=>'12',

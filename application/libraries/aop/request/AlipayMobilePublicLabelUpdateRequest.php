@@ -35,7 +35,7 @@ class AlipayMobilePublicLabelUpdateRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.label.update";
+		return "alipay.mobile.mars.label.update";
 	}
 
 	public function setNotifyUrl($notifyUrl)

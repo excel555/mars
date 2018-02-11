@@ -437,7 +437,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific query so that the column data can be retrieved
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @return	object
 	 */
@@ -543,7 +543,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific insert string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the insert keys
 	 * @param	array	the insert values
@@ -580,7 +580,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific replace string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the insert keys
 	 * @param	array	the insert values
@@ -598,7 +598,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific update string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the update data
 	 * @param	array	the where clause

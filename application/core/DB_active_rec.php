@@ -1912,7 +1912,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 *
 	 * Empties the AR cache
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	public function flush_cache()

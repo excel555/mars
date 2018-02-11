@@ -101,7 +101,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 * Keep / reestablish the db connection if no queries have been
 	 * sent for a length of time exceeding the server's idle timeout
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	void
 	 */
 	function reconnect()
@@ -212,7 +212,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	/**
 	 * Begin Transaction
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	bool
 	 */
 	function trans_begin($test_mode = FALSE)
@@ -353,7 +353,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	/**
 	 * Insert ID
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	integer
 	 */
 	function insert_id()
@@ -369,7 +369,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 * Generates a platform-specific query string that counts all records in
 	 * the specified database
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string
 	 * @return	string
 	 */
@@ -544,7 +544,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific insert string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the insert keys
 	 * @param	array	the insert values
@@ -563,7 +563,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific replace string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the insert keys
 	 * @param	array	the insert values
@@ -600,7 +600,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 *
 	 * Generates a platform-specific update string from the supplied data
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @param	string	the table name
 	 * @param	array	the update data
 	 * @param	array	the where clause

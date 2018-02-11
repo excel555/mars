@@ -64,7 +64,7 @@ class CI_DB_pdo_odbc_driver extends CI_DB_pdo_driver {
 	 *
 	 * @var	string
 	 */
-	public $schema = 'public';
+	public $schema = 'mars';
 
 	// --------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.open.public.partner.subscribe.sync request
+ * ALIPAY API: alipay.open.mars.partner.subscribe.sync request
  *
  * @author auto create
  * @since 1.0, 2016-12-08 12:10:03

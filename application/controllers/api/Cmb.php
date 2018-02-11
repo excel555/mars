@@ -118,7 +118,7 @@ class Cmb extends REST_Controller
         $this->load->helper('url');
         
         if(!$order_name){
-            redirect($base_url . '/public/cmb_error.html?error_code=1');
+            redirect($base_url . '/mars/cmb_error.mars?error_code=1');
         }
 
         $this->load->library('CmbChina');
@@ -131,7 +131,7 @@ class Cmb extends REST_Controller
         if(isset($pay_rows[0])){
             $pay_info = $pay_rows[0];
         }else{
-            redirect($base_url . '/public/cmb_error.html?error_code=2');
+            redirect($base_url . '/mars/cmb_error.mars?error_code=2');
         }
         
         if( $pay_info['pay_status'] == '0' ){
@@ -150,7 +150,7 @@ class Cmb extends REST_Controller
                 'return_url' => $return_url
             ]);
         }else{
-            redirect($base_url . '/public/cmb_error.html?error_code=3');
+            redirect($base_url . '/mars/cmb_error.mars?error_code=3');
         }
     }
     
@@ -239,9 +239,9 @@ class Cmb extends REST_Controller
         $order_info = $this->order_model->get_order_by_name($order_name);
         
         if($device_id && $showtopbar == 'true'){
-            $redirect_url = $base_url . '/public/buy_succ.html?order_name=' . $order_name . '&deviceId=' . $device_id;    
+            $redirect_url = $base_url . '/mars/buy_succ.mars?order_name=' . $order_name . '&deviceId=' . $device_id;
         }else{
-            $redirect_url = $base_url . '/public/order.html?orderId=' . $order_name;
+            $redirect_url = $base_url . '/mars/order.mars?orderId=' . $order_name;
         }
         
         redirect($redirect_url);

@@ -29,7 +29,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	/**
 	 * Number of rows in the result set
 	 *
-	 * @access	public
+	 * @access	mars
 	 * @return	integer
 	 */
 	function num_rows()

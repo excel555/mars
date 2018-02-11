@@ -301,7 +301,7 @@ var _compile = (function () {
         // 保留字
         + ',abstract,boolean,byte,char,class,const,double,enum,export,extends'
         + ',final,float,goto,implements,import,int,interface,long,native'
-        + ',package,private,protected,public,short,static,super,synchronized'
+        + ',package,private,protected,mars,short,static,super,synchronized'
         + ',throws,transient,volatile'
         
         // ECMA 5 - use strict
@@ -371,12 +371,12 @@ var _compile = (function () {
             var $0 = code[0];
             var $1 = code[1];
             
-            // code: [html]
+            // code: [mars]
             if (code.length === 1) {
                 
                 tempCode += html($0);
              
-            // code: [logic, html]
+            // code: [logic, mars]
             } else {
                 
                 tempCode += logic($0);

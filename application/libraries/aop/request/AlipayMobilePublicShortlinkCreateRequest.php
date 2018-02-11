@@ -35,7 +35,7 @@ class AlipayMobilePublicShortlinkCreateRequest
 
 	public function getApiMethodName()
 	{
-		return "alipay.mobile.public.shortlink.create";
+		return "alipay.mobile.mars.shortlink.create";
 	}
 
 	public function setNotifyUrl($notifyUrl)

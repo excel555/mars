@@ -1,6 +1,6 @@
 <?php
 /**
- * ALIPAY API: alipay.open.public.third.customer.service request
+ * ALIPAY API: alipay.open.mars.third.customer.service request
  *
  * @author auto create
  * @since 1.0, 2016-12-08 12:11:15
