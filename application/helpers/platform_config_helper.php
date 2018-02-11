@@ -98,73 +98,73 @@ function get_platform_config_by_device_id($device_id){
     $ci =&get_instance();
     $ci->config->load('platform_config', TRUE);
     $defalut_config = $ci->config->item('platform_config');
-    if($device_id){
-        //获取平台ID
-        $ci->load->config('platform',true);
-        $key = $ci->config->item('platform_redis_new_key_ex', 'platform')."d_".$device_id;
-        $cache = $ci->cache->redis->get($key);
-        if(!$cache){
-            $key_pd = $ci->config->item('platform_redis_new_key_ex', 'platform')."pd_".$device_id;//记录设备对应的platform_id
-            $cache_pd = $ci->cache->redis->get($key_pd);
-            if($cache_pd){
-                $platform_id = $cache_pd;
-            }else{
-                $ci->load->model('equipment_model');
-                $rs_eq = $ci->equipment_model->get_info_by_equipment_id($device_id);
-                $platform_id = isset($rs_eq['platform_id']) ? $rs_eq['platform_id'] : 0;
-                if($platform_id){
-                    $ci->cache->redis->save($key_pd,$platform_id,5*60);//5分钟
-                }
-            }
-            return get_platform_config($platform_id);
-        }else{
-            $custom_config = json_decode($cache,1);
-            $ret = merge_replace_config($defalut_config,$custom_config);
-            return $ret;
-        }
-    }else{
-        return $defalut_config;
-    }
+//    if($device_id){
+//        //获取平台ID
+//        $ci->load->config('platform',true);
+//        $key = $ci->config->item('platform_redis_new_key_ex', 'platform')."d_".$device_id;
+//        $cache = $ci->cache->redis->get($key);
+//        if(!$cache){
+//            $key_pd = $ci->config->item('platform_redis_new_key_ex', 'platform')."pd_".$device_id;//记录设备对应的platform_id
+//            $cache_pd = $ci->cache->redis->get($key_pd);
+//            if($cache_pd){
+//                $platform_id = $cache_pd;
+//            }else{
+//                $ci->load->model('equipment_model');
+//                $rs_eq = $ci->equipment_model->get_info_by_equipment_id($device_id);
+//                $platform_id = isset($rs_eq['platform_id']) ? $rs_eq['platform_id'] : 0;
+//                if($platform_id){
+//                    $ci->cache->redis->save($key_pd,$platform_id,5*60);//5分钟
+//                }
+//            }
+//            return get_platform_config($platform_id);
+//        }else{
+//            $custom_config = json_decode($cache,1);
+//            $ret = merge_replace_config($defalut_config,$custom_config);
+//            return $ret;
+//        }
+//    }else{
+//        return $defalut_config;
+//    }
 }
 
 function get_platform_config($id){
     $ci =&get_instance();
     $ci->config->load('platform_config', TRUE);
-    $defalut_config = $ci->config->item('platform_config');
-    if(!$id || $id == "0" || $id == 0){
-      return $defalut_config;
-    }
-    $ci->load->config('platform',true);
-    $key = $ci->config->item('platform_redis_new_key_ex', 'platform')."p_".$id;
-    $cache = $ci->cache->redis->get($key);
-
-    if(!$cache){
-        //找不到cache,则刷新缓存
-        $url = $ci->config->item('platform_update_new_cache_url', 'platform');
-        $secret = $ci->config->item('platform_secret', 'platform');
-
-        $params = array(
-            'timestamp' => time() . '000',
-            'source' => 'api',
-        );
-        $params['sign'] = create_platform_host_sign($params, $secret);
-        $options['timeout'] = 100;
-        $result = HttpRequest::curl($url, $params);
-        $result = $result ? json_decode($result,1) : "";
-        if (isset($result['code']) == 200) {
-            $custom_config = $result[$key];
-            $ret = merge_replace_config($defalut_config,$custom_config);
-            return $ret;
-        }else{
-            return $defalut_config;
-        }
-    }elseif($cache == "defalut" ){
-        return $defalut_config;
-    }else{
-        $custom_config = json_decode($cache,1);
-        $ret = merge_replace_config($defalut_config,$custom_config);
-        return $ret;
-    }
+    return $defalut_config = $ci->config->item('platform_config');
+//    if(!$id || $id == "0" || $id == 0){
+//      return $defalut_config;
+//    }
+//    $ci->load->config('platform',true);
+//    $key = $ci->config->item('platform_redis_new_key_ex', 'platform')."p_".$id;
+//    $cache = $ci->cache->redis->get($key);
+//
+//    if(!$cache){
+//        //找不到cache,则刷新缓存
+//        $url = $ci->config->item('platform_update_new_cache_url', 'platform');
+//        $secret = $ci->config->item('platform_secret', 'platform');
+//
+//        $params = array(
+//            'timestamp' => time() . '000',
+//            'source' => 'api',
+//        );
+//        $params['sign'] = create_platform_host_sign($params, $secret);
+//        $options['timeout'] = 100;
+//        $result = HttpRequest::curl($url, $params);
+//        $result = $result ? json_decode($result,1) : "";
+//        if (isset($result['code']) == 200) {
+//            $custom_config = $result[$key];
+//            $ret = merge_replace_config($defalut_config,$custom_config);
+//            return $ret;
+//        }else{
+//            return $defalut_config;
+//        }
+//    }elseif($cache == "defalut" ){
+//        return $defalut_config;
+//    }else{
+//        $custom_config = json_decode($cache,1);
+//        $ret = merge_replace_config($defalut_config,$custom_config);
+//        return $ret;
+//    }
 }
 
 function merge_replace_config($defalut_config,$custom_config = array()){

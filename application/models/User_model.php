@@ -3,6 +3,8 @@
 class User_model extends MY_Model
 {
     private $field = "";
+    const REG_GIFT = 20;
+    const SIGN_GIFT = 2;
 	function __construct()
 	{
 		parent::__construct ();
@@ -12,29 +14,13 @@ class User_model extends MY_Model
     {
         return 'user';
     }
-    public function return_field()
-    {
-        return ["id","mobile","user_name","reg_time","open_id","is_black","s_admin_id","avatar","city","province","gender","source","agreement_no","scene","sign_time","thirdpart_id","sign_detail","zm_open_id","program_openid","unionid","user_rank","acount_id","equipment_id"];
-    }
 
-	function get_user_info_by_id($id,$field=NULL){
-        if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
-
-        }
+	function get_user_info_by_id($id){
 		$where = array('id'=>$id);
-		$this->db->select($field);
+		$this->db->select("*");
 		$this->db->where($where);
 		$this->db->from($this->table_name());
         $res = $this->db->get()->row_array();
-        if($res['acount_id']){
-            $account          = $this->get_user_acount($res['acount_id']);
-            $res['user_rank'] = isset($account['user_rank'])?intval($account['user_rank']):1;
-            $res['moli']      = isset($account['moli'])?intval($account['moli']):0;
-            $res['modou']     = isset($account['modou'])?intval($account['modou']):0;
-            $res['yue']       = isset($account['yue'])?intval($account['yue']):0;
-            $res['frozen_yue']= isset($account['frozen_yue'])?intval($account['frozen_yue']):0;
-        }
 		return $res;
 	}
 
@@ -135,60 +121,41 @@ class User_model extends MY_Model
     }
 
     //如果已注册过，返回uid
-    function is_registered($open_id){
-        $rs = $this->select('id')->from('user')->where('open_id',$open_id)->get()->row_array();
-        return $rs['id'];
+    function is_registered($open_id,$refer){
+        $rs = $this->select('*')->from('user_thrid')->where(array('open_id'=>$open_id,'refer'=>$refer))->get()->row_array();
+        return $rs;
     }
 
     //增加用户
-    function adUser($user_data,$device_id = ""){
-        $platform_id = 0;//默认是0
-        $this->db->trans_start();
-        if($device_id){
-            $this->load->model('equipment_model');
-            $equipment_info = $this->equipment_model->get_info_by_equipment_id($device_id);
-            if($equipment_info && isset($equipment_info['platform_id'])){
-                $platform_id = $equipment_info['platform_id'];
-            }
-        }
-        $user_data['platform_id'] = $platform_id;
-        $user_data['register_device_id'] = $device_id;
+    function adUser($user_data,$open_id,$refer){
         $this->db->insert('user',$user_data);
         $last_id = $this->db->insert_id();
-        if ($platform_id){
-            $this->db->insert('user_daily_info',array(
-                'uid' => $last_id,
-                'register_device_id'=>$device_id,
-                'platform_id'=>$platform_id
-            ));
-            $this->load->model('user_platform_relations_model');
-            $this->user_platform_relations_model->add_platform_relation($last_id,$platform_id);
-        }
-        //创建acount 信息
-        $acount['moli']           = 0;
-        $acount['modou']          = 1;
-        $acount['update_time']    = date('Y-m-d H:i:s');
-        $acount['user_rank']      = 1;
-        $this->db->insert('user_acount', $acount);//创建acount账户
-        $acount_id = $this->db->insert_id();
 
-        $modou_param['acount_id'] = $acount_id;
-        $modou_param['uid']       = $last_id;
-        $modou_param['modou']     = 1;
-        $modou_param['des']       = "首次赠送";
-        $modou_param['add_time']  = date('Y-m-d H:i:s');
-        $this->db->update('user', array('acount_id'=>$acount_id), array('id'=>$last_id));
-        $this->db->insert('user_acount_modou', $modou_param);
+        $thrid['user_id']           = $last_id;
+        $thrid['refer']          = $refer;
+        $thrid['open_id']    = $open_id;
+        $this->db->insert('user_thrid', $thrid);
 
+        $thrid['user_id']           = $last_id;
+        $thrid['refer']          = $refer;
+        $thrid['open_id']    = $open_id;
+        $this->db->insert('user_thrid', $thrid);
 
-        $this->db->trans_complete();
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            return 0;
-        } else {
-            $this->db->trans_commit();
-            return $last_id;
-        }
+        $thrid['user_id']           = $last_id;
+        $thrid['create_time']          = date("Y-m-d H:i:s");
+        $thrid['obj_type']    = '注册';
+        $thrid['obj_id']    = $last_id;
+        $thrid['energy']    = self::REG_GIFT;
+        $thrid['energy_type']    = 'add';
+        $this->db->insert('user_energy_log', $thrid);
+
+        $thrid['user_id']           = $last_id;
+        $thrid['lastupdate_time']          = date("Y-m-d H:i:s");
+        $thrid['land']    = '0.0';
+        $thrid['energy']    = self::REG_GIFT;;
+        $this->db->insert('user_fin', $thrid);
+
+        return $last_id;
     }
     function update_agreement_sign($open_id,$data,$refer = 'alipay',$is_program = ''){
         if(!$open_id)
