@@ -69,7 +69,7 @@ class Account extends REST_Controller
             $key1 = "role_". $user['open_id'];
             $this->cache->save($key1, $user['role'], REST_Controller::USER_LIVE_SECOND);
             write_log('login_user_succ=>'.var_export($user,1));
-            $this->user_sign_model->get_sign_today();
+            $this->user_sign_model->get_sign_today($user_id);
             $this->send_ok_response(['token' => $session_id, 'user' => $user]);
         } else {
             $this->send_error_response("cache错误");
