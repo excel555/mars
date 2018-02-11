@@ -120,4 +120,12 @@ class Account extends REST_Controller
             $this->login_user($user_id);
         }
     }
+    public function qr_code_get(){
+        $user = $this->get_curr_user();
+        $invite_code = $user['invite_code'];
+        $str = "https://lxy.bootoa.cn/public/c.html?c=".$invite_code;
+//        general_qr_code($str);
+        $qr_url = "http://qr.liantu.com/api.php?text=".urlencode($str)."";
+        $this->send_ok_response(array('qr'=>$qr_url));
+    }
 }
