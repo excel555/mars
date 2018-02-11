@@ -43,6 +43,7 @@ class Account extends REST_Controller
         $user = $this->user_model->get_user_info_by_id($user_id);
         if ($user) {
             $fin = $this->user_fin_model->get_fin_by_id($user_id);
+            write_log($this->db->last_query());
             $user['fin'] = $fin;
             $session_id = $this->session_id_2_user($user['id']);
             $user_cache_key = 'user_'.$session_id;
