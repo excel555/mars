@@ -19,6 +19,14 @@ class User_fin_model extends MY_Model
         $this->db->order_by('land','DESC');
         $this->db->limit($size);
         $res = $this->db->get()->result_array();
+        foreach ($res as &$re){
+            $where = array('id'=>$re['user_id']);
+            $this->db->select("user_name");
+            $this->db->where($where);
+            $this->db->from($this->table_name());
+            $u = $this->db->get()->row_array();
+            $re['user_name'] = $u['user_name'];
+        }
         return $res;
     }
     function get_fin_by_id($id){
