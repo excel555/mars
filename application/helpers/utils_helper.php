@@ -47,7 +47,7 @@ function check_str_exist($str, $needle)
  */
 function get_cache_user($uid){
     $ci = &get_instance();
-    $session_id = $ci->session_id_2_user($uid);
+    $session_id = session_id_2_user($uid);
     $user_cache_key = 'user_'.$session_id;
     $user = $ci->cache->get($user_cache_key);
     return $user;
@@ -69,7 +69,7 @@ function session_id_2_user($uid){
 }
 function update_user_cache($uid,$data){
     $ci = &get_instance();
-    $session_id = $ci->session_id_2_user($uid);
+    $session_id = session_id_2_user($uid);
     $user_cache_key = 'user_'.$session_id;
     $user = $ci->cache->get($user_cache_key);
     foreach ($data as $k=>$v){
