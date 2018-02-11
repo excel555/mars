@@ -14,7 +14,7 @@ class User_fin_model extends MY_Model
     }
 
     function get_fin_by_id($id){
-        $where = array('id'=>$id);
+        $where = array('user_id'=>$id);
         $this->db->select("*");
         $this->db->where($where);
         $this->db->from($this->table_name());
