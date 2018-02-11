@@ -1309,7 +1309,5 @@ Class Program_jscode2session extends Common_util_pub{
         $url = "https://api.weixin.qq.com/sns/jscode2session?".$bizString;
         return $this->getCurl($url,$this->curl_timeout);
     }
-
-
 }
 ?>

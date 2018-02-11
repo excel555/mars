@@ -97,7 +97,7 @@ function get_platform_config_by_device_id($device_id){
     //使用默认配置
     $ci =&get_instance();
     $ci->config->load('platform_config', TRUE);
-    $defalut_config = $ci->config->item('platform_config');
+    return $defalut_config = $ci->config->item('platform_config');
 //    if($device_id){
 //        //获取平台ID
 //        $ci->load->config('platform',true);
