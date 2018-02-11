@@ -132,6 +132,7 @@ class User_model extends MY_Model
 
     //增加用户
     function adUser($user_data,$open_id,$refer){
+        $this->db->trans_start();
         $this->db->insert('user',$user_data);
         $last_id = $this->db->insert_id();
 
@@ -140,26 +141,30 @@ class User_model extends MY_Model
         $thrid['open_id']    = $open_id;
         $this->db->insert('user_thrid', $thrid);
 
-        $thrid['user_id']           = $last_id;
-        $thrid['refer']          = $refer;
-        $thrid['open_id']    = $open_id;
-        $this->db->insert('user_thrid', $thrid);
 
-        $thrid['user_id']           = $last_id;
-        $thrid['create_time']          = date("Y-m-d H:i:s");
-        $thrid['obj_type']    = '注册';
-        $thrid['obj_id']    = $last_id;
-        $thrid['energy']    = self::REG_GIFT;
-        $thrid['energy_type']    = 'add';
-        $this->db->insert('user_energy_log', $thrid);
+        $user_energy_log['user_id']           = $last_id;
+        $user_energy_log['create_time']          = date("Y-m-d H:i:s");
+        $user_energy_log['obj_type']    = '注册';
+        $user_energy_log['obj_id']    = $last_id;
+        $user_energy_log['energy']    = self::REG_GIFT;
+        $user_energy_log['energy_type']    = 'add';
+        $this->db->insert('user_energy_log', $user_energy_log);
 
-        $thrid['user_id']           = $last_id;
-        $thrid['lastupdate_time']          = date("Y-m-d H:i:s");
-        $thrid['land']    = '0.0';
-        $thrid['energy']    = self::REG_GIFT;;
-        $this->db->insert('user_fin', $thrid);
+        $user_fin['user_id']           = $last_id;
+        $user_fin['lastupdate_time']          = date("Y-m-d H:i:s");
+        $user_fin['land']    = '0.0';
+        $user_fin['energy']    = self::REG_GIFT;;
+        $this->db->insert('user_fin', $user_fin);
 
-        return $last_id;
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return $last_id;
+        }
+
     }
     function update_agreement_sign($open_id,$data,$refer = 'alipay',$is_program = ''){
         if(!$open_id)
