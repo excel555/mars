@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <title>确认补货商品</title>
+    <!--build:style bundle-->
+    <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/shop.css" />
+    <link rel="stylesheet" href="./css/goods.css" />
+    <!--/build-->
+    <style>
+        .has-app section div[class="order-tabs"] {
+            padding-top: .25rem;
+        }
+        .has-app section div[class="order-list"] {
+            padding-top: .7rem;
+        }
+    </style>
+</head>
+
+<body>
+<noscript>
+    <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+</noscript>
+<section class="container goods">
+    <div class="goods-content" id="rby-list">
+    </div>
+
+</section>
+
+<footer class="footer-goods">
+    <div class="footer-buttons" style="display: none">
+        <div class="iconfont btn btn-2 btn-mini-cart1"><img src="img/qrcode.png" style="    width: .43rem; height: .43rem;"/><i style="display: none;"></i></div>
+    </div>
+    <div class="options">
+        <button class="btn btn-add-cart">商品数量正确，提交</button>
+    </div>
+</footer>
+
+<!--商品详情开始-->
+<div class="sidebar bottom" id="detail-page">
+    <div class="iconfont btn-close">&#xe619;</div>
+    <div class="goods-detail" id="rby-detail">这事详情老师看见老师</div>
+</div>
+<!--商品详情结束-->
+
+<!--迷你购物车开始-->
+<div id="sidebar-bg"></div>
+<div class="sidebar bottom" id="mini-cart-page">
+    <div class="iconfont btn-cart" id="btn-cart-close" >&#xe60a;<i>0</i></div>
+    <div class="mini-cart-goods" id="rby-mini-cart"><div class="nodata">正在加载数据……</div></div>
+</div>
+<!--迷你购物车结束-->
+
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast">
+    <img src="img/tip.png" width="60"/>
+    <span>xxx</span>
+</div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1"><img src="img/loading3.gif" /></div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <img src="img/tip.png" />
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+
+<!--模版开始-->
+<script id="rby-list-tmpl" type="text/html">
+    <div class="goods-nav<!--[= $addClassByCondition(goods.length == 0, ' single')]-->">
+        <a class="goods-nav-item<!--[= $addClassByIdx(i,0,' active')]-->" href="#group<!--[= tagId]-->"></a>
+    </div>
+    <div class="goods-list<!--[= $addClassByCondition(goods.length == 0, ' single')]-->">
+        <div class="goods-group<!--[= $addClassByIdx(i,0,' active')]-->" id="group<!--[= tagId]-->">
+            <!--[for(j = 0; j < goods.length; j++){]-->
+            <a class="goods-item" href="#" data-id="<!--[= goods[j].product_id]-->">
+                <div class="thumb"><img src="<!--[= $absImg(goods[j].img_url)]-->"></div>
+                <div class="content">
+                    <h3><!--[= goods[j].product_name]--></h3>
+                    <p>¥<!--[= $rbyFormatCurrency(goods[j].price)]--></p>
+                </div>
+                <div class="goods-qty" key="<!--[= goods[j].serial_number]-->">
+                    <div class="btn minus<!--[= $addClassByCondition(goods[j].qty > 0,' active',' disabled')]-->"><span>-</span></div>
+                    <div class="goods-qty-item<!--[= $addClassByCondition(goods[j].qty > 0,' active')]-->">
+                        <div class="num-ipt" data-limit="100" data-store="100" data-objident="<!--[= goods[j].id ]-->"><!--[= goods[j].qty]--></div>
+                    </div>
+                    <div class="btn plus<!--[= $addClassForGoods(goods[j],' disabled', '')]-->"><span>+</span></div>
+                </div>
+            </a>
+            <!--<div class="group-detail-content" >-->
+            <!--<img src="img/showqrcode.jpeg" alt="">-->
+            <!--</div>-->
+            <!--[}]-->
+
+        </div>
+        <div class="logo">
+            <img src="img/qr.png" alt="" />
+        </div>
+    </div>
+
+</script>
+<script id="rby-mini-cart-tmpl" type="text/html">
+    <div class="mini-cart-count">
+        <div class="name">总价</div>
+        <div class="value">--</div>
+    </div>
+    <!--[for(i = 0; i < goods.length; i++){]-->
+    <div class="mini-cart-goods-item">
+        <div class="name"><!--[= goods[i].product_name]--></div>
+        <div class="price" data-price="<!--[= $rbyFormatCurrency(goods[i].price)]-->">¥<!--[= $rbyFormatCurrency(goods[i].price * goods[i].qty)]--></div>
+        <div class="goods-qty" data-to="<!--[= goods[i].serial_number]-->">
+            <div class="btn minus<!--[= $addClassByCondition(goods[i].qty > 0,' active',' disabled')]-->"><span>-</span></div>
+            <div class="goods-qty-item<!--[= $addClassByCondition(goods[i].qty > 0,' active')]-->">
+                <div class="num-ipt" data-limit="99" data-store="99" data-objident="<!--[= goods[i].id ]-->" ><!--[= goods[i].qty]--></div>
+            </div>
+            <div class="btn plus<!--[= $addClassForGoods(goods[i],' disabled', '')]-->"><span>+</span></div>
+        </div>
+    </div>
+    <!--[}]-->
+</script>
+<!--//模版结束-->
+<script src="./js/main.js"></script>
+<script src="https://as.alipayobjects.com/g/component/antbridge/1.1.1/antbridge.min.js"></script>
+<script src="./js/deliver_confirm.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)http://www.fruitday.com/cart -->
+<html xmlns:wb="http://open.weibo.com/wb">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>魔盒CITYBOX-用户结算</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="./doc/bootstrap.min.css" rel="stylesheet">
+    <link href="./doc/common.css" rel="stylesheet" type="text/css">
+    <link href="./doc/style.css" rel="stylesheet" type="text/css">
+    <link href="./doc/cart.css" rel="stylesheet" type="text/css">
+    <style>
+        .top-con{
+            width: 90%;
+            margin: 0 auto;
+        }
+        .input_div{
+            display: block;
+            width: 30%;
+            margin: 50px auto;
+            text-align: center;
+            font-size: 32px;
+        }
+
+    </style>
+</head>
+<body style="" id="car-page">
+<!-- top -->
+<div class="top-con">
+    <div class="input_div">
+        <label>支付宝扫码结算</label>
+    </div>
+</div>
+<!--中部开始-->
+<div class="cart w-750">
+    <div class="cart-filter-bar pt-50">
+        <div class="mycart scan_div" style="display: none">
+            <p class="" style="text-align: center" id="device_view">  </p>
+            <img id="qr" src="" width="300px" style=" margin: 0 auto; display: block;"/>
+            <p class="scan_succ" style="display: none; color: #0000FF;text-align: center">
+                扫码成功
+            </p>
+        </div>
+        <div class="mycart login_div" style="display: none;">
+            <p class="" style="text-align: center"> 登录设备：天天果园5楼 【68805328909】 </p>
+            <button id="c_login" style="display: block;margin: 50px auto; background: #3c763d;width: 80%;height: 50px;border: 0">确认登录</button>
+
+        </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script src="./js/scan_login.js"></script>
+</body>
+</html>

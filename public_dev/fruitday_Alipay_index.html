@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-itunes-app" content="app-id=880977721" >
+    <title>发现魔盒</title>
+    <link rel="stylesheet" href="./css/common-fruitday.css" />
+    <link rel="stylesheet" href="./css/swiper.min.css" />
+    <link rel="stylesheet" href="./css/scan.css" />
+    <script src="https://a.alipayobjects.com/u/ecmng/js/201410/3fzyLyZl9J.js"></script>
+    <style type="text/css">
+        html, body{
+            height: auto;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body class="alipay-index">
+    <noscript>
+        <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+    </noscript>
+    
+    <!--自定义提示框开始-->
+    <div class="toast" id="rby-toast">
+        <img src="img/tip.png" width="60"/>
+        <span>xxx</span>
+    </div>
+	<div class="loading" id="rby-loading">
+	    <div class="loading-content">
+	        <div class="s-1"><img src="img/loading3.gif" /></div>
+	        <div class="s-2">正在加载中</div>
+	    </div>
+	</div>
+
+    <section class="container">
+        <div class="gps-con">
+            <div class="specific">
+                <img class="icon" src="img/icon-gps.png" alt="" />
+                <div class="infor">
+                    <span id="first_name" class="name">xxx</span>
+                    <p id="first_address">xxx</p>
+                </div>
+                <span class="change">切换魔盒</span>
+            </div>
+        </div>
+        <div class="swiper-container swiper-banner">
+            <div class="swiper-wrapper" id="active_banner">
+                <!--<div class="swiper-slide"><img src="https://imgws3.fruitday.com/images/2017-06-23/7fa8b7a22f93675843147955eb78f295.jpg" /></div>
+                <div class="swiper-slide"><img src="https://imgqn7.fruitday.com/images/2017-06-29/ad87eeee8ad8dcec148eeedbcdedd145.jpg" /></div>
+                <div class="swiper-slide"><img src="https://imgws3.fruitday.com/images/2017-07-13/896ed81c9f42f1e7171f03b15496a53a.jpg" /></div>-->
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="swiper-container menu-swiper">
+            <div class="swiper-wrapper" id="swiper-wrapper">
+                <div class="swiper-slide"><span>优惠活动</span></div>
+                <!--<div class="swiper-slide"><span>水果果切</span></div>
+                <div class="swiper-slide"><span>烘焙盒饭</span></div>
+                <div class="swiper-slide"><span>果汁饮料</span></div>-->
+            </div>
+        </div>
+        <div class="home-swiper">
+            <div class="swiper-wrap" id="swiper0">
+                <div class="title">优惠活动</div>
+                <div class="item-wrap activity" id="active_icon">
+                	
+                    <!--<div class="item">
+                        <img class="active-img" src="https://imgws3.fruitday.com/images/2017-06-29/ad87eeee8ad8dcec148eeedbcdedd145.jpg" alt="">
+                        <dl class="">
+                            <dt>星巴克随机减，最高免单90%中奖！</dt>
+                            <dd>2018.08.02-2018.08.30</dd>
+                        </dl>
+                    </div>
+                    <div class="item">
+                        <img class="active-img" src="https://imgws3.fruitday.com/images/2017-06-29/ad87eeee8ad8dcec148eeedbcdedd145.jpg" alt="">
+                        <dl class="">
+                            <dt>星巴克全品类随机减巴拉巴拉拉最高享受免单90%中奖！走过路过不要过…%</dt>
+                            <dd>2018.08.02-2018.08.30</dd>
+                        </dl>
+                    </div>-->
+                </div> 
+            </div>
+            <!--<div class="swiper-wrap" id="swiper1">
+                <div class="title">水果果切</div>
+                <div class="item-wrap goods">
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd6.fruitday.com/images/product_pic/7/1/1-270x270-7-DAT4H3FS.jpg" alt="">  
+                        <dl> 
+                            <dt>墨西哥牛油果 6个</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd1.fruitday.com/images/product_pic/6/1/1-270x270-6-DHBW63R4.jpg" alt="">  
+                        <dl> 
+                            <dt>越南火龙果 约2.5斤</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgqn8.fruitday.com/images/product_pic/9/1/1-270x270-9-426T698K.jpg" alt="">  
+                        <dl> 
+                            <dt>进口凤梨 1个</dt>  
+                            <dd>1个</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                </div>    
+            </div>
+            <div class="swiper-wrap" id="swiper2">
+                <div class="title">烘焙盒饭</div>
+                <div class="item-wrap goods">
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd6.fruitday.com/images/product_pic/7/1/1-270x270-7-DAT4H3FS.jpg" alt="">  
+                        <dl> 
+                            <dt>墨西哥牛油果 6个</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd1.fruitday.com/images/product_pic/6/1/1-270x270-6-DHBW63R4.jpg" alt="">  
+                        <dl> 
+                            <dt>越南火龙果 约2.5斤</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgqn8.fruitday.com/images/product_pic/9/1/1-270x270-9-426T698K.jpg" alt="">  
+                        <dl> 
+                            <dt>进口凤梨 1个</dt>  
+                            <dd>1个</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                </div>    
+            </div>
+            <div class="swiper-wrap isLast" id="swiper3">
+                <div class="title">果汁饮料</div>
+                <div class="item-wrap goods">
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd6.fruitday.com/images/product_pic/7/1/1-270x270-7-DAT4H3FS.jpg" alt="">  
+                        <dl> 
+                            <dt>墨西哥牛油果 6个</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgjd1.fruitday.com/images/product_pic/6/1/1-270x270-6-DHBW63R4.jpg" alt="">  
+                        <dl> 
+                            <dt>越南火龙果 约2.5斤</dt>  
+                            <dd>1盒</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                    <div class="item"> 
+                        <img class="good-img" src="https://imgqn8.fruitday.com/images/product_pic/9/1/1-270x270-9-426T698K.jpg" alt="">  
+                        <dl> 
+                            <dt>进口凤梨 1个</dt>  
+                            <dd>1个</dd> 
+                            <div>
+                                <span class="num pull-right">可售 5</span>
+                                <small>￥</small><big>59</big><small>.9</small>
+                            </div> 
+                        </dl>  
+                    </div>
+                </div>    
+            </div>-->
+        </div>
+
+       
+
+        <div class="scan-con">
+            <img src="img/icon-scan.png" alt="" />扫码开门
+        </div>
+
+        <div class="totop hide" id="toTop"><img src="img/icon-top.png"></div>
+        
+        
+    </section>
+
+    <!-- 魔盒为空页面 -->
+   <section class="container-empty hide">
+       <div class="main">
+           <img src="img/logo1.png" alt="" />
+           <p>在魔盒上消费过,<br/>里面的商品才会在这里出现哦</p>
+       </div>
+   </section>
+
+   <div class="cover-bg"></div>
+   <div class="address-prop" id="address-list">
+        <div class="title ">
+            <span class="pull-left cancel"><img src="img/icon-close.png" alt="" /></span>
+            魔盒列表
+        </div> 
+        <div class="scroll"> 
+            <ul>  
+                <!--<li class="item"> 
+                    <span class="active sel"><img src="img/icon5.png" alt="" /></span>
+                    <div class="infor"> 
+                        <span class="name">天天果园5楼魔盒</span> 
+                        <p>祖冲之路887弄71-72号5F</p> 
+                    </div>  
+                </li>  
+                <li class="item"> 
+                    <span class=" sel"><img src="img/icon5.png" alt="" /></span> 
+                    <div class="infor"> 
+                        <span class="name">祖冲之路887弄71-72号5F</span> 
+                        <p>上海市浦东新区张江镇祖冲之路887弄 张江高科四标园区71-72号5F</p> 
+                    </div>  
+                </li>
+                <li class="item"> 
+                    <span class=" sel"><img src="img/icon5.png" alt="" /></span> 
+                    <div class="infor"> 
+                        <span class="name">花木站魔盒</span> 
+                        <p>祖冲之路887弄71-72号5F</p> 
+                    </div>  
+                </li>
+                <li class="item"> 
+                    <span class=" sel"><img src="img/icon5.png" alt="" /></span> 
+                    <div class="infor"> 
+                        <span class="name">祖冲之路887弄71-72号5F</span> 
+                        <p>上海市浦东新区张江镇祖冲之路887弄 张江高科四标园区71-72号5F</p> 
+                    </div>  
+                </li><li class="item"> 
+                    <span class=" sel"><img src="img/icon5.png" alt="" /></span> 
+                    <div class="infor"> 
+                        <span class="name">花木站魔盒</span> 
+                        <p>祖冲之路887弄71-72号5F</p> 
+                    </div>  
+                </li>
+                <li class="item"> 
+                    <span class=" sel"><img src="img/icon5.png" alt="" /></span> 
+                    <div class="infor"> 
+                        <span class="name">祖冲之路887弄71-72号5F</span> 
+                        <p>上海市浦东新区张江镇祖冲之路887弄 张江高科四标园区71-72号5F</p> 
+                    </div>  
+                </li>-->
+            </ul> 
+        </div>
+
+    </div>
+    
+    <div class="dialog" id="rby-panel">
+	    <div class="dialog-content">
+	        <div class="panel-content">
+	            <div class="panel-cell">
+                    <img src="img/tip.png" />
+	                <h3 class="panel-title">xxx</h3>
+	                <div class="panel-text">xxx</div>
+	            </div>
+	        </div>
+	        <div class="panel-buttons">
+	            <div class="options">
+	                <a href="javascript:;" class="btn btn-default">取消</a>
+	                <a href="javascript:;" class="btn btn-primary">确定</a>
+	            </div>
+	            <div class="panel-tips">xxx</div>
+	        </div>
+	    </div>
+	</div>
+
+    
+	
+    <script src="./js/zepto.js"></script>
+    <script src="./js//fx.js"></script>
+    <script src="./js/zepto-slide-transition.min.js"></script>
+    <script src="./js/swiper.min.js"></script>
+    <script src="./js/fastclick.min.js"></script>
+    <script src="./js/scan.js"></script>
+    <script src="https://as.alipayobjects.com/g/component/antbridge/1.1.1/antbridge.min.js"></script>
+	<script src="./js/main.js"></script>
+    <script src="./js/fruitday_Alipay_index.js"></script>
+</body>
+</html>

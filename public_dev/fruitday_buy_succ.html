@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <meta name="apple-itunes-app" content="app-id=880977721" >
+        <title>天天果园-购买成功</title>
+        <link rel="stylesheet" href="./css/common-fruitday.css" />
+        <link rel="stylesheet" href="./css/scan.css" />
+        <style>
+            .buy-suc .container > dl > dd >em{
+                text-align: right;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+                width: 1%;
+                -webkit-box-flex: 1;
+            }
+            .buy-suc .container > dl > dd{
+                text-align: unset;
+                display: -webkit-box;
+            }
+
+            .buy-suc .container > dl > dd > span {
+                -webkit-box-flex: 1;
+                width: 1%;
+                display: block;
+            }
+            .foot-img{
+                margin-top: 20px;
+            }
+            /**果园loading  start*/
+            .loading .loading-content {
+                background:none;
+            }
+            .loading .loading-content .s-1 img {
+                width: 150px;
+            }
+            .loading .loading-content .s-2{
+                display: none;
+            }
+            /**果园load end*/
+        </style>
+    </head>
+    <body class="has-nav buy-suc">
+        <noscript>
+            <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+        </noscript>
+
+        <section class="container">
+            <dl id="buy-container">
+
+            </dl>
+            <div class="text-center" style="display: none">
+                <div class="tips">为保证可继续享受服务，请尽快充值</div>
+                <a href="fruitday_recharge.html" class="recharge-btn">立即充值</a>
+                <a href="orders.html?status=-1" style="margin-top: .15rem;background: #fff;border:1px solid #979797; color:#878787;" class="btn order-href">查看订单</a>
+            </div>
+            <div class="text-center order-btn-view" style="display: none">
+                <a href="orders.html?status=-1" style="background: #fff;border:1px solid #979797; color:#878787;" class="btn order-href">查看订单</a>
+            </div>
+
+            <img class="click_icon_img foot-img" click_type="" click_url="" src="" alt="" />
+        </section>
+        <!--自定义提示框开始-->
+        <div class="toast" id="rby-toast"><span>xxx</span></div>
+        <div class="loading" id="rby-loading">
+            <div class="loading-content">
+                <div class="s-1"><img src="img/loading.gif" /></div>
+                <div class="s-2">正在加载中</div>
+            </div>
+        </div>
+        <div class="loading" id="rby-loading1">
+            <div class="loading-content">
+                <div class="s-1"></div>
+                <div class="s-2">正在加载中</div>
+            </div>
+        </div>
+        <div class="dialog" id="rby-panel">
+            <div class="dialog-content">
+                <div class="panel-content">
+                    <div class="panel-cell">
+                        <img src="img/tip.png" />
+                        <h3 class="panel-title">xxx</h3>
+                        <div class="panel-text">xxx</div>
+                    </div>
+                </div>
+                <div class="panel-buttons">
+                    <div class="options">
+                        <a href="javascript:;" class="btn btn-default">取消</a>
+                        <a href="javascript:;" class="btn btn-primary">确定</a>
+                    </div>
+                    <div class="panel-tips">xxx</div>
+                </div>
+            </div>
+        </div>
+        <!--//自定义提示框结束-->
+        <script id="buy-content-tmpl" type="text/html">
+            <dt><img class="suc-icon" src="./img/icon1.png" alt="" /></dt>
+            <dd>
+                <em>本次消费</em>
+                <span>
+                    <em><!--[= $rbyFormatCurrency(money)]--></em> 元
+                </span>
+            </dd>
+
+            <!--[ if( discount && discount.length > 0){]-->
+                <!--[for(j = 0; j < discount.length; j++){]-->
+            <dd>
+                <em><!--[= discount[j].text]--> </em>
+                <span>
+                    <em><!--[= $rbyFormatCurrency(discount[j].discount_money)]--></em> 元
+                </span>
+            </dd>
+                <!--[}]-->
+            <!--[}]-->
+            <dd>
+                <em>当前余额 </em>
+                <span>
+                    <em><!--[= $rbyFormatCurrency(fruitday_money)]--></em> 元
+                </span>
+            </dd>
+            <p style="text-align: center;color:#bfbfbf;font-size: .12rem;">您可去"我的果园"->"智能魔盒"->"我的订单" 查看明细</p>
+        </script>
+        <nav>
+            <a href="fruitday_amount.html" class="back"><i class="iconfont icon-searchhomedel"></i></a>
+            <div class="text">购买成功</div>
+            <a href="javascript:;" class="next"></a>
+        </nav>
+
+        <script src="./js/main.js"></script>
+        <script src="./js/fruitday_buy_succ.js"></script>
+    </body>
+</html>

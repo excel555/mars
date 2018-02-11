@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-itunes-app" content="app-id=880977721" >
+    <title>天天果园-充值中心</title>
+    <link rel="stylesheet" href="./css/common-fruitday.css" />
+    <link rel="stylesheet" href="./css/scan.css" />
+</head>
+<body class="has-nav recharge">
+<noscript>
+    <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+</noscript>
+
+<section class="container" id="recharge-content">
+
+</section>
+
+<nav>
+    <a href="javascript:history.go(-1)" class="back"><i class="iconfont icon-morehome"></i></a>
+    <div class="text">充值中心</div>
+    <a href="javascript:;" class="next"></a>
+</nav>
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast"><span>xxx</span></div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1"><img src="img/loading3.gif" /></div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <img src="img/tip.png" />
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+
+<!--content 模版开始-->
+<script id="recharge-content-tmpl" type="text/html">
+    <dl>
+        <dt><!--[= $rbyFormatCurrency(fruitday_money)]--></dt>
+        <dd>
+            <div class="text-center">当前余额<img src="./img/icon4.png" alt="" /></div>
+            <p>City Box开门需要果园余额大于10元</p>
+        </dd>
+    </dl>
+    <div class="layout">
+        <ul class="recharge-item">
+            <li class="cur" money="30"><span>30元</span></li>
+            <li money="50"><span>50元</span></li>
+            <li money="100"><span>100元</span></li>
+            <li money="200"><span>200元</span></li>
+            <li money="500"><span>500元</span></li>
+            <li money="0"><span><input class="amount" type="tel" placeholder="其他金额" /></span></li>
+        </ul>
+        <ul class="pay-way">
+            <li class="cur" pay_type="7"><em></em><span class="wx-img"></span>微信支付</li>
+            <li pay_type="1" id="alipay_btn" style="display: none"><em></em><span class="zfb-img"></span>支付宝支付</li>
+        </ul>
+        <div class="text-center"><a href="###" class="btn recharge-btn "  data-money="30" data-pay="7">去支付</a></div>
+        </ul>
+    </div>
+</script>
+<!--// content模版结束-->
+<script src="./js/main.js"></script>
+<script src="./js/fruitday_recharge.js"></script>
+</body>
+</html>

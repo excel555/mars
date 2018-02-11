@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <title>绑定手机号</title>
+    <!--build:style bundle-->
+    <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/shop.css" />
+    <!--/build-->
+</head>
+
+<body class="has-footer">
+<noscript>
+    <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+</noscript>
+<section class="container bind">
+    <form id="bind-form" novalidate>
+        <div class="items">
+            <div class="val">
+                <input type="tel" name="phone" id="phone" maxlength="11" required pattern="^1[34578]\d{9}$" autofocus="autofocus" placeholder="手机号" value="" />
+            </div>
+        </div>
+        <div class="items-code">
+            <div class="items">
+                <div class="val">
+                    <input type="tel" id="code" name="code" maxlength="6" placeholder="验证码" value="" />
+                </div>
+            </div>
+            <div class="options">
+                <button type="button" class="btn btn-send ready">获取验证码</button>
+            </div>
+        </div>
+        <div class="options">
+            <button type="submit" class="btn">完成</button>
+        </div>
+    </form>
+</section>
+
+<div class="footer-height"></div>
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast">
+    <img src="img/tip.png" width="60"/>
+    <span>xxx</span>
+</div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1"><img src="img/loading3.gif" /></div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <img src="img/tip.png" />
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+
+<script src='./js/zepto.min.js'></script>
+<script src='./js/md5.js'></script>
+<script src='js/config.js'></script>
+<script src='./js/global.js'></script>
+<script src='./js/common.js'></script>
+<script src="./js/register.js"></script>
+</body>
+
+</html>

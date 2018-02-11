@@ -1,0 +1,168 @@
+@charset "UTF-8";
+
+.login>.tips{
+	position:fixed;
+	top:0;
+	left:.15rem;
+	right:.15rem;
+	height:.2rem;
+	background:#e95417;
+	font-size:.1rem;
+	color:#fff;
+	line-height:.2rem;
+}
+
+.login>.tips .iconfont{
+	float:left;
+	padding:0 .08rem;
+	font-size:.07rem;
+}
+
+.login>form {
+    top: .2rem;
+    right: .15rem;
+    bottom: auto;
+    left: .15rem;
+    position: absolute;   
+}
+
+.login>form>.form-group {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-box;
+    display: -o-box;
+    display: box;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-box-align: center;
+    -o-box-align: center;
+    box-align: center;
+    width: 100%;
+    height: .25rem;
+    padding: .08rem 0;
+    margin: .1rem 0;
+    border-bottom: .01rem solid #d8d8d8;
+    margin-top:.15rem;
+}
+
+.login>form>.form-group>.iconfont {
+    display: inline-block;
+    color: #878787;
+    font-size: .22rem;
+    margin-right: .1rem;
+    line-height: .25rem
+}
+
+.login>form>.form-group>.form-control {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -ms-box-flex: 1;
+    -o-box-flex: 1;
+    box-flex: 1;
+    position: relative;
+    height: .25rem
+}
+
+.login>form>.form-group>.form-control>.form-input {
+    width: 100%;
+    font-size: .14rem;
+    line-height: .25rem;
+    color: #878787;
+    height: .25rem;
+    padding: 0;
+    background: 0 0;
+    border: none
+}
+
+.login>form>.form-group>.form-control>.form-input::-webkit-input-placeholder {
+    color: #bfbfbf
+}
+
+.login>form>.form-group>.form-control>.form-input:focus {
+    outline: 0
+}
+
+.login>form>.form-group>.form-control>.remove {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    position: absolute;
+    display: inline-block;
+    width: .25rem;
+    height: .25rem;
+    line-height: .25rem;
+    text-align: center
+}
+
+.login>form>.form-group>.form-control>.remove>.iconfont {
+    display: inline-block;
+    width: .16rem;
+    height: .16rem;
+    line-height: .16rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 100%;
+    font-size: .1rem;
+    background: #bfbfbf
+}
+
+.login>form>.form-group>.identcode {
+    display: inline-block;
+    width: .8rem;
+    height: .25rem;
+    margin-left: .1rem;
+    border-radius: .04rem;
+    background: #e95417;
+    line-height: .25rem;
+    font-size: .12rem;
+    color: #fff;
+    text-align: center
+}
+
+.login>form>.form-group>.identcode.dis {
+    background: #bfbfbf
+}
+ 
+.login>form>.btn-login {
+    display: block;
+    width: 100%;
+    height: .4rem;
+    margin: .3rem 0 .15rem;
+    border-radius: .04rem;
+    background: #e95417;
+    line-height: .4rem;
+    font-size: .16rem;
+    color: #fff;
+    text-align: center;
+}
+
+.login>form>.btn-login.dis {
+    background: #bfbfbf
+}
+
+
+.login .toast{
+	display: -webkit-box;
+	-webkit-box-align: center;
+	position:fixed;
+	top:50%;
+	left:50%;
+	margin-left:-.9rem;
+	margin-top:-.3rem;
+	width:1.8rem;
+	height:.6rem;
+	border-radius:.1rem;
+	background:rgba(34,34,34,.75);
+	font-size:.14rem;
+	color:#fff; 
+	z-index: 10;
+
+}
+
+.login .toast>p{
+	-webkit-box-flex: 1;
+	text-align:center;
+}
+
+

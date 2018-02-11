@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="stylesheet" href="./css/common-fruitday.css" />
+    <link rel="stylesheet" href="./css/swiper.min.css" />
+    <link rel="stylesheet" href="./css/scan.css" />
+    <title>魔盒CITYBOX</title>
+    <style>
+
+        .popup-window{position:fixed; left: 0; top: 0; bottom: 0; width: 100%; height: 100%;overflow:hidden; background: rgba(0,0,0,0.7); -webkit-background: rgba(0,0,0,0.7); z-index: 1000;}
+        .popWin-hide, .webpage-skipping-link{ position: absolute; left: 0; top: 0; width: 100%; height: 100%;z-index: 1001;}
+        .popWin-col{position:fixed; left: 50%; top: 50%; -webkit-transform:translate(-50%,-50%); transform:translate(-50%,-50%); width: calc(81300%/1125); max-width: 990px; z-index: 1005; }
+        .popWin-close{ line-height: 0; font-size: 0; position: absolute; width:calc(4500%/600); right: 42.5%; bottom:calc(100% + 3vh);top: calc(100% + 2vh);}
+        .popWin-close:before{ content: ""; position: absolute;  width: 1px; height:3vh; top: -3vh;left: 50%; -webkit-transform:translate(-50%,0); transform:translate(-50%,0); }
+        #popup-window .popWin-col, #popup-window .webpage-skipping-link{z-index: 1015;}
+
+
+        .hide{display: none;}
+        .hideShow{ visibility: hidden;}
+
+        .animated {
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+        .bounceInDown {animation-name: bounceInDown}
+        @keyframes bounceInDown {
+            from, 60%, 75%, 90%, to {animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);}
+            0% {opacity: 0; transform: translate3d(0, -3000px, 0); }
+            60% {opacity: 1; transform: translate3d(0, 25px, 0);}
+            75% {transform: translate3d(0, -10px, 0);}
+            90% {transform: translate3d(0, 5px, 0);}
+            to {transform: none;}
+        }
+
+        .fadeOutDownBig {animation-name: fadeOutDownBig;}
+        @keyframes fadeOutDownBig {
+            from {opacity: 1;}
+            to {opacity: 0;transform: translate3d(0, 2000px, 0);}
+        }
+        .popWin-close{ width:calc(7500%/600);}
+
+        .alipay-open .info{
+            background-color: #4d4d4d;
+            padding:0;
+            margin:0;
+        }
+
+        .alipay-open .info>h4{
+            color: #F0D292;
+            font-size: .25rem;
+            padding:.25rem 0 .2rem;
+            margin:0;
+        }
+
+        .mini-user-center{
+            margin:0 .1rem;
+            padding:.25rem .15rem .2rem;
+            border-radius: .06rem .06rem 0 0;
+            background:url(./img/card-bg.png) no-repeat 0 0 / 100% auto,
+                        url(./img/card-bg-line.png) repeat-y 0 1rem / 100% auto;
+        }
+        .basicInfo{
+            display: -webkit-box;
+            height: .3rem;
+            overflow: hidden;
+            margin-bottom: .05rem;
+        }
+        .basicInfo>dt{
+            width: .3rem;
+            height: .3rem;
+            margin-right: .05rem;
+        }
+        .basicInfo>dd{
+            font-weight: 700;
+            font-size: .15rem;
+            color: #2e2e2e;
+            line-height: .3rem;
+        }
+        .level{
+           display: -webkit-box;
+           height: .2rem;
+           line-height: .2rem; 
+           color:#3a3a3a;
+           font-size: .12rem;
+        }
+        .progress{
+            margin:.07rem 0 .07rem 0.05rem;
+            height: .06rem;
+            width: 1rem;
+            background: #fff;
+            border-radius: .06rem;
+            overflow: hidden;
+        }
+        .progress-bar{
+            background: #E95417;
+            height: 100%;
+            border-radius: .06rem;
+            animation: progress-ani 1.5s;
+        }
+        @keyframes progress-ani{
+            from {width: 0}
+            to {width: var(--width)}
+        }
+
+        .modou{
+           float: right;
+           position: relative; 
+           height: .2rem;
+           line-height: .2rem; 
+           color:#3a3a3a;
+           font-size: .12rem;
+        }
+        .yue{
+            float: right;
+            position: relative;
+            height: .2rem;
+            line-height: .2rem;
+            color:#3a3a3a;
+            font-size: .12rem;
+            margin-right: 20px;
+        }
+        dt span{
+            color: #E95417;
+        }
+        .modou dd{
+            position: absolute;
+            top:-.35rem;
+            right: 0;
+            width: .76rem;
+            height: .25rem;
+            padding-bottom: .05rem;
+            background: url(./img/POP@2x.png) no-repeat 0 0 / 100% auto;
+            text-align: center;
+            font-size: .12rem;
+            color:#ffffff;
+            line-height: .25rem;
+            overflow: hidden;
+        }
+        .special{
+            margin-top: .15rem;
+            padding-top:.15rem;
+            /*border-top: .01rem solid #e9e9e9;     */
+        }
+
+        .special>dl{
+            display: -webkit-box;
+            height: .35rem;
+            padding:.1rem .2rem;
+            border-radius: .6rem;
+            background: #fff;
+        }
+        .special>dl>dt{
+            height: 100%;
+            margin-right: .15rem;
+        }
+        .special>dl>dt>img{
+            height: 100%;
+            width: auto;
+        }
+        .special>dl>dd{
+            display: -webkit-box;
+            -webkit-box-pack:center;
+            -webkit-box-flex:1;
+            -webkit-box-orient:vertical;
+            height: 100%;
+        }
+        .special>dl>dd>p{
+            color:#615434;
+            font-size: .12rem;
+            line-height: .18rem;
+            margin:0;
+        }
+        .special>dl>dd>p>span{
+            color:#E95417;
+            font-size: .14rem;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+
+<body class="alipay-open">
+<noscript><div id="noscript">当前的浏览器不支持JavaScript脚本</div></noscript>
+
+<div class="header-height"></div>
+<section class="container" id="index-content">
+</section>
+
+<!--START 弹窗 -->
+<div id="popup-window" class="popup-window animated bounceInDown hide">
+    <div class="popWin-col">
+        <img class="banner_img" style="border-radius: 5px;" src="https://activecdn.fruitday.com/popup_598d97a746b45.png">
+        <a class="popWin-close" href="javascript:void(0);">
+            <img src="./img/close_btn.png">
+        </a>
+        <a class="webpage-skipping-link" href="javascript:void(0);"></a>
+    </div>
+    <div class="popWin-hide"></div>
+</div>
+
+
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast"><span>xxx</span></div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1"></div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="loading" id="rby-loading1">
+    <div class="loading-content">
+        <div class="s-1"></div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+<script id="index-content-tmpl" type="text/html"> 
+    <div class="info">
+
+        <h4 id="open_door_text">您已开门成功!</h4>
+        <p id="open_door_p" style="margin: -20px 0px 20px 0px;color: #878787;"><!--[if(is_new == 1 ){]-->请取走您需要购买的商品，关门后将自动扣款<!--[}]--></p>
+        <div class="mini-user-center">
+            <dl class="basicInfo">
+                <dt><img src="./img/card-default-pic.png"></dt>
+                <dd><!--[= user_name]-->，<!--[= return_hello]--></dd>
+            </dl>
+            <dl class="modou">
+                <dt>魔豆：<span><!--[= modou]--></span></dt>
+                <!--[if(discount_return ){]-->
+                <dd><!--[= discount_return]--></dd>
+                <!--[}]-->
+            </dl>
+            <dl class="yue">
+                <dt>余额：<span><!--[= yue]--></span></dt>
+
+            </dl>
+            <dl class="level">
+                <dt>M<!--[= user_rank]-->等级:</dt>
+                <dd>
+                    <div class="progress">
+                      <div class="progress-bar" style="width:<!--[= moli/zong]-->%; --width:<!--[= moli/zong]-->%;"></div>
+                    </div> 
+                </dd>
+            </dl>
+            <div class="special">
+                <dl>
+                    <dt><img src="./img/card-special-ico.png" alt=""></dt>
+                    <dd>
+                        <!--[if(member_tile ){]-->
+                        <p>
+                            <!--[== member_tile]-->
+                        </p>
+                        <!--<p>sdfsf<span>9.5折</span></p>-->
+                        <!--[}]-->
+                        <p>每周五消费可得<span>双倍魔豆</span>特权</p>
+                    </dd>
+                </dl>
+            </div>
+    
+        </div>
+
+            <h5 id="level_text" style="display: none"><span >您的会员等级: <em id="level_num"></em></span></h5>
+            <p class="huiyuanri" style="display: none">周三会员日 多种福利享不停</p>
+
+    </div>
+
+
+    <!--[if(banner.length > 0 || active_icon.length > 0 ){]-->
+    <div class="layout">
+        <!--[if(banner.length > 0){]-->
+        <div class="title"><img class="pull-left" src="img/icon6.png" alt="" />最新活动</div>
+        <div class="swiper-container swiper-banner">
+            <div class="swiper-wrapper">
+                <!--[for(i = 0; i < banner.length; i++){]-->
+                <div class="swiper-slide"><img src="<!--[= banner[i].img_url]-->" /></div>
+                <!--[}]-->
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+        <!--[}]-->
+        <!--[if(active_icon.length > 0 ){]-->
+        <div class="active">
+            <!--[for(i = 0; i < active_icon.length; i++){]-->
+            <div class="item">
+                <img class="active-img" src="<!--[= active_icon[i].img_url]-->" alt="">
+                <dl class="">
+                    <dt><!--[=active_icon[i].remarks ]--></dt>
+                    <dd style="margin-top: 0.1rem;"><!--[=active_icon[i].start_time ]--> -  <!--[=active_icon[i].end_time ]--></dd>
+                </dl>
+            </div>
+        <!--[}]-->
+        </div>
+        <!--[}]-->
+    </div>
+    <!--[}]-->
+
+    <!--[if(coupon.length > 0 ){]-->
+    <div class="layout">
+        <div class="title"><img class="pull-left" src="img/icon7.png" alt="" />优惠券</div>
+        <!--[for(i = 0; i < coupon.length; i++){]-->
+        <div class="coupon-item">
+            <div class="coupon-bg-r">
+                <div class="coupon-con">
+                    <div class="coupon-price"><small>¥</small><!--[= $rbyFormatCurrency(coupon[i].card_money)]--></div>
+                    <dl>
+                        <dt><!--[=coupon[i].card_name ]--></dt>
+                        <dd>有效期:<!--[=coupon[i].begin_date ]-->-<!--[=coupon[i].to_date ]--></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <!--[}]-->
+    </div>
+    <!--[}]-->
+    <div class="logo">
+        <img src="img/logo.png" alt="" />
+    </div>
+</script>
+
+<script src="./js/main.js"></script>
+
+<!--<script src="js/lib/jquery-3.0.0.min.js"></script>-->
+<script src="js/swiper.min.js"></script>
+<script src="./js/index.js"></script>
+</body>
+</html>

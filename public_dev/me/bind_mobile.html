@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="stylesheet" href="../css/common-fruitday.css" />
+    <link rel="stylesheet" href="../css/me.css" />
+    <title>魔盒CITYBOX</title>
+     
+</head>
+
+<body class="login">
+<noscript><div id="noscript">当前的浏览器不支持JavaScript脚本</div></noscript>
+    <div class="tips"><i class="iconfont">&#xe638;</i>此号码已绑定，请重新输入！</div>
+
+    <form>
+        <div class="form-group">
+            <i class="iconfont">&#xe6d5;</i>
+            <div class="form-control">
+                <input type="tel" class="form-input mobile mobile-code" maxlength="11" placeholder="请输入手机号码" />
+                <span class="remove "><i class="iconfont">&#xe638;</i></span>
+            </div>
+
+            <span class="identcode dis" >获取验证码</span>
+        </div>
+        <div class="form-group">
+            <i class="iconfont">&#xe606;</i>
+            <div class="form-control">
+                <input type="tel" class="form-input code" maxlength="6" placeholder="请输入6位验证码" />
+                <span class="remove"><i class="iconfont">&#xe638;</i></span>
+            </div>
+
+        </div>
+        <a href="javascript:;" class="btn-login">确定</a>
+    </form>
+
+    <div class="toast">
+        <p>验证码有误！<br/>请重新输入验证码</p>
+    </div>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

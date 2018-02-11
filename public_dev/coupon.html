@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <title>领取优惠券-魔盒</title>
+    <!--build:style bundle-->
+    <link rel="stylesheet" href="./css/common.css" />
+    <!--/build-->
+    <style>
+        .rule p{
+            line-height: 202%;
+            padding: 0px 10px 0px 10px;
+        }
+        .span_title:before{
+            position: absolute;
+            left: 0;
+            right: 0%;
+            top:20px;
+            content: ' ';
+            display: block;
+            border-bottom: 2px solid rgb(253,146,104);
+        }
+        .dialog .options .btn {
+            color: #ff8000;
+        }
+
+        .btn, .buy-suc .container .recharge-btn, .balance .container .layout .recharge-btn, .pay-suc .container .recharge-btn, .recharge .container .layout .recharge-btn {
+            display: inline-block;
+            width: 90%;
+            height: .4rem;
+            background: #ff8000;
+            border-radius: .04rem;
+            font-size: 0.16rem;
+            line-height: .4rem;
+            color: #ffffff;
+            text-align: center; }
+        .btn.dis_btn, .buy-suc .container .dis_btn.recharge-btn, .balance .container .layout .dis_btn.recharge-btn, .pay-suc .container .dis_btn.recharge-btn, .recharge .container .layout .dis_btn.recharge-btn {
+            background: #bfbfbf; }
+
+        .alipay-open .active .item > dl > dd, .alipay-index .activity .item > dl > dd{
+            height: .2rem;
+            font-size:.11rem;
+            line-height:.2rem;
+            color:#878787;
+            margin-top:.1rem;
+        }
+
+        .alipay-open .coupon-tips{
+            padding-top:.1rem;
+            text-align:center;
+            color:#e95417
+        }
+
+        .alipay-open .coupon-item {
+            /*margin: .1rem 0 .05rem;*/
+            height: .98rem;
+            padding-left: .21rem;
+            background: url(./img/coupon-bg-l.png) no-repeat;
+            background-size:.21rem .98rem
+        }
+
+        .alipay-open .coupon-bg-r{
+            height:100%;
+            padding-right: .21rem;
+            background: url(./img/coupon-bg-r.png) no-repeat right 0;
+            background-size:.21rem .98rem
+        }
+
+        .alipay-open .coupon-con{
+            display: -webkit-flex;
+            display: flex;
+            padding:.24rem 0;
+            height: calc( 100% - .48rem);
+            background: url(./img/coupon-bg.png) repeat-x 0 0;
+            background-size:auto .98rem
+        }
+
+        .alipay-open .coupon-con .coupon-price {
+            min-width:.75rem;
+            height: .5rem;
+            padding-right:.08rem;
+            margin-right:.08rem;
+            border-right:.01rem solid #eee;
+            line-height: .5rem;
+            font-size: .48rem;
+            font-weight:700;
+            text-align: center;
+            color: #e95417;
+        }
+
+        .alipay-open .coupon-con .coupon-price > small{
+            font-size:.18rem;
+            font-weight:400;
+        }
+
+        .alipay-open .coupon-con dl {
+            flex: 1;
+            height: .5rem;
+            font-size: .14rem;
+            margin-right:.05rem;
+        }
+
+        .alipay-open .coupon-con dt {
+            height:.35rem;
+            color: #3A3A3A;
+            line-height:.18rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom:.05rem;
+        }
+
+        .alipay-open .coupon-con dd {
+            color: #878787;
+            font-size:.11rem;
+        }
+
+        .alipay-open .coupon-con .receive{
+            width:.3rem;
+            padding:.05rem .05rem .05rem .1rem;
+            margin-left:.1rem;
+            border-left:.01rem solid #eee;
+            line-height:.2rem;
+            font-size:.15rem;
+            color:#e95417;
+        }
+
+        .alipay-open .checked .coupon-con .coupon-price{
+            color:#878787;
+        }
+
+        .alipay-open .checked .coupon-con .receive{
+            color:#bfbfbf;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<noscript>
+    <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+</noscript>
+<section class="container" id="rby-detail" style="padding-bottom:0px">
+    <div class="">
+        <img id="banner_img" src="" style="width: 100%;display:block">
+    </div>
+    <div class="content alipay-open" style="background: #8a00ff 100%">
+        <!-- 优惠券start -->
+        <div class="layout" style="background: none;width: 90%;margin: 0 auto;" >
+            <div class="coupon-item">
+                <div class="coupon-bg-r">
+                    <div class="coupon-con">
+                        <div class="coupon-price" id='money'></div>
+                        <dl>
+                            <dt id="coupon_remarks"></dt>
+                            <dd id="coupon_date"></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--- 优惠券end -->
+        <div class="text-center" id="share_btn">
+            <a href="###" class="btn share-btn "  style="width: 90%;display: block;margin: 10px auto;background: #FFFCCC;color: #E95417;">分享给好友</a>
+        </div>
+        <div class="text-center" >
+            <a href="open.html" id="used_btn" class="btn recharge-btn "  style="width: 90%;display: block;margin: 10px auto;background: none;border: 1px solid #fff">立即使用</a>
+        </div>
+        <div style="width: 90%;margin: 0 auto;color:#fff;background: rgba(255,255,255,.3);float: left;margin-left: 5%;border-radius: 4px;padding-bottom: 20px;">
+            <div class="span_title" style="float: left;width: 18%;margin-left:5%;position: relative;font-size: .16rem;text-align: center;line-height: 40px">
+            <span>&nbsp;</span>
+            </div>
+
+            <div class="span_title" style="float: right;width: 18%;margin-right:5%;position: relative;font-size: .16rem;text-align: center;line-height: 40px">
+                <span>&nbsp;</span>
+            </div>
+            <span style="line-height: 40px;font-size: 0.16rem;display: block;text-align: center;">看看小伙伴手气如何</span>
+            <ul id="user-content">
+
+            </ul>
+        </div>
+        <div style="clear: both"></div>
+        <div class="rule" style="padding-bottom:50px;margin-top: 30px">
+            <div class="layout" style="padding-bottom: 20px;color:#fff;width: 90%;margin: 0 auto;background: rgba(255,255,255,.3);border-radius: 4px;font-size: .12rem;" id="user-rule">
+
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+<script id="user-content-tmpl" type="text/html">
+    <!--[for(j = 0; j < card_users.length; j++){]-->
+    <li style="display: block;float: left;width: 90%;margin-left: 5%;border-bottom: 2px solid rgb(253,146,104);    padding: 10px 0px 10px 0px;">
+        <div style="width: 20%">
+            <img src="<!--[= $absImg(card_users[j].avatar)]-->" width="36" height="36" style="border-radius: 18px;display: block;float: left;">
+        </div>
+        <div style="float: left;width: 80%;margin-left: 3%;">
+            <span style="text-align: right;float: right;font-size: 0.16rem;line-height: 42px"><!--[= $rbyFormatCurrency(card_users[j].card_money)]-->元</span>
+            <p style=""><!--[= card_users[j].user_name]--> <em style="font-size: .1rem;"><!--[= $rbyFormatCurrency(card_users[j].send_time)]--></em></p>
+            <p>换个姿势领，金额会更高</p>
+        </div>
+    </li>
+    <!--[}]-->
+</script>
+
+<script id="user-rule-tmpl" type="text/html">
+    <div class="span_title" style="float: left;width: 28%;margin-left:5%;position: relative;font-size: .16rem;text-align: center;line-height: 40px">
+        <span>&nbsp;</span>
+    </div>
+
+    <div class="span_title" style="float: right;width: 28%;margin-right:5%;position: relative;font-size: .16rem;text-align: center;line-height: 40px">
+        <span>&nbsp;</span>
+    </div>
+    <span style="line-height: 40px;font-size: 0.16rem;display: block;text-align: center;">活动规则</span>
+    </div>
+    <!--[for(j = 0; j < rule_text.length; j++){]-->
+        <p><!--[= rule_text[j]]--></p>
+    <!--[}]-->
+</script>
+
+<!-- 分享操作开始 -->
+<div class="cover-bg share-bg" style="display: none;background: rgba(0, 0, 0, 0.7)">
+    <div class="dialog-bg">
+        <img src="./img/arrow@2x.png" style="right: 20px;position: absolute;" width="86px" height="69px" />
+    </div>
+    <div class="dialog-con">
+        <img src="./img/picture@2x.png"  width="124"  alt="" style="display: block;margin: 60px auto;">
+    </div>
+</div>
+<!-- //分享操作结束 -->
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast">
+    <img src="img/tip.png" width="60"/>
+    <span>xxx</span>
+</div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1">
+            <img src="img/loading3.gif" />
+        </div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <img src="img/tip.png" />
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+<script src="https://as.alipayobjects.com/g/component/antbridge/1.1.1/antbridge.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="./js/main.js"></script>
+<script src="./js/fruitday_login.js"></script>
+<script src="./js/coupon.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <title>我的订单</title>
+    <!-- build:css ../content/css/rby.min.css -->
+    <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/shop.css" />
+    <!-- endbuild -->
+    <style>
+        .has-app section div[class="order-status"] {
+            padding-top: .25rem;
+        }
+    </style>
+</head>
+
+<body class="has-footer">
+    <noscript>
+        <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+    </noscript>
+    <section class="order" id="rby-detail"></section>
+
+    <!--自定义提示框开始-->
+    <div class="toast" id="rby-toast">
+        <img src="img/tip.png" width="60"/>
+        <span>xxx</span>
+    </div>
+    <div class="loading" id="rby-loading">
+        <div class="loading-content">
+            <div class="s-1"><img src="img/loading3.gif" /></div>
+            <div class="s-2">正在加载中</div>
+        </div>
+    </div>
+    <div class="dialog" id="rby-panel">
+        <div class="dialog-content">
+            <div class="panel-content">
+                <div class="panel-cell">
+                    <img src="img/tip.png" />
+                    <h3 class="panel-title">xxx</h3>
+                    <div class="panel-text">xxx</div>
+                </div>
+            </div>
+            <div class="panel-buttons">
+                <div class="options">
+                    <a href="javascript:;" class="btn btn-default">取消</a>
+                    <a href="javascript:;" class="btn btn-primary">确定</a>
+                </div>
+                <div class="panel-tips">xxx</div>
+            </div>
+        </div>
+    </div>
+    <!--//自定义提示框结束-->
+    <!-- 退款填写 -->
+        <section class="account" id="login-form" novalidate style="left: 0;right: 0;margin:auto;">
+            <span class="iconfont">&#xe638;</span>
+            <h3>
+                <p>退款填写</p>
+            </h3>
+
+            <dl>
+                <dt class="iconfont password">退款类型</dt>
+                <dd>
+                    <select  id="reason" style="width: 100%; background: none;border: none;height: .43rem;line-height: .43rem;">
+                        <option value="1">订单结算错误</option>
+                        <option value="2">商品质量问题</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="iconfont password">退款理由</dt>
+                <dd><input type="text" id="reason_detail"  required autofocus placeholder="请输入退款理由" value="" /></dd>
+            </dl>
+            <dl>
+                <dt class="iconfont password">退款金额</dt>
+                <dd><input type="text" id="money" placeholder="请输入退款金额"></dd>
+            </dl>
+            <div>
+                <button class="btn login" id="refund_btn_send">申请退款</button>
+            </div>
+        </section>
+
+    <!-- 退款填写 -->
+
+    <!--模版开始-->
+    <script id="rby-detail-tmpl" type="text/html">
+    <div class="order-status">
+
+        <div class="iconfont yiwancheng<!--[= $addClassByCondition(1==1,' active')]-->">&#xe62b;</div>
+    </div>
+    <div class="order-payment">
+        <div class="name">支付方式</div>
+        <div class="value">
+            <!--[ if(refer == 'alipay'){]-->
+                支付宝
+            <!--[}else if(refer == 'fruitday'){]-->
+                天天果园
+            <!--[}else if(refer == 'wechat'){]-->
+                微信
+            <!--[}else if(refer == 'gat'){]-->
+                关爱通
+            <!--[}else{]-->
+                其他
+            <!--[}]-->
+
+        </div>
+    </div>
+    <div class="order-no">
+        <div class="name">订单编号</div>
+        <div class="value"><!--[= order_name]--></div>
+    </div>
+    <div class="goods-list">
+        <!--[for(j = 0; j < goods.length; j++){]-->
+        <div class="goods-item">
+            <div class="thumb"><img src="<!--[= $absImg(goods[j].thumbnailPic)]-->"></div>
+            <div class="content">
+                <h3><!--[= goods[j].name]--></h3>
+                <div class="buy">
+                    <div class="price">¥<!--[= $rbyFormatCurrency(goods[j].price)]--></div>
+                    <div class="quantity">购买数量：<!--[= goods[j].quantity]--></div>
+                </div>
+            </div>
+        </div>
+        <!--[}]-->
+    </div>
+
+    <div class="order-button">
+        <div class="order-no order-button-content">订单状态：<!--[= $getOrderStatus(order_status)]--></div>
+        <!--[ if(order_status == '1' && (money > 0 || yue > 0) ){]-->
+        <div class="options "><button class="btn btn-refund">申请退款</button></div>
+        <!--[ }else if(order_status == '0' || order_status == '2'){]-->
+        <div class="options "><button class="btn btn-pay">马上支付</button></div>
+        <!--[}]-->
+    </div>
+
+    <div class="grouprule order-info">
+        <dl><dt>下单时间：</dt><dd><!--[= order_time ]--></dd></dl>
+        <dl><dt>商品总额：</dt><dd>￥<!--[= $rbyFormatCurrency(good_money)]--></dd></dl>
+        <!--[ if(discounted_money > 0 || card_money > 0){]-->
+            <!--[for(k = 0; k < discount.length; k++){]-->
+        <dl><dt><!--[= discount[k].text]-->：</dt><dd>-￥<!--[= $rbyFormatCurrency(discount[k].discount_money)]--></dd></dl>
+            <!--[}]-->
+        <!--[}]-->
+        <!--[ if(modou > 0){]-->
+        <dl><dt>魔豆优惠：</dt><dd>-￥<!--[= (modou)]--></dd></dl>
+        <!--[}]-->
+        <!--[ if(level_money > 0){]-->
+        <dl><dt>会员日专享优惠：</dt><dd>-￥<!--[= $rbyFormatCurrency(level_money)]--></dd></dl>
+        <!--[}]-->
+        <!--[ if(yue > 0){]-->
+        <dl><dt>余额支付：</dt><dd>-￥<!--[= $rbyFormatCurrency(yue)]--></dd></dl>
+        <!--[}]-->
+        <dl><dt>在线支付：</dt><dd style="font-size: .17rem">￥<!--[= $rbyFormatCurrency(money)]--></dd></dl>
+        <!--[ if(refund_money > 0){]-->
+        <dl><dt>退款金额：</dt><dd>￥<!--[= $rbyFormatCurrency(refund_money)]--></dd></dl>
+        <!--[}]-->
+        <!--[ if(order_status == '5'){]-->
+        <dl><dt>驳回理由：</dt><dd><!--[= refund_reply]--></dd></dl>
+        <!--[}]-->
+    </div>
+
+    </script>
+    <!--//模版结束-->
+
+    <script src="./js/main.js"></script>
+    <script src="./js/order.js"></script>
+</body>
+
+</html>

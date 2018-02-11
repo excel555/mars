@@ -1,0 +1,161 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * 不同环境的统一配置文件
+ * Created by PhpStorm.
+ * User: xingyulin
+ * Date: 5/17/17
+ * Time: 10:43
+ */
+
+// -------------config.php---------------
+$env_config['base_url'] = 'http://www.api.com';
+/**
+|   0 = Disables logging, Error logging TURNED OFF
+|	1 = Error Messages (including PHP errors)
+|	2 = Debug Messages
+|	3 = Informational Messages
+|	4 = All Messages
+ */
+$env_config['log_threshold'] = 2;
+$env_config['sess_driver'] = 'memcached';
+$env_config['sess_save_path'] = "127.0.0.1:11211";
+
+// -------------database.php---------------
+$env_config_db['hostname'] = '127.0.0.1';//'127.0.0.1';//'127.0.0.1';
+$env_config_db['username'] = 'root';
+$env_config_db['password'] = '123456';//'123456';//'123456';
+$env_config_db['database'] = 'citybox';
+
+$env_config_slave_db['hostname'] = '127.0.0.1';//'127.0.0.1';//'127.0.0.1';
+$env_config_slave_db['username'] = 'root';
+$env_config_slave_db['password'] = '123456';//'123456';//'123456';
+$env_config_slave_db['database'] = 'citybox';
+
+// -------------device.php---------------
+$env_config['app_key'] = "citybox";
+$env_config['secret'] = '571713b4e09075562332194581f2776b';
+$env_config['host_device'] = 'https://api.citybox.mayihezi.com';
+
+// -------------alipay-bak.php---------------
+$env_config['alipay_app_id'] = "2017032806445211";
+$env_config['alipay_public_key'] = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
+
+// -------------mapi.php---------------
+$env_config['partner'] = "2088221926206318";
+$env_config['seller_id'] = ""; //2088622714324366  2088521512869410
+$env_config['safe_key'] = 'gjee8somrxcwiw6rrmjk2nmzlb8t0c0c';//安全码lbzctaybj4hxtp56g9gruikldrmbujwa
+$env_config['mapi_box_host'] = 'http://stagingcityboxapi.fruitday.com';
+//模板消息id
+$env_config['pay_succ_tpl_id'] = '42941dc4430f4e338411eb22cb6d8164';
+$env_config['pay_fail_tpl_id'] = 'd852802636f34f358fe88141f6b3d369';
+$env_config['refund_tpl_id'] = '50834b0ac1304609a2063511ac745022';
+$env_config['notify_tpl_id'] = '205be44de0114ff2a963b0c5edddbf4f';
+
+// -------------memcached.php--------------
+$env_config['memcached'] = array(
+    'default' => array(
+        'hostname' => '127.0.0.1',
+        'port'     => '11211',
+        'weight'   => '1',
+    ),
+);
+
+// -------------redis.php--------------
+$env_config['redis'] = array(
+    'socket_type'=>'tcp',
+    'host'=>'127.0.0.1',
+    'password'=>NULL,
+    'port'=>6379,
+    'timeout'=>0,
+);
+
+
+// -------------rest.php---------------
+$env_config['rest_auth'] = '';//是否开启签名 测试环境用空字符串
+$env_config['allow_host'] = array(
+    'box.guantest.fruitday.com',
+    'stagingcityboxapi.fruitday.com',
+    'cityboxapi.fruitday.com'
+);
+
+//API加密串
+$env_config['api_secret']= array(
+    'wap'=>'ce6u8wX8Wf7fWufRp',
+    'admin'=>'48eU7IeTJ6zKKDd1',
+    'device'=>'3ZgtmpTCdV4GJzOr',
+    'client'=>'cletmpTCdV4GJzOr'
+
+);
+// -------------wechat-bak.php---------------
+$env_config['wechat']['APPID'] = 'wx3450e6a290582989';//wx3450e6a290582989
+$env_config['wechat']['APPSECRET'] = 'ed0ea56e0f6f19801cb9bfd28c122abb';//ed0ea56e0f6f19801cb9bfd28c122abb
+$env_config['wechat']['MCHID'] = '1279484801';
+$env_config['wechat']['KEY'] = 'b3853ae76821b0936a15a71132a6d86a';
+$env_config['wechat']['SSLCERT_PATH'] = dirname(dirname(__FILE__)).'/libraries/wechat/cert/apiclient_cert-'.$env_config['wechat']['APPID'].'.pem';
+$env_config['wechat']['SSLKEY_PATH'] = dirname(dirname(__FILE__)).'/libraries/wechat/cert/apiclient_key-'.$env_config['wechat']['APPID'].'.pem';
+$env_config['wechat']['CURL_TIMEOUT'] = 30;
+$env_config['wechat']['entrustweb_notify_url'] = $env_config['base_url'].'/api/account/wecht_notify_entrust';//开通免密协议的回调
+$env_config['wechat']['pay_notify_url'] = $env_config['base_url'].'/api/order/wecht_notify_pay';//支付的回调
+$env_config['wechat']['PLANID'] = '100203';//免密协议的模板ID
+
+$env_config['wechat_pay_succ_tpl_id'] = '';
+$env_config['wechat_pay_fail_tpl_id'] = '';
+$env_config['wechat_refund_tpl_id'] = '';
+$env_config['wechat_notify_tpl_id'] = '';
+$env_config['wechat_exception_tpl_id'] = 'OE_5QDUZIb_mPo_EnP2JOZIarD45lPztkGoJawM-KYI';
+// -------------sms.php---------------
+$env_config['sms_bind_content'] = '感谢你使用城市盒子，验证码是：';//用户绑定短信内容
+$env_config['sms_warn_stock_enable'] = TRUE;//是否开启盘点短信告警
+$env_config['sms_warn_stock_content'] = '盘点结果与上次差异较大，设备号：';//盘点告警短信内容
+$env_config['sms_warn_stock_moblie'] = '18221525981,13671981025';//盘点告警手机号，逗号分隔
+
+//短信通知类
+$env_config['sms_notify_accounts'] = array(
+    'notify1'=>array('account'=>'JS3982','pwd'=>'256235','url'=>'http://61.145.229.26:8086/MWGate/wmgw.asmx/MongateSendSubmit'),//通知
+    'notify2'=>array('account'=>'JS3983','pwd'=>'528962','url'=>'http://61.145.229.26:8086/MWGate/wmgw.asmx/MongateSendSubmit'),//通知
+    'notify3'=>array('account'=>'JH2107','pwd'=>'245623','url'=>'http://61.145.229.29:8892/MWGate/wmgw.asmx/MongateSendSubmit'),//虽然是营销通道，用作通知类的备用方案
+    'fruitday'=>array('account'=>'citybox','pwd'=>'3410w312ecf4a3j814y50b6abff6f6b97e16','url'=>$config['sms_url'])//虽然是天天果园，用作通知类的备用方案
+);
+
+$env_config['select_notify_pipe'] = 'notify1';//选择通道
+
+//市场营销短信
+$env_config['sms_market_accounts'] = array(
+    'market1'=>array('account'=>'JH2107','pwd'=>'245623','url'=>'http://61.145.229.29:8892/MWGate/wmgw.asmx/MongateSendSubmit')//营销
+);
+
+$env_config['select_market_pipe'] = 'market1';//选择通道
+
+
+// -------------log.php---------------
+$env_config['crit_log_email_rec'] = "linxy@fruitday.com,lusc@fruitday.com"; //发送告警日志错误,多个邮箱逗号分隔
+
+// -------------zmxy.php---------------
+$env_config['zmxy_app_id'] = "1003057";
+$env_config['zmxy_merchant_id'] = "268821000000108055554";
+$env_config['zmxy_type_id'] = "1003057-default-test";
+$env_config['zm_public_key'] = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtdqYBYPZx2Vzo+d6XlKhYpbUPURPvu79UktZDCAtalXtRZIKzBcjYJSRjEHlWnF2GHm2zlMKTdCZAk0sVocQ2r26zIgA+gaxa88u7CtpDcv5Tq0YoUTa5GshJ/9V4dQ7bxS3xEqtVXFZR8AR7JL330MJZpaf7iatBrnMOL80w9wIDAQAB";
+
+// -------------fruitday.php----------
+$env_config['fruitday_secret'] = 'bdp2dn8echrstqab1aicd7gkau6w3d40';
+$env_config['fruitday_host'] = 'https://stagingnirvana3.fruitday.com/citybox/v1';
+$env_config['fruitday_recharge_return_url'] = $env_config['base_url'].'/public/fruitday_amount.html';
+
+// ------------- platform.php ----------
+$env_config['platform_secret'] = 'irBplW5mdCGS6O5sRrMqKgI9i4f4rbuO';
+$env_config['platform_host'] = 'http://stagingcityboxplatform.fruitday.com';
+
+// ------------- auth_url.php ----------
+$env_config['auth_default_url'] =  'http://a.app.qq.com/o/simple.jsp?pkgname=com.ttxg.fruitday';
+$env_config['auth_fruitday_url'] = 'http://staging.m.fruitday.com/boxLogin?redirect_uri=REDIRECT_URI';//http://a.app.qq.com/o/simple.jsp?pkgname=com.ttxg.fruitday
+$env_config['auth_gat_url'] = 'http://staging.m.fruitday.com/boxLogin?redirect_uri=REDIRECT_URI';
+$env_config['auth_redirect_url'] = $env_config['base_url'].'/public/platform_login.html?deviceId=DEVICEID&p=PLATFORM';
+$env_config['auth_fruitday_app_url'] = $env_config['base_url'].'/public/platform_login.html?deviceId=DEVICEID&p=PLATFORM&connect_id=CONNECT';
+$env_config['auth_fruitday_index_url'] = $env_config['base_url'].'/public/fruitday_amount.html?goBackEnable=0';
+$env_config['auth_wechat_redirect_url'] = $env_config['base_url'].'/public/auth.html?deviceId=DEVICEID&p=PLATFORM';
+
+// ------------- guanaitong.php-----------
+
+$env_config['guanaitong_app_id'] = '20091175';
+$env_config['guanaitong_secret'] = '91cdbc85b207e3de2d4ae03c635fe9bb';

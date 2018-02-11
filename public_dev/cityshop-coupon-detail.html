@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <title>专享优惠券详情</title>
+    <!--build:style bundle-->
+    <link rel="stylesheet" href="./css/common.css" />
+    <!--/build-->
+    <style>
+
+        body{
+            background: #ffffff;
+        }
+        p{
+            color: #999999;
+            line-height: 18px;
+            font-size: .12rem;
+        }
+        .top{
+            box-shadow:0px 5px 5px rgba(0,0,0,0.1);
+            width: 95%;
+            margin: 10px auto;
+            border-radius: 6px;
+            margin-bottom: 40px;
+            height: 150px;
+        }
+        .title{
+            font-weight:bold;
+            color:#000;
+            font-size: 0.16rem;
+            display: block;
+            font-family:PingFangSC-Regular;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+<noscript>
+    <div id="noscript">当前的浏览器不支持JavaScript脚本</div>
+</noscript>
+<section class="container" id="rby-coupon-detail" style="padding-bottom:0px">
+
+</section>
+
+<!--模版开始-->
+<script id="rby-coupon-detail-tmpl" type="text/html">
+    <div class="top">
+        <img id="banner_img" src="<!--[=img_src ]-->" style="width: 300px;display:block;margin: auto;padding-top:32px;">
+    </div>
+    <div style="width: 95%;margin: auto">
+        <span class="title">使用须知</span>
+        <!--[for(j = 0; j < rule_text.length; j++){]-->
+        <p><!--[= rule_text[j]]--></p>
+        <!--[}]-->
+    </div>
+</script>
+<!--//模版结束-->
+
+<!--自定义提示框开始-->
+<div class="toast" id="rby-toast">
+    <img src="img/tip.png" width="60"/>
+    <span>xxx</span>
+</div>
+<div class="loading" id="rby-loading">
+    <div class="loading-content">
+        <div class="s-1">
+            <img src="img/loading3.gif" />
+        </div>
+        <div class="s-2">正在加载中</div>
+    </div>
+</div>
+<div class="dialog" id="rby-panel">
+    <div class="dialog-content">
+        <div class="panel-content">
+            <div class="panel-cell">
+                <img src="img/tip.png" />
+                <h3 class="panel-title">xxx</h3>
+                <div class="panel-text">xxx</div>
+            </div>
+        </div>
+        <div class="panel-buttons">
+            <div class="options">
+                <a href="javascript:;" class="btn btn-default">取消</a>
+                <a href="javascript:;" class="btn btn-primary">确定</a>
+            </div>
+            <div class="panel-tips">xxx</div>
+        </div>
+    </div>
+</div>
+<!--//自定义提示框结束-->
+<script src="./js/main.js"></script>
+<script src="./js/coupons-detail.js"></script>
+</body>
+
+</html>
