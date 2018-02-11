@@ -13,6 +13,14 @@ class User_fin_model extends MY_Model
         return 'user_fin';
     }
 
+    function get_rank($size){
+        $this->db->select("*");
+        $this->db->from($this->table_name());
+        $this->db->order_by('land','DESC');
+        $this->db->limit($size);
+        $res = $this->db->get()->result_array();
+        return $res;
+    }
     function get_fin_by_id($id){
         $where = array('user_id'=>$id);
         $this->db->select("*");
