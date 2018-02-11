@@ -41,6 +41,43 @@ function check_str_exist($str, $needle)
     }
 }
 
+/**
+ * 用户信息保存在cache，
+ * @return Array
+ */
+function get_cache_user($uid){
+    $ci = &get_instance();
+    $session_id = $ci->session_id_2_user($uid);
+    $user_cache_key = 'user_'.$session_id;
+    $user = $ci->cache->get($user_cache_key);
+    return $user;
+}
+/**
+ * session id 跟用户关联
+ */
+function session_id_2_user($uid){
+    $ci = &get_instance();
+    $key_user = 'user_id_'.$uid;
+    $cache_session_id = $ci->cache->get($key_user);
+    if($cache_session_id){
+        $session_id = $cache_session_id;
+    }else{
+        $session_id = create_uuid();
+    }
+    $ci->cache->save($key_user,$session_id,604800);//记录用户session_id 保存7天
+    return $session_id;
+}
+function update_user_cache($uid,$data){
+    $ci = &get_instance();
+    $session_id = $ci->session_id_2_user($uid);
+    $user_cache_key = 'user_'.$session_id;
+    $user = $ci->cache->get($user_cache_key);
+    foreach ($data as $k=>$v){
+        $user[$k] = $v;
+    }
+    $ci->cache->save($user_cache_key,$user,604800);//记录用户保存7天
+}
+
 function general_qr_code($qr_str)
 {
     $ci = get_instance();

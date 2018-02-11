@@ -2459,34 +2459,6 @@ abstract class REST_Controller extends \CI_Controller {
         return $user;
     }
 
-    public function update_curr_user($data){
-        $token = $this->get_wap_token();
-        $user_cache_key = 'user_'.ltrim($token,'=');
-        $this->cache->save($user_cache_key,$data,604800);//记录用户保存7天
-    }
-    /**
-     * session id 跟用户关联
-     */
-    public function session_id_2_user($uid){
-        $key_user = 'user_id_'.$uid;
-        $cache_session_id = $this->cache->get($key_user);
-        if($cache_session_id){
-            $session_id = $cache_session_id;
-        }else{
-            $session_id = create_uuid();
-        }
-        $this->cache->save($key_user,$session_id,604800);//记录用户session_id 保存7天
-        return $session_id;
-    }
-    public function update_user_cache($uid,$data){
-        $session_id = $this->session_id_2_user($uid);
-        $user_cache_key = 'user_'.$session_id;
-        $user = $this->cache->get($user_cache_key);
-        foreach ($data as $k=>$v){
-            $user[$k] = $v;
-        }
-        $this->cache->save($user_cache_key,$user,604800);//记录用户保存7天
-    }
     public function check_null_and_send_error($data, $msg)
     {
         if (null_para($data)) {
