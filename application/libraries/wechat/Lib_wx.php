@@ -1304,6 +1304,7 @@ Class Program_jscode2session extends Common_util_pub{
         $jsApiObj["secret"] = $this->config['wechat_program_secret'];
         $jsApiObj["js_code"] = $code;
         $jsApiObj["grant_type"] = "authorization_code";
+        write_log(var_export($jsApiObj,1));
         $bizString = $this->formatBizQueryParaMap($jsApiObj, false);
         $url = "https://api.weixin.qq.com/sns/jscode2session?".$bizString;
         return $this->getCurl($url,$this->curl_timeout);
