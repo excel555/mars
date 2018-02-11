@@ -404,7 +404,7 @@ abstract class REST_Controller extends \CI_Controller {
         $this->load->library('format');
         $this->load->helper("utils");
         $this->load->driver('cache',
-            array('adapter' => 'memcached', 'key_prefix' => 'citybox_')
+            array('adapter' => 'redis', 'key_prefix' => 'citybox_')
         );
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
@@ -2473,7 +2473,7 @@ abstract class REST_Controller extends \CI_Controller {
         if($cache_session_id){
             $session_id = $cache_session_id;
         }else{
-            $session_id = $this->session->session_id;
+            $session_id = create_uuid();
         }
         $this->cache->save($key_user,$session_id,604800);//记录用户session_id 保存7天
         return $session_id;

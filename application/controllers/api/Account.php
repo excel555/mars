@@ -26,55 +26,13 @@ class Account extends REST_Controller
     {
         // Construct the parent class
         parent::__construct();
-        $this->load->model("user_model");
-        $this->load->model('user_agreement_model');
-        $this->load->helper("utils");
-        $this->load->helper("aop_send");
-        $this->load->helper("mapi_send");
-        $this->load->helper('koubei_send');
-        $this->load->helper("message");
-        $this->load->helper("http_request");
-        $this->load->library("aop/request/AlipaySystemOauthTokenRequest");
-        $this->load->library("aop/request/AlipayUserUserinfoShareRequest");
-
-        $this->platforms = array(
-            array("id"=>'1' ,"name"=> '上海鲜动'),
-            array("id"=>'2' , "name"=> '北京波之鸿'),
-            array("id"=>'3' , "name"=> '技术测试商户'),
-            array("id"=>'4' , "name"=> '广州天天果园'),
-            array("id"=>'6' , "name"=> '杭州鲜动'),
-            array("id"=>'8' , "name"=> '武汉鲜动'),
-            array("id"=>'7' , "name"=> '北京鲜动'),
-            array("id"=>'9' , "name"=> '白领易生活科技（北京）有限公司'),
-            array("id"=>'10' , "name"=> '上海天天果园'),
-            array("id"=>'11' , "name"=> 'WinBox'),
-            array("id"=>'12' , "name"=> '广州市钱大妈农产品有限公司'),
-            array("id"=>'13' , "name"=> '广州食安菜妈信息科技有限公司'),
-            array("id"=>'14' , "name"=> '浙江五芳斋'),
-            array("id"=>'15' , "name"=> '潍坊元佩商贸有限公司'),
-            array("id"=>'16' , "name"=> '叶氏兄弟'),
-            );
     }
 
     public function get_info_get()
     {
         $rs = $this->get_curr_user();
-
-//        $rs = $this->user_model->get_user_info_by_id($user['id']);
-        if ($rs) {
-            $this->load->model("shipping_permission_model");
-            $old = $this->shipping_permission_model->old_deliver_permission($rs['mobile']);
-            if($old){
-                $rs['view_old_deliver'] = 1;
-            }else{
-                $rs['view_old_deliver'] = 0;
-            }
-            $rs['s_admin_id'] = $this->get_deliver_permission($rs['id']) ? 1 : 0;
-            $rs['platforms'] = $this->platforms;
-            $this->send_ok_response($rs);
-        } else {
-            $this->send_error_response("没有找到该用户信息");
-        }
+//
+        $this->send_ok_response($rs);
     }
 
     function warn_user_info_post(){
