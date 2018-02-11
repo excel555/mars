@@ -132,4 +132,9 @@ class Account extends REST_Controller
             $num = 0;
         $this->send_ok_response(array('qr'=>$qr_url,'user'=>$user,'num'=>$num));
     }
+    public function fin_log_get(){
+        $user = $this->get_curr_user();
+        $logs = $this->user_fin_model->get_log($user['id']);
+        $this->send_ok_response($logs);
+    }
 }

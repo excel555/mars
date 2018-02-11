@@ -29,6 +29,14 @@ class User_fin_model extends MY_Model
         }
         return $res;
     }
+    function get_log($uid){
+        $this->db->select("*");
+        $this->db->from('user_fin_log');
+        $this->db->order_by('id','DESC');
+        $this->db->where('user_id='.$uid);
+        $res = $this->db->get()->result_array();
+        return $res;
+    }
     function get_fin_by_id($id){
         $where = array('user_id'=>$id);
         $this->db->select("*");
