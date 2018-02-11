@@ -31,6 +31,7 @@ class Account extends REST_Controller
         parent::__construct();
         $this->load->model('user_fin_model');
         $this->load->model('user_sign_model');
+        $this->load->model('user_friend_model');
         $this->load->model('user_model');
     }
 
@@ -84,6 +85,7 @@ class Account extends REST_Controller
         $userInfo = $this->post('rawData');
         $encrypted_data = $this->post('encryptedData');
         $iv = $this->post('iv');
+        $invite_code = $this->post('inviteCode');
 
 
         $this->check_null_and_send_error($js_code,'js_code 不能为空');
@@ -111,6 +113,9 @@ class Account extends REST_Controller
                     'reg_time'=>date('Y-m-d H:i:s')
                 );
                 $user_id = $this->user_model->adUser($user_data,$data['openid'],'wechat-program');
+                if($invite_code){
+                    $this->user_friend_model->invite($user_id,$invite_code);
+                }
             }
             $this->login_user($user_id);
         }
