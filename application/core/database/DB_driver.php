@@ -496,15 +496,15 @@ class CI_DB_driver {
 
 		if (preg_match('/^((INSERT)|(UPDATE)|(REPLACE)|(DELETE))/', strtoupper($sql))) {
 			 $CI = & get_instance();
-			 $CI->load->library('session');
-			 $bsession = $CI->session->userdata('sess_admin_data');
-			 if ($bsession) {
-				 $time = date('Y-m-d H:i:s',time());
-			  	 $query_sql = '';
-			  	 $query_sql = addslashes($sql);
-			  	 $bsql = "INSERT INTO s_admin_log (admin_id,admin_name,query_sql,time) VALUES(".$bsession['adminid'].",'".$bsession['adminname']."','".$query_sql."','".$time."')";
-			 	 $this->_execute($bsql);
-			 }
+//			 $CI->load->library('session');
+//			 $bsession = $CI->session->userdata('sess_admin_data');
+//			 if ($bsession) {
+//				 $time = date('Y-m-d H:i:s',time());
+//			  	 $query_sql = '';
+//			  	 $query_sql = addslashes($sql);
+//			  	 $bsql = "INSERT INTO s_admin_log (admin_id,admin_name,query_sql,time) VALUES(".$bsession['adminid'].",'".$bsession['adminname']."','".$query_sql."','".$time."')";
+//			 	 $this->_execute($bsql);
+//			 }
 		 }
 		return $this->_execute($sql);
 	}
