@@ -14,6 +14,13 @@ class User_friend_model extends MY_Model
         return 'user_friend';
     }
 
+    function get_friend_count($uid){
+        $where = array('parent_id'=>$uid);
+        $this->db->select("*");
+        $this->db->where($where);
+        $this->db->from($this->table_name());
+        return $this->db->get()->num_rows();
+    }
     function get_friend_list($id){
         $where = array('parent_id'=>$id);
         $this->db->select("*");

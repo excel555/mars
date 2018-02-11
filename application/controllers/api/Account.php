@@ -126,6 +126,10 @@ class Account extends REST_Controller
         $str = "https://lxy.bootoa.cn/public/c.html?c=".$invite_code;
 //        general_qr_code($str);
         $qr_url = "http://qr.liantu.com/api.php?text=".urlencode($str)."";
-        $this->send_ok_response(array('qr'=>$qr_url,'user'=>$user));
+
+        $num = $this->user_friend_model->get_friend_count($user['id']);
+        if(!$num)
+            $num = 0;
+        $this->send_ok_response(array('qr'=>$qr_url,'user'=>$user,'num'=>$num));
     }
 }
