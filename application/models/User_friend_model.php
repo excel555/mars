@@ -59,7 +59,7 @@ class User_friend_model extends MY_Model
 
         $this->db->set('lastupdate_time',date("Y-m-d H:i:s"));
         $this->db->set('energy',$energy + $user['fin']['energy']);
-        $this->db->where(array('user_id'=>$uid));
+        $this->db->where(array('user_id'=>$parent_id));
         $this->db->update('user_fin');
 
         $this->db->trans_complete();
@@ -68,7 +68,7 @@ class User_friend_model extends MY_Model
             return false;
         } else {
             $this->db->trans_commit();
-            update_user_cache($uid,array("energy"=>$energy + $user['fin']['energy']));
+            update_user_cache($parent_id,array("energy"=>$energy + $user['fin']['energy']));
             return $last_id;
         }
     }
