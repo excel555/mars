@@ -33,7 +33,7 @@ class User_fin_model extends MY_Model
         $this->db->select("*");
         $this->db->from('user_fin_log');
         $this->db->order_by('id','DESC');
-        $this->db->where('user_id='.$uid);
+        $this->db->where(array('user_id'=>$uid));
         $res = $this->db->get()->result_array();
         return $res;
     }
