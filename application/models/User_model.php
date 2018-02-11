@@ -136,6 +136,10 @@ class User_model extends MY_Model
         $this->db->insert('user',$user_data);
         $last_id = $this->db->insert_id();
 
+        $this->db->set('invite_code',random_code(''.$last_id));
+        $this->db->where(array('id'=>$last_id));
+        $this->db->update('user');
+
         $thrid['user_id']           = $last_id;
         $thrid['refer']          = $refer;
         $thrid['open_id']    = $open_id;

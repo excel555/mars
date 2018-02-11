@@ -77,6 +77,31 @@ function update_user_cache($uid,$data){
     }
     $ci->cache->save($user_cache_key,$user,604800);//记录用户保存7天
 }
+function random_code($uid){
+    $code_key = array(
+        '1'=>array('A','Q'),
+        '2'=>array('S','W'),
+        '3'=>array('D','E'),
+        '4'=>array('F','R'),
+        '5'=>array('G','T'),
+        '6'=>array('H','Y'),
+        '7'=>array('J','U'),
+        '8'=>array('K','I'),
+        '9'=>array('L','X'),
+        '0'=>array('Z','C'),
+    );
+    $uid = ''.$uid;
+    if(strlen($uid)<4){
+        for ($i = 0;$i<=4-strlen($uid);$i++){
+            $uid ='0'.$uid;
+        }
+    }
+    $code = "";
+    for($i = 0;$i<strlen($uid);$i++){
+        $code .= $code_key[$uid[$i]][rand(0,1)];
+    }
+    return $code;
+}
 
 function general_qr_code($qr_str)
 {
