@@ -122,8 +122,12 @@ class User_model extends MY_Model
 
     //如果已注册过，返回uid
     function is_registered($open_id,$refer){
-        $rs = $this->select('*')->from('user_thrid')->where(array('open_id'=>$open_id,'refer'=>$refer))->get()->row_array();
-        return $rs;
+        $where = array('open_id'=>$open_id,'refer'=>$refer);
+        $this->db->select("*");
+        $this->db->where($where);
+        $this->db->from('user_thrid');
+        $res = $this->db->get()->row_array();
+        return $res;
     }
 
     //增加用户
