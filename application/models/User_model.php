@@ -77,15 +77,9 @@ class User_model extends MY_Model
         return $res;
     }
 
-    function get_user_info_by_mobile($mobile, $field=NULL, $source=null){
-        if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
-        }
+    function get_user_info_by_mobile($mobile){
         $where = array('mobile'=>$mobile);
-        if($source){
-            $where['source'] = $source;
-        }
-        $this->db->select($field);
+        $this->db->select("*");
         $this->db->where($where);
         $this->db->from($this->table_name());
         $query = $this->db->get();
@@ -203,11 +197,11 @@ class User_model extends MY_Model
         return $this->db->update($this->table_name());
     }
 
-    function delete_agreement_sign($open_id,$data,$refer = 'wechat'){
-        $this->db->set('agreement_no','');
-        $this->db->set('sign_time',strtotime($data["sign_time"]));
-        $this->db->set('sign_detail','');
-        $this->db->where(array('open_id'=>$open_id,'source'=>$refer));
+    function update_user($uid,$mobile,$name,$idcard){
+        $this->db->set('mobile',$mobile);
+        $this->db->set('really_name',$name);
+        $this->db->set('idcard',$idcard);
+        $this->db->where(array('id'=>$uid));
         return $this->db->update($this->table_name());
     }
 

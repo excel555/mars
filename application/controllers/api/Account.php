@@ -187,4 +187,25 @@ class Account extends REST_Controller
         );
         $this->send_ok_response($ret);
     }
+
+    public function finish_info_post(){
+        $mobile = $this->post('mobile');
+        $name = $this->post('name');
+        $idcard = $this->post('idcard');
+        $this->check_null_and_send_error($mobile,'手机号不能为空');
+        $this->check_null_and_send_error($name,'真实姓名不能为空');
+        $this->check_null_and_send_error($idcard,'身份证号不能为空');
+        $user = $this->get_curr_user();
+        $e = $this->user_model->get_user_info_by_mobile($mobile);
+        if($e){
+            $this->send_error_response("手机号已经注册过");
+        }
+        $this->user_model->update_user($user['id'],$mobile,$name,$idcard);
+        update_user_cache($user['id'],array(
+            'mobile'=>$mobile,
+            'really_name'=>$name,
+            'idcard'=>$idcard,
+        ));
+        $this->send_ok_response($this->get_curr_user());
+    }
 }
