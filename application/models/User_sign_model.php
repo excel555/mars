@@ -80,9 +80,9 @@ class User_sign_model extends MY_Model
         $this->db->from($this->table_name());
         $res = $this->db->get()->row_array();
         if($res){
-            return false;
-        }else{
             return true;
+        }else{
+            return false;
         }
     }
 }
