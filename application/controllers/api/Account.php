@@ -147,8 +147,8 @@ class Account extends REST_Controller
         $user = $this->get_curr_user();
         $fins = $this->user_fin_model->get_fins_collect($user['id']);
         foreach ($fins as &$v){
-            $v['top'] = rand(1,250);
-            $v['left'] = rand(1,250);
+            $v['top'] = rand(1,200);
+            $v['left'] = rand(1,200);
         }
         $this->send_ok_response($fins);
     }

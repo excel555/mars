@@ -49,6 +49,10 @@ class Cron_event extends CI_Controller
             }
         }
     }
+    function get_land($uid){
+        $t = rand(10000,99999);
+        return floatval($t/100000);
+    }
 }
 
 ?>
