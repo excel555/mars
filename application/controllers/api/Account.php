@@ -38,9 +38,11 @@ class Account extends REST_Controller
     public function get_info_get()
     {
         $user = $this->get_curr_user();
-        $user['mobile'] =  substr($user['mobile'],0,4).'****'.substr($user['mobile'],8);
-        $user['really_name'] =  mb_substr($user['really_name'],0,1).'**';
-        $user['idcard'] =  substr($user['idcard'],0,4).'*********'.substr($user['idcard'],12);
+        if($user['mobile'] && $user['really_name'] && $user['idcard'] ){
+            $user['mobile'] =  substr($user['mobile'],0,4).'****'.substr($user['mobile'],8);
+            $user['really_name'] =  mb_substr($user['really_name'],0,1).'**';
+            $user['idcard'] =  substr($user['idcard'],0,4).'*********'.substr($user['idcard'],12);
+        }
         $this->send_ok_response($user);
     }
 
