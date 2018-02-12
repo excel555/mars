@@ -206,6 +206,9 @@ class Account extends REST_Controller
             'really_name'=>$name,
             'idcard'=>$idcard,
         ));
-        $this->send_ok_response($this->get_curr_user());
+        $user['mobile'] =  substr($mobile,0,4).'****'.substr($mobile,8);
+        $user['really_name'] =  mb_substr($name,0,1).'**';
+        $user['idcard'] =  substr($mobile,0,4).'*********'.substr($mobile,12);
+        $this->send_ok_response($user);
     }
 }
