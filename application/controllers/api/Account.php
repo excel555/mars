@@ -37,8 +37,11 @@ class Account extends REST_Controller
 
     public function get_info_get()
     {
-        $rs = $this->get_curr_user();
-        $this->send_ok_response($rs);
+        $user = $this->get_curr_user();
+        $user['mobile'] =  substr($user['mobile'],0,4).'****'.substr($user['mobile'],8);
+        $user['really_name'] =  mb_substr($user['really_name'],0,1).'**';
+        $user['idcard'] =  substr($user['idcard'],0,4).'*********'.substr($user['idcard'],12);
+        $this->send_ok_response($user);
     }
 
     public function get_rank_get()
@@ -208,7 +211,7 @@ class Account extends REST_Controller
         ));
         $user['mobile'] =  substr($mobile,0,4).'****'.substr($mobile,8);
         $user['really_name'] =  mb_substr($name,0,1).'**';
-        $user['idcard'] =  substr($mobile,0,4).'*********'.substr($mobile,12);
+        $user['idcard'] =  substr($idcard,0,4).'*********'.substr($idcard,12);
         $this->send_ok_response($user);
     }
 }
