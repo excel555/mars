@@ -59,7 +59,14 @@ class User_sign_model extends MY_Model
             update_user_cache($uid, array("fin"=>array('energy'=>self::SIGN_GIFT + $user['fin']['energy'])));
             return $last_id;
         }
+    }
 
+    function get_user_sign_today(){
+        $where = array('sign_day'=>date("Y-m-d"));
+        $this->db->select("*");
+        $this->db->where($where);
+        $this->db->from($this->table_name());
+        return $this->db->get()->result_array();
     }
 
 }

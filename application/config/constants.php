@@ -98,3 +98,4 @@ define('APP_REFRESH_AUTH_TOKEN_KEY', 'koubei_app_refresh_token_');//ISV模式,�
 define('KOUBEI_PLATFORM_ID', '14');//浙江五芳斋商户id
 define('KOUBEI_SHOP_ID', '2015070700077000000001343615');//浙江五芳斋店铺id
 define('WFZ_SHOP_ID', '1040101004');//浙江五芳斋ERP系统店铺id
+define('LAND_COLLECT_TIME_KEY', 'land_collect_time_');
