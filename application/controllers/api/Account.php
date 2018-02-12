@@ -143,4 +143,14 @@ class Account extends REST_Controller
         $this->send_ok_response($logs);
     }
 
+    public function get_fins_collect_get(){
+        $user = $this->get_curr_user();
+        $fins = $this->user_fin_model->get_fins_collect($user['id']);
+        foreach ($fins as &$v){
+            $v['top'] = rand(1,250);
+            $v['left'] = rand(1,250);
+        }
+        $this->send_ok_response($fins);
+    }
+
 }

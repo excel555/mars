@@ -54,4 +54,11 @@ class User_fin_model extends MY_Model
         $res = $this->db->get()->result_array();
         return $res;
     }
+    function get_fins_collect($uid){
+        $this->db->select("*");
+        $this->db->from('fin_land_list');
+        $this->db->where(array('user_id'=>$uid,'send_time <='.date("Y-m-d H:i:s"),'status'=>0));
+        $res = $this->db->get()->result_array();
+        return $res;
+    }
 }
