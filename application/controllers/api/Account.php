@@ -155,7 +155,7 @@ class Account extends REST_Controller
     public function collect_fin_post(){
         $id = $this->post('id');
         $this->check_null_and_send_error($id,'缺少cans');
-        $fin_id = $this->user_fin_model->collect_fin($id);
-        $this->send_ok_response($fin_id);
+        $fin_land = $this->user_fin_model->collect_fin($id);
+        $this->send_ok_response(array('land'=>$fin_land));
     }
 }

@@ -91,9 +91,9 @@ class User_fin_model extends MY_Model
             } else {
                 $this->db->trans_commit();
                 update_user_cache($res['user_id'], array("fin"=>array('land'=>$v_land)));
-                return $last_id;
+                return $v_land;
             }
         }
-        return $res;
+        return false;
     }
 }
