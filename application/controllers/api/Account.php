@@ -137,4 +137,10 @@ class Account extends REST_Controller
         $logs = $this->user_fin_model->get_log($user['id']);
         $this->send_ok_response($logs);
     }
+    public function energy_log_get(){
+        $user = $this->get_curr_user();
+        $logs = $this->user_fin_model->get_energy_log($user['id']);
+        $this->send_ok_response($logs);
+    }
+
 }
