@@ -70,6 +70,10 @@ class User_fin_model extends MY_Model
         $res = $this->db->get()->row_array();
         if($res && $res['status'] == 0){
 
+            $this->db->set('status',1);
+            $this->db->where(array('id'=>$id));
+            $this->db->update('fin_land_list');
+
             $this->db->trans_start();
             $user_data = array('user_id'=>$res['user_id'],'obj_type'=>'日常领取','obj_id'=>$id,'fin_type'=>'add','land'=>$res['land'],'create_time'=>date("Y-m-d H:i:s"));
             $this->db->insert('user_fin_log',$user_data);
