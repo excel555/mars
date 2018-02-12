@@ -73,7 +73,14 @@ function update_user_cache($uid,$data){
     $user_cache_key = 'user_'.$session_id;
     $user = $ci->cache->get($user_cache_key);
     foreach ($data as $k=>$v){
-        $user[$k] = $v;
+        if(is_array($v)){
+            foreach ($v as $vk=>$vv){
+                $user[$k][$vk] = $vv;
+            }
+        }else{
+            $user[$k] = $v;
+        }
+
     }
     $ci->cache->save($user_cache_key,$user,604800);//记录用户保存7天
 }

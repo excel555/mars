@@ -44,6 +44,9 @@ class User_friend_model extends MY_Model
         $this->db->where(array('invite_code'=>$invite_code));
         $this->db->from('user');
         $u = $this->db->get()->row_array();
+        if(!$u){
+            return false;
+        }
         $parent_id = $u['id'];
 
 
@@ -75,7 +78,7 @@ class User_friend_model extends MY_Model
             return false;
         } else {
             $this->db->trans_commit();
-            update_user_cache($parent_id,array("energy"=>$energy + $user['fin']['energy']));
+            update_user_cache($parent_id, array("fin"=>array('energy'=>$energy + $user['fin']['energy'])));
             return $last_id;
         }
     }

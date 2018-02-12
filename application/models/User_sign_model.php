@@ -56,7 +56,7 @@ class User_sign_model extends MY_Model
             return false;
         } else {
             $this->db->trans_commit();
-            update_user_cache($uid,array("energy"=>self::SIGN_GIFT + $user['fin']['energy']));
+            update_user_cache($uid, array("fin"=>array('energy'=>self::SIGN_GIFT + $user['fin']['energy'])));
             return $last_id;
         }
 
