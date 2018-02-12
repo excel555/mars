@@ -72,4 +72,17 @@ class User_sign_model extends MY_Model
     function insert_form_id($uid,$form_id){
         $this->db->insert('wait_send_msg',array('user_id'=>$uid,'create_time'=>date("Y-m-d H:i:s"),'form_id'=>$form_id,'status'=>0));
     }
+
+    function is_sign_today($id){
+        $where = array('user_id'=>$id,'sign_day'=>date("Y-m-d"));
+        $this->db->select("*");
+        $this->db->where($where);
+        $this->db->from($this->table_name());
+        $res = $this->db->get()->row_array();
+        if($res){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

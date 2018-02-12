@@ -167,4 +167,24 @@ class Account extends REST_Controller
         }
         $this->send_ok_response(array('status'=>$r ? 'succ' : 'fail'));
     }
+
+    public function task_status_get(){
+        $user = $this->get_curr_user();
+        $sign = $this->user_sign_model->is_sign_today($user['id']);
+        $invite_status = false;
+        $info_status = false;
+        if($user['mobile'] && $user['really_name'] && $user['idcard'] ) {
+            $info_status = true;
+        }
+        $n = $this->user_friend_model->get_friend_count($user['id']);
+        if($n >= 100){
+            $invite_status = true;
+        }
+        $ret = array(
+            'invite_status'=>$invite_status,
+            'sign_status'=>$sign,
+            'info_status'=>$info_status,
+        );
+        $this->send_ok_response($ret);
+    }
 }
