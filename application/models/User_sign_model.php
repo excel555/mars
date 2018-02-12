@@ -69,4 +69,7 @@ class User_sign_model extends MY_Model
         return $this->db->get()->result_array();
     }
 
+    function insert_form_id($uid,$form_id){
+        $this->db->insert('wait_send_msg',array('user_id'=>$uid,'create_time'=>date("Y-m-d H:i:s"),'form_id'=>$form_id,'status'=>0));
+    }
 }

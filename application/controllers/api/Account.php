@@ -158,4 +158,13 @@ class Account extends REST_Controller
         $fin_land = $this->user_fin_model->collect_fin($id);
         $this->send_ok_response(array('land'=>$fin_land));
     }
+    public function sign_today_post(){
+        $id = $this->post('id');
+        $user = $this->get_curr_user();
+        $r = $this->user_sign_model->get_sign_today($user['id']);
+        if($id){
+            $this->user_sign_model->insert_form_id($user['id'],$id);
+        }
+        $this->send_ok_response(array('status'=>$r ? 'succ' : 'fail'));
+    }
 }
