@@ -5,6 +5,7 @@ class User_model extends MY_Model
     private $field = "";
     const REG_GIFT = 20;
     const SIGN_GIFT = 2;
+    const FINISH_INFO_ENERGY = 20;
 	function __construct()
 	{
 		parent::__construct ();
@@ -198,11 +199,38 @@ class User_model extends MY_Model
     }
 
     function update_user($uid,$mobile,$name,$idcard){
+
+        $this->db->trans_start();
         $this->db->set('mobile',$mobile);
         $this->db->set('really_name',$name);
         $this->db->set('idcard',$idcard);
         $this->db->where(array('id'=>$uid));
-        return $this->db->update($this->table_name());
+        $rs_u = $this->db->update($this->table_name());
+
+        $user_energy_log['user_id']           = $uid;
+        $user_energy_log['create_time']          = date("Y-m-d H:i:s");
+        $user_energy_log['obj_type']    = '完善信息';
+        $user_energy_log['obj_id']    = $uid;
+        $user_energy_log['energy']    = self::FINISH_INFO_ENERGY;
+        $user_energy_log['energy_type']    = 'add';
+        $this->db->insert('user_energy_log', $user_energy_log);
+
+        $user = get_cache_user($uid);
+
+        $this->db->set('lastupdate_time',date("Y-m-d H:i:s"));
+        $this->db->set('energy',self::FINISH_INFO_ENERGY + $user['fin']['energy']);
+        $this->db->where(array('user_id'=>$uid));
+        $this->db->update('user_fin');
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            update_user_cache($uid, array("fin"=>array('energy'=>self::FINISH_INFO_ENERGY + $user['fin']['energy'])));
+            return $rs_u;
+        }
     }
 
     function update_mobile($uid,$mobile){
