@@ -37,7 +37,7 @@ class User_sign_model extends MY_Model
 
         $user_energy_log['user_id']           = $uid;
         $user_energy_log['create_time']          = date("Y-m-d H:i:s");
-        $user_energy_log['obj_type']    = '每天登录';
+        $user_energy_log['obj_type']    = '每天签到';
         $user_energy_log['obj_id']    = $last_id;
         $user_energy_log['energy']    = self::SIGN_GIFT;
         $user_energy_log['energy_type']    = 'add';
