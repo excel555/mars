@@ -27,32 +27,40 @@ class Cron_event extends CI_Controller
         $this->load->driver('cache',
             array('adapter' => 'redis', 'key_prefix' => 'citybox_')
         );
+
     }
 
     public function send_land(){
-        $users = $this->user_fin_model->get_collect_users(1);
-        write_log('send_land cron '.var_export($users,1));
-        foreach ($users as $user){
-            $last_collect = $this->cache->get(LAND_COLLECT_TIME_KEY.$user['user_id']);
-            if($last_collect < strtotime("-1hour")){
-                $data = array(
-                    'user_id'=>$user['user_id'],
-                    'send_time'=>date("Y-m-d H:i:s"),
-                    'land'=>$this->get_land($user['user_id']),
-                    'status'=>0
-                );
-                $r = $this->db->insert('fin_land_list',$data);
-                if($r){
-                    $this->cache->save(LAND_COLLECT_TIME_KEY.$user['user_id'],time());
-                }
+        $hour =  date('H');
+        if($hour >= 7 && $hour<=23){
+            $total_land = rand(1,5); //todo
+            $users = $this->user_fin_model->get_collect_users(1);
+            write_log('send_land cron '.var_export($users,1));
+            $total_energy = 0;
+            foreach ($users as $user1){
+                $user_cache = get_cache_user($user1['user_id']);
+                $total_energy += intval($user_cache['fin']['energy']);
             }
+            foreach ($users as $user){
+                    $data = array(
+                        'user_id'=>$user['user_id'],
+                        'send_time'=>date("Y-m-d H:i:s"),
+                        'land'=>$this->get_land($user['user_id'],$total_energy,$total_land),
+                        'status'=>0
+                    );
+                    $r = $this->db->insert('fin_land_list',$data);
+                    if($r){
+                        $this->cache->save(LAND_COLLECT_TIME_KEY.$user['user_id'],time());
+                    }
+            }
+        }else{
+            write_log('send_land cron 不执行');
         }
     }
-    function get_land($uid){
+    function get_land($uid,$total_energy,$total_land){
         $user = get_cache_user($uid);
-
-        $t = rand(10000,39999);
-        return floatval($t/100000);
+        $energy = $user['fin']['energy'];
+        return floatval($total_land/$total_energy) * $energy;
     }
 }
 
