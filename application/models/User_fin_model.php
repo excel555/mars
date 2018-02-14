@@ -100,4 +100,17 @@ class User_fin_model extends MY_Model
         }
         return false;
     }
+
+    /**
+     * 获取24小时内收集土地的用户
+     */
+    function get_collect_users($day){
+        $this->db->select("*");
+        $this->db->from('user_fin_log');
+        $this->db->where(array('create_time >='=>date("Y-m-d H:i:s",strtotime("-{$day}days"))));
+        $this->db->group_by("user_id");
+        $res = $this->db->get()->result_array();
+        write_log($this->db->last_query());
+        return $res;
+    }
 }

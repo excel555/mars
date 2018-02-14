@@ -30,7 +30,7 @@ class Cron_event extends CI_Controller
     }
 
     public function send_land(){
-        $users = $this->user_sign_model->get_user_sign_today();
+        $users = $this->user_fin_model->get_collect_users(1);
         write_log('send_land cron '.var_export($users,1));
         foreach ($users as $user){
             $last_collect = $this->cache->get(LAND_COLLECT_TIME_KEY.$user['user_id']);
@@ -49,6 +49,8 @@ class Cron_event extends CI_Controller
         }
     }
     function get_land($uid){
+        $user = get_cache_user($uid);
+
         $t = rand(10000,39999);
         return floatval($t/100000);
     }
