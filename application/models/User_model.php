@@ -5,6 +5,7 @@ class User_model extends MY_Model
     private $field = "";
     const REG_GIFT = 20;
     const SIGN_GIFT = 2;
+    const SIGN_GIFT_LAND = 0.00100;
     const FINISH_INFO_ENERGY = 20;
 	function __construct()
 	{
@@ -149,9 +150,14 @@ class User_model extends MY_Model
         $user_energy_log['energy_type']    = 'add';
         $this->db->insert('user_energy_log', $user_energy_log);
 
+        $user_data_land = array('user_id'=>$last_id,'obj_type'=>'新用户礼物','obj_id'=>$last_id,'fin_type'=>'add','land'=>self::SIGN_GIFT_LAND,'create_time'=>date("Y-m-d H:i:s"));
+        $this->db->insert('user_fin_log',$user_data_land);
+        $this->db->insert_id();
+
+
         $user_fin['user_id']           = $last_id;
         $user_fin['lastupdate_time']          = date("Y-m-d H:i:s");
-        $user_fin['land']    = '0.0';
+        $user_fin['land']    = self::SIGN_GIFT_LAND;
         $user_fin['energy']    = self::REG_GIFT;;
         $this->db->insert('user_fin', $user_fin);
 
