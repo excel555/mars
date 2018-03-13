@@ -838,7 +838,7 @@ form .single .val {
     font-size:.15rem;background: #fff;
     margin-left: 13px;
     color: #E95417;
-    border: 1px solid #E95417;
+    /*border: 1px solid #E95417;*/
     border-radius: 4px;
     width: 265px;
     height: .4rem;
@@ -874,6 +874,7 @@ form .single .val {
     overflow: auto;
     /*width: 5%;*/
     margin: auto;
+    padding-top: 10px;
 }
 .dialog .panel-text img {
     margin: 0 auto; }

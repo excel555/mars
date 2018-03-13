@@ -23,6 +23,8 @@
         <name type ="2" value ="21" url="/showlog/open_door">开门日志</name>
         <name type ="2" value ="22" url="/showlog/pay_log">支付日志</name>
         <name type ="2" value ="23" url="/showlog/log_abnormal">异常记录</name>
+        <name type ="2" value ="23" url="/showlog/log_device_receive">设备推送消息</name>
+        <name type ="2" value ="23" url="/showlog/log_request">请求开门日志</name>
 
         <name type ="3" value ="31" url="/order/index">交易订单管理</name>
 

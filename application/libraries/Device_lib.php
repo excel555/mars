@@ -45,18 +45,6 @@ class Device_lib
             return $open_door_msg['defalut'];
         }
 
-        //获取角色
-        $key = "role_" . $user['open_id'];
-        $user_role = $this->CI->cache->get($key);
-
-        //普通开门的时候，检查开门来源
-        $is_open_refer = check_device_open_refer($sceneId, $user['source']);
-        if ($is_open_refer === true) {
-            //允许当前来源开门
-        } else {
-            return array('status' => 'limit_open_refer', 'error' => $is_open_refer);;
-        }
-
         $type = $user['source'];
         $equipment_info = $this->CI->equipment_model->get_info_by_equipment_id($sceneId);
 
@@ -370,14 +358,8 @@ class Device_lib
 
                 //支付
                 if ($order) {
-
                     $rs_pay = $this->pay($order, $box_status['user_id'], $box_status['refer'], $box_status['box_id']);
                     write_log('rs_pay:' . var_export($rs_pay, 1));
-                    if ($rs_pay['code'] == 408) {
-                        //返回失败，则直接进异步处理
-                        $order['pay_info'] = $rs_pay['pay_info'];
-                        $this->ajax_pay($order, $box_status);
-                    }
                 }
 
             }

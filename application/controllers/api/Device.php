@@ -109,9 +109,6 @@ class Device extends REST_Controller {
             $this->send_ok_response(array('status'=>'succ','message'=>'请求开门中...','device_id'=>$device_id));
         }elseif($status['status']=='qianyue'){
             $this->send_ok_response(array('status'=>'error','message'=>'未签约...', 'url'=>$status['url']));
-        }elseif ($status['status']=='limit_open_refer'){
-            //开门方式被限制了
-            $this->send_ok_response(array('status'=>'limit_open_refer','message'=>$status['error']['msg'],'redirect_url'=>$status['error']['redirect_url']));
         }else{
             $this->send_error_response($status."，请稍后重试");
         }
