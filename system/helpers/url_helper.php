@@ -531,6 +531,7 @@ if ( ! function_exists('redirect'))
 	 */
 	function redirect($uri = '', $method = 'auto', $code = NULL)
 	{
+
 		if ( ! preg_match('#^(\w+:)?//#i', $uri))
 		{
 			$uri = site_url($uri);
@@ -554,7 +555,7 @@ if ( ! function_exists('redirect'))
 				$code = 302;
 			}
 		}
-
+        var_dump($uri);
 		switch ($method)
 		{
 			case 'refresh':

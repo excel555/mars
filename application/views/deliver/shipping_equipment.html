@@ -1,0 +1,388 @@
+<style>
+	.pagination-detail { padding-left: 10px }
+
+	.pagination { padding-right: 10px }
+	.editable-input input{width: 100% !important;}
+	table {
+		font-size: 12px;
+		vertical-align: middle;
+	}
+	.list-group{ margin-bottom: 0}
+	#pro_code_suggest { font-size: 12px }
+	#pro_code_suggest .badge{ background-color: #f0ad4e; }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">添加出库/下架单</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group searchbar">
+                <div class="col-sm-2">
+                    <select class="form-control" name="search_replenish_location" id="search_replenish_location" style="width:100px;">
+                        <option value="-1">选择补货仓</option>
+                        <{foreach $store_list as $val}>
+                        <option value="<{$val.code}>"><{$val.name}></option>
+                        <{/foreach}>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                	<label class="control-label">设备名称：</label>
+                	<input style="width:60%;display:inline;" type="text" class="form-control" name="search_name" placeholder="设备名称">
+                </div>
+                <div class="col-sm-3">
+                	<label class="control-label">管理员：</label>
+                	<input style="width:60%;display:inline;" type="text" class="form-control" name="search_admin_name" placeholder="管理员">
+                </div>
+
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <input type="hidden" id="origin_url" value="/deliver/equipment_data">
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-toolbar">
+            <button type="button" class="btn btn-info btn-sm" id="shipping_config_edit">设定预存量</button>
+            <button type="button" class="btn btn-info btn-sm" id="shipping_add_order">添加出库单</button>
+            <button type="button" class="btn btn-info btn-sm" id="off_shipping_add_order">添加下架单</button>
+            <button type="button" class="btn btn-info btn-sm" id="shipping_view_order">查看出库单</button>
+            <a href="/deliver/batch_shipping_config" class="btn btn-warning btn-sm">批量预存量</a>
+            <input type="hidden" id="curr_id" value="0">
+        </div>
+        <div id="config-body">
+	        <table id="tableBody" class="table table-striped"></table>
+    </div>
+    </div>
+</div>
+
+<div class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content"></div>
+	</div>
+</div>
+<link href="/assets/bootstrap/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="/assets/bootstrap/js/bootstrap-editable.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap-table-editable.js" type='text/javascript'></script>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {field: 'state', radio: true},
+            {field: 'id', title: 'ID'},
+            {field: 'name', title: '设备名称'},
+            {field: 'admin_name', title: '管理员'},
+            {field: 'sku_num', title: '总SKU数'},
+            {field: 'num', title: '总库存量'},
+            {field: 'send_date', title: '最新出库单日期',formatter: function (value, row, index) {
+                    return value ? value.send_date.split(' ')[0] : '';
+                }},
+            {field: 'today', title: '今日出库单',formatter: function (value, row, index) {
+                    return value ? value.send_date + '(<a href="/deliver/shipping_view_order_products/'+value.id+'">' + value.operation_name + '</a>)' : '';
+                }},
+            {field: 'remarks', title: '备注'},
+            {
+                field: 'is_auto', title: '自动补货', formatter: function (value, row, index) {
+                    return value == 1 ? '是' : '否';
+                }
+            },
+        ];
+        var table = $('#tableBody'),
+            modal = $('.modal'),
+            modalContent = $('.modal-content');
+        table.bootstrapTable({
+            url: '/deliver/equipment_data',
+            columns: columns,
+            sidePagination: "server",
+            clickToSelect: true,
+            queryParams: function queryParams(params) {
+                $('.searchbar').find('input, select').each(function () {
+                    var _this = $(this), _val = $.trim(_this.val()), _tagName = _this.get(0).tagName;
+                    if ((_tagName == 'INPUT' && _val != '') || (_tagName == 'SELECT' && _val != '-1')) {
+                        var name = $(this).find("option:selected").data('name') || $(this).data('name') || $(this).attr('name');
+                        params[name] = _val;
+                    }
+
+                });
+                return params;
+            },
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 25, 50, 100]
+        });
+
+        function getSelected() {
+            var s = table.bootstrapTable('getSelections');
+            return s.length == 1 ? s[0] : false;
+        }
+
+
+        $("#search-btn").on('click', function () {
+            table.bootstrapTable('refresh');
+        });
+
+
+        function tableData() {
+            return modalContent.find('table').bootstrapTable('getData');
+        }
+
+        modalContent.on('click', '.btn-pro-code', function (e) {
+            var _this = $(this);
+            var code = modalContent.find('#pro_code');
+            if (_this.attr('loading') == 1 || code.val().trim() == '') {
+                return;
+            }
+            _this.attr('loading', 1);
+            var data = {};
+            data['product_id'] = code.val().trim();
+            $.ajax({
+                url: '/warehouse/product/',
+                type: "POST",
+                data: data,
+                dataType: 'json',
+                error: function () {
+                    _this.attr('loading', 0);
+                },
+                success: function (resp) {
+                    _this.attr('loading', 0);
+                    if (resp.status != 'y') {
+                        MessageBox.error(resp.msg);
+                        return;
+                    }
+
+                    var TID = [];
+                    var row = resp.data;
+                    if(Object.prototype.toString.call(row) !== '[object Object]'){
+                        MessageBox.error('商品不存在');
+                        return;
+                    }
+
+                    $.each(tableData(), function () {
+                        TID.push(this.product_id);
+                    });
+
+                    if($.inArray(row.product_id, TID) != -1){
+                        MessageBox.error('已经存在列表中:' + row['product_name']);
+                        return;
+                    }
+
+                    modalContent.find('table').bootstrapTable('prepend', row);
+                    code.val('');
+                    modalContent.find('table').find('[data-name=pre_qty]').eq(0).trigger('click');
+                }
+            });
+        }).on('keyup', '#pro_code', function (e) {
+            var v = $(this).val().trim();
+            if (v == '') {
+                $('#pro_code_suggest').html('');
+                return;
+            }
+            if (e.keyCode == 13) {
+                $('.btn-pro-code').trigger('click');
+            } else if (v.indexOf(',') == -1 && !(/^[U]?\d+$/.test(v))) {
+                $.ajax({
+                    url: '/warehouse/product_suggest/',
+                    type: "POST",
+                    data: {keyword: v},
+                    dataType: 'json',
+                    success: function (resp) {
+                        var li = [];
+                        if (resp && resp.status == 'y') {
+                            $.each(resp.data, function () {
+                                if (this.product_id) {
+                                    li.unshift('<li class="list-group-item" data-code="' + this.product_id + '">' + this.product_name + ' <span class="badge">' + this.product_id + '</span></li>');
+                                } else {
+                                    li.push('<li class="list-group-item disabled" data-code="">' + this.product_name + '</li>')
+                                }
+
+                            });
+                        }
+                        $('#pro_code_suggest').html(li.join(''));
+                    }
+                });
+            }
+        }).on('keydown', '#pro_code', function (e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        }).on('click', function (e) {
+            $('#pro_code_suggest').html('');
+        }).on('click', '#pro_code_suggest li', function (e) {
+            var pro_code = $(this).data('code');
+            if (!pro_code || pro_code == '') {
+                $('#pro_code').val('');
+                MessageBox.error('商品ID不存在: ' + $(this).text());
+                return;
+            }
+            $('#pro_code').val(pro_code);
+            $('.btn-pro-code').trigger('click');
+
+        }).on('click', '.btn-clear', function (e) {
+            $(this).parent().prev().val('');
+        }).on('click', '.btn-del', function (e) {
+            var id = String($(this).parent().parent().data('uniqueid'));
+            modalContent.find('table').bootstrapTable('removeByUniqueId', id);
+        }).on('click', '.btn-save', function (e) {
+            var _this = $(this);
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+            if (_this.attr('loading') == 1) {
+                return;
+            }
+            _this.attr('loading', 1);
+            //防止预存量未保存
+            setTimeout(function () {
+                var data = {eid: row.id};
+                var rows = tableData();
+                if(rows.length == 0 && !window.confirm('确定要清空列表吗？')){
+                    _this.attr('loading', 0);
+                    return;
+                }
+
+                data['products'] = JSON.stringify(rows);
+                data['clear'] = rows.length > 0 ? 0 : 1;
+                $.ajax({
+                    url: '/deliver/shipping_config_save/',
+                    type: "POST",
+                    data: data,
+                    dataType: 'json',
+                    error: function () {
+                        _this.attr('loading', 0);
+                    },
+                    success: function (resp) {
+                        if (resp.status != 'y') {
+                            MessageBox.error(resp.msg);
+                            _this.attr('loading', 0);
+                            return;
+                        }
+                        MessageBox.success('提交成功');
+                        _this.attr('loading', 0);
+                        modal.modal('hide');
+                    }
+                });
+            }, 100);
+
+        }).on('click', '#config-copy-save', function (e) {
+            var codes = $.trim(modalContent.find('#equipment_codes').val());
+            if (codes == ''){
+                MessageBox.error('请输入要复制到的设备编码！');
+                return;
+            }
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+            $.post("/deliver/config_copy",{codes:codes,equipment_id:row.id},function(data){
+                if(data.status=='success'){
+                    MessageBox.success(data.msg);
+                    modalContent.find('#equipment_codes').val('');
+                }else{
+                    MessageBox.error(data.msg);
+                }
+            },'json');
+        });
+
+        //设定预存量
+        $("#shipping_config_edit").on('click', function () {
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+
+            modalContent.html('loading...');
+            $.ajax({
+                url: '/deliver/shipping_config/',
+                type: "POST",
+                dataType: 'html',
+                success: function (resp) {
+                    modalContent.html(resp);
+                    modal.modal('show');
+                    var _columns = [
+                        {field: 'product_id', title: '商品ID'},
+                        {field: 'product_name', title: '商品名称'},
+                        {field: 'preservation_time', title: '保鲜期（天）'}
+                    ];
+                    if(row.is_auto == 1){
+                        modalContent.find('[data-auto-show=1]').show();
+                        modalContent.find('[data-auto-hide=1]').hide();
+                        _columns.push({
+                            field: 'pre_qty', title: '数量', width: 100
+                        });
+                    }else{
+                        modalContent.find('[data-auto-show=1]').hide();
+                        modalContent.find('[data-auto-hide=1]').show();
+                        _columns.push({
+                                field: 'pre_qty', title: '数量', width: 100,
+                                formatter: function(value, row){
+                                    return value ? value : 0;
+                                },
+                                editable: {
+                                    type: 'text',
+                                    showbuttons: false,
+                                    mode: 'inline',
+                                    onblur: 'submit',
+                                    defaultValue: 0,
+                                    validate: function (v) {
+                                        var val = v.trim();
+                                        if (val != '' && !/^\d+$/.test(v)) {
+                                            return '格式错误, 只能为正整数';
+                                        }
+                                    }
+                                }
+                            });
+                        _columns.push({field: '_options', title: '操作', formatter: function (val,row) {
+                                return '<span class="btn btn-danger btn-xs btn-del">x</span>'
+                            }});
+                    }
+
+                    modalContent.find('table').bootstrapTable({
+                        url: '/deliver/shipping_config_data/' + row.id,
+                        columns: _columns,
+                        sidePagination: "server",
+                        uniqueId: 'product_id',
+                        onEditableShown: function (field, row, $el, editable) {
+                            if(!row[field]){
+                                editable.input.$clear.trigger('click');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        //出库单
+        $("#shipping_add_order").on('click', function () {
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+            window.location.href = "/deliver/shipping_add_order/" + row.id + "/" + row.num;
+        });
+
+        //添加出库单
+        $("#off_shipping_add_order").on('click', function () {
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+            window.location.href = "/deliver/off_shipping_add_order/" + row.id;
+        });
+
+        //查看出库单
+        $("#shipping_view_order").on('click', function () {
+            var row = getSelected();
+            if (!row) {
+                MessageBox.error('请选择设备');
+                return;
+            }
+            window.location.href = "/deliver/shipping_view_order/" + row.id;
+        });
+
+
+    });
+</script>

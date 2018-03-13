@@ -1,0 +1,25 @@
+<p style="text-align: center">重启电脑或者显示"127.0.0.1拒绝..."，需要重新运行jar包;</p>
+<div class="col-sm-1" style="float: left">
+    <div class="input-group date  col-md-12" data-link-field="dtp_input1">
+        <a href="#" class="btn btn-default" style="cursor: pointer" id="swich_bind">切换到安的版</a>&nbsp;&nbsp;
+    </div>
+</div>
+<script type="application/javascript">
+    $("#swich_bind").click(function () {
+        var url = $("#bind_iframe").attr("src");
+        if($(this).text() == '切换到安的版'){
+            $("#bind_iframe").attr("src",'http://127.0.0.1:10002/andi?platform=<{$platform_id}>&token=<{$token}>');
+            $(this).text('切换到蚂蚁版')
+        }else{
+            $("#bind_iframe").attr("src",'http://127.0.0.1:10002/bind?platform=<{$platform_id}>&token=<{$token}>');
+            $(this).text('切换到安的版')
+        }
+
+    })
+</script>
+<div class="col-sm-1" style="float: right">
+    <div class="input-group date  col-md-12" data-link-field="dtp_input1">
+        <a href="/assets/bind_help.html" class="btn btn-default" target="_blank">操作文档</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>
+<iframe id="bind_iframe" src="http://127.0.0.1:10002/bind?platform=<{$platform_id}>&token=<{$token}>" width="100%" height="600px" frameborder="0"></iframe>

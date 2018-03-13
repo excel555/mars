@@ -119,7 +119,7 @@ $config['refers'] = array("alipay","wechat","fruitday-app","gat","cmb","sodexo",
 $config['error_msg'] = "请使用微信、支付宝扫码";
 $config['error_url'] = "";
 $config['use_yue'] = 1;
-$config['common_pr'] = $env_config['base_url'].'/public/p.mars?d=DEVICEID';//二维码是前缀
+$config['common_pr'] = $env_config['base_url'].'/public/p.html?d=DEVICEID';//二维码是前缀
 
 //-------------支付宝设备入驻配置------------------
 $config['product_user_id'] = '2088221926206318';//厂商支付宝id

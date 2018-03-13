@@ -1,0 +1,307 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><{$province_name}>-<{$city_name}>-<{$area_name}>-销量汇总</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <form action="/order/sale_bi" method="get" id="sale_form">
+                <{if $province gt 0}>
+                <{include 'order/search_box_new.html'}>
+                <{else}>
+                <{include 'order/search_box.html'}>
+                <{/if}>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" value="<{$name}>" name="search_name" placeholder="设备名称">
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group date  col-md-10" data-link-field="dtp_input1" id="time1">
+                            <input class="form-control" type="text" name="search_start_time" value="<{$search_start_time}>" placeholder="开始时间"  readonly >
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group date  col-md-10" data-link-field="dtp_input2" id="time2" >
+                            <input class="form-control" type="text" name="search_end_time" value="<{$search_end_time}>" placeholder="结束时间"  readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-default" id="search-sale">查找</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="main" style="width: 900px;height:300px;"></div>
+    </div>
+
+    <div class="panel-body">
+        <div id="main2" style="width: 900px;height:300px;"></div>
+    </div>
+    <br/><br/><br/>
+    <div class="panel-heading">
+        <h3 class="panel-title">所有盒子按天销量详情报表下载</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input" id="time" >
+                        <input class="form-control" type="text" name="next_start_time"  placeholder="开始时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input" id="time3" >
+                        <input class="form-control" type="text" name="next_end_time"  placeholder="结束时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                    <input type="hidden" id="origin_url" value="/order/sale_table">
+                </div>
+                <div class="col-sm-3">
+                    <button type="button"  class="btn btn-large btn-primary" id="explore_result" >导出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/order/sale_table" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]">
+                <thead>
+                <tr>
+                    <th data-field="code" data-align="center">售货机编号</th>
+                    <th data-field="sale_date" data-align="center">销售日期</th>
+                    <th data-field="sale_qty" data-align="center">销售数量</th>
+                    <th data-field="stock" data-align="center">库存</th>
+                    <th data-field="good_money" data-align="center">商品金额</th>
+                    <th data-field="sale_money" data-align="center">实付金额</th>
+                    <th data-field="discounted_money" data-align="center">优惠金额</th>
+                    <th data-field="detail" data-align="center">详情</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script src="//cdn.bootcss.com/echarts/3.4.0/echarts.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $('#time1').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $('#time2').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $('#time3').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='next_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        //导出
+        $("#explore_result").on('click', function(){
+            var serverUrl = '/order/explore_result';
+            var filterData = "";
+            $.each($("[name^='next_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            location.href=url;
+        });
+
+    });
+    function show_model(box_no, sale_date){
+        $.get("/order/one_detail/"+box_no+'/'+sale_date,{ },function(respData){
+            if(respData.status=='success'){
+                $(".modal-content").html(respData.html);
+                $('#myModal').modal('show');
+            }
+        },'json');
+    }
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var time    = '<{$time}>';
+    var box_tmp = '<{$box_tmp}>';
+    var param   = '<{$param}>';
+    var start_time = '<{$search_start_time}>';
+    var end_time   = '<{$search_end_time}>';
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            subtext:start_time+'至'+end_time+'销量走势图',
+            subtextStyle:{
+                fontSize:8,
+                color:'#aaa',
+                fontWeight:'normal'
+            }
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:$.parseJSON(box_tmp)
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+//            boundaryGap: false,
+            data: $.parseJSON(time)
+        },
+        yAxis: {
+            type: 'value',
+        },
+        series: $.parseJSON(param)
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+    //柱形图
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    var zhu_key = '<{$zhu_key}>';
+    var zhu_val = '<{$zhu_val}>';
+    var sale_money = '<{$sale_money}>';
+    option = {
+        title : {
+            text:start_time+'至'+end_time+'总销量图',
+            textStyle:{
+                fontSize:12,
+                color:'#444'
+            }
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['商品销量','实付金额']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : $.parseJSON(zhu_key)
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'商品销量',
+                type:'bar',
+                data:$.parseJSON(zhu_val),
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name: '平均值'}
+                    ]
+                }
+            },
+            {
+                name:'实付金额',
+                type:'bar',
+                data:$.parseJSON(sale_money),
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                }
+            }
+        ]
+    };
+
+    myChart2.setOption(option);
+
+
+</script>

@@ -1,0 +1,206 @@
+<style type="text/css">
+    table{
+        font-size: 13px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> 用户信息管理</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='5' name="search_user_name" placeholder="用户昵称">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_id" placeholder="用户id">
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input1" id="begin_time" >
+                        <input class="form-control" type="text" name="search_start_time"  placeholder="开始时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input1" id="to_time" >
+                        <input class="form-control" type="text" name="search_end_time"  placeholder="结束时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-success" id="search-btn">搜索</button>
+                </div>
+                <input type="hidden" id="origin_url" value="/user/user_list_table">
+                <input type="hidden" id="curr_id" value="0">
+            </div>
+
+        </div>
+    </div>
+    <div class="panel-heading">
+        <button type="button" class="btn btn-info btn-sm" id="user_black">添加到黑名单</button>
+
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/user/user_list_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]" data-sortable="true" data-silent-sort="ture">
+                <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="mobile" data-align="center">用户手机号</th>
+                    <th data-field="user_name" data-align="center">昵称</th>
+                    <th data-field="source" data-align="center">来源</th>
+                    <th data-field="reg_time" data-align="center">注册时间</th>
+                    <th data-field="is_black" data-align="center">黑名单</th>
+                    <!--<th data-field="open_id" data-align="center">openId</th>-->
+                    <!--<th data-field="pay_comment" data-align="center">操作</th>-->
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="download_label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 50%">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script type="text/javascript">
+    function download_user(obj, serverUrl){
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'&'+filterData;
+        }
+        $(obj).css('color', '#aaa');
+        location.href=url;
+    }
+
+    $(function(){
+        $('#begin_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day',
+            minuteStep:1
+        });
+        $('#to_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day',
+            minuteStep:1
+        });
+
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        }).on('load-success.bs.table', function (e,data) {
+            $('.user_total').text(data.total);
+            $('.today').text(data.today);
+            $('.yesterday').text(data.yesterday);
+        });;
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+
+        $("#user_show").click(function(){
+            var cur_id = $("#curr_id").val();
+            if (cur_id == 0) {
+                MessageBox.error('请选择查看项');
+                return;
+            }
+            window.location.href = "/order/index?uid=" + cur_id;
+        });
+
+        $("#user_card_show").click(function(){
+            var cur_id = $("#curr_id").val();
+            if (cur_id == 0) {
+                MessageBox.error('请选择查看项');
+                return;
+            }
+            window.location.href = "/card/index?uid=" + cur_id;
+        });
+        $("#user_black").click(function(){
+            var cur_id = $("#curr_id").val();
+            if (cur_id == 0) {
+                MessageBox.error('请选择查看项');
+                return;
+            }
+            if(confirm('是否确认把用户添加到黑名单')) {
+                $.ajax({
+                    type: "post",
+                    url: "/user/update_black",
+                    data: {
+                        user_id: cur_id
+                    },
+                    success: function (data, status) {
+                        location.reload();
+                    },
+                    error: function () {
+
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            }
+        });
+
+
+
+        $("#user_bind").click(function(){
+            var cur_id = $("#curr_id").val();
+            if (cur_id == 0) {
+                MessageBox.error('请选择查看项');
+                return;
+            }
+            window.location.href = "/user/user_bind/" + cur_id;
+        });
+
+//        $("#export").click(function(){
+//            window.open('/user/user_export');
+//        });
+
+        $("#export").on('click', function(){
+            $.get("/user/download_html/"+$('.user_total').text(),{ },function(respData){
+                if(respData.status=='success'){
+                    $("#download_label").find('.modal-content').html(respData.html);
+                    $('#download_label').modal('show')
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>

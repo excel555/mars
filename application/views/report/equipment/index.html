@@ -1,0 +1,489 @@
+<style type="text/css">
+    .vertical-alignment-helper {
+        display:table;
+        height: 100%;
+        width: 100%;
+
+    }
+    .vertical-align-center {
+        text-align: center;
+        /* To center vertically */
+        display: table-cell;
+        vertical-align: middle;
+    }
+</style>
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <span class="panel-title" style="width: 50%; color: #777;"> 设备情报 </span>
+    </div>
+
+    <div class="panel-body">
+        <br>
+        <div class="col-xs-6">
+
+            <div class="col-xs-3">
+                <img style="width: 100px;height: 140px" src="http://fdaycdn.fruitday.com/images/box_products_img/1760/1/1-180x180-1760-K7AW7HKP.jpg">
+            </div>
+            <div class="col-xs-9">
+                <h4><{$info['name']}></h4>
+                <span>设备标签:<{$info['tags']}></span><br/>
+                <span>运营时间:<{$info['firstordertime']}></span><br/>
+                <span>购买人数|库存数:<{$info['user']|default:'0'}>|<a target="_blank" href="/equipment/stock/<{$info['id']}>"><{$info['stock']|default:'0'}></a></span><br/>
+                <span>时段复购率:<font id="user_avg">0%</font></span><br/>
+                <span>设备等级:<{$info['level']}></span>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="col-sm-12" style="height: 50px"></div>
+            <div class="col-sm-5" style="padding-right: 8px;">
+                <div class="input-group date  col-md-12" data-link-field="dtp_input" id="time" >
+                    <input class="form-control" type="text" name="start_date"  placeholder="开始时间"  readonly="readonly" value="<{$info['start']}>">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+            </div>
+            <div class="col-sm-5" style="padding-right: 8px;">
+                <div class="input-group date  col-md-12" data-link-field="dtp_input" id="time1" >
+                    <input class="form-control" type="text" name="end_date"  placeholder="结束时间"  readonly="readonly" value="<{$info['end']}>">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-default" id="eq-search-btn">查找</button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <div class="panel-body">
+        <div id="main" style="width: 100%;height:300px;"></div>
+    </div>
+    <div class="panel-body">
+        <div id="main3" style="width: 100%;height:300px;"></div>
+    </div>
+    <div class="panel-body">
+        <div id="main2" style="width: 100%;height:600px;"></div>
+    </div>
+
+    <div class="panel-body">
+        <div id="main7" style="width: 100%;height:500px"></div>
+    </div>
+</div>
+
+
+<div class="modal " id="loadingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <img src="/assets/images/loading.gif" width="20%" height="auto"  >
+        </div>
+    </div>
+</div>
+<script src="/assets/js/echarts.min.js"></script>
+<script src="/assets/js/echarts-gl.min.js"></script>
+<script type="application/javascript">
+    var equipment_id = '<{$info["equipment_id"]}>';
+    var total_stock = "<{$info['stock']|default:'0'}>";
+    function show_loading(){
+        $('#loadingModal').show().css('padding-right', '0px').append('<div class="modal-backdrop  in" style="height: 100%;"></div>');
+    }
+
+    function hide_loading(){
+        $('#loadingModal').hide();//
+        $('.modal-backdrop').remove();
+    }
+
+    function init_page(){
+        show_loading();
+        var start_date = $('input[name="start_date"]').val();
+        var end_date   = $('input[name="end_date"]').val();
+
+        $.ajax({
+            url: '/report/equipment/ajax_data',
+            data: {equipment_id: equipment_id, start_date: start_date, end_date:end_date},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                if(data['status'] == 'success'){
+                    hide_loading();
+                    chart_area(data['xAxis'], data['sale_money'], data['discount_money']);
+                    chart_pie(data['class_1v'], data['class_2v'], data['class_sk'], data['class_sv'], data['all_n'], data['all_m']);
+//                    chart_bar(data['relation_x'], data['relation_v'], false);
+                    if(data['product_v'].length>12){
+                        $('#main7').height(500);
+                    }else{
+                        $('#main7').height(data['product_v'].length*30 +100);
+                    }
+                    chart_store(data['product_k'],  data['product_v']);
+                    chart_money(data['hour_k'], data['hour_v']);
+                    $('#user_avg').text(data['user_avg']+'%');
+                }
+            }
+        });
+
+
+    }
+
+
+    function chart_area(xAxis, sale_money, discount_money){
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        var option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            title: {
+                subtext:'单设备销售表现',
+            },
+            legend: {
+                data:['销售额','单设备补贴额']
+            },
+
+            xAxis: {
+                type: 'category',
+                axisLine: {
+                    lineStyle: { color: '#666' }
+                },
+                boundaryGap: false,
+                data: xAxis
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: { color: '#666' }
+                },
+                boundaryGap: false,
+                splitLine: { show: false }
+            },
+            series: [
+                {
+                    name: '销售额',
+                    type: 'line',
+                    smooth:true,
+                    sampling: 'average',
+                    itemStyle: {
+                        normal: {
+                            color: '#5BCCCB'
+                        }
+                    },
+                    lineStyle:{
+                        normal:{
+                            width:1
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color: '#5BCCCB'
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    data: sale_money
+                },
+                {
+                    name: '单设备补贴额',
+                    type: 'line',
+                    smooth:true,
+                    sampling: 'average',
+                    itemStyle: {
+                        normal: {
+                            color: '#C0E17B'
+                        }
+                    },
+                    lineStyle:{
+                        normal:{
+                            width:1
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color:'#C0E17B'
+                        }
+                    },
+                    data: discount_money
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }
+
+
+
+    function chart_pie(class1_data, class2_data, class_sk, class_sv, all_n, all_m){
+        var myChart = echarts.init(document.getElementById('main2'));
+        // 总和
+        var option = {
+            title:[
+                {text:"单设备销售额 ￥"+all_m+"("+all_n+"件) 一级类目 ",x: '1%', y: '1%',textStyle:{color:"#bbb",fontSize:"14"}},
+                {text:"设备热卖品类排行",x: '40%', y: '1%',textStyle:{color:"#bbb",fontSize:"14"}},
+                {text:"单设备销售额 ￥"+all_m+"("+all_n+"件) 二级类目",x: '1%', y: '50%',textStyle:{color:"#bbb",fontSize:"14"}},
+            ],
+            grid: [
+                {x: '50%', y: '7%', width: '45%', height: '90%'},
+            ],
+            tooltip: {
+                formatter: '{b} ({c})'
+            },
+            xAxis: [
+                {gridIndex: 0, axisTick: {show:false},axisLabel: {show:false},splitLine: {show:false},axisLine: {show:false }},
+            ],
+            yAxis: [
+                {  gridIndex: 0, interval:0,data:class_sk,
+                    axisTick: {show:false}, axisLabel: {show:true},splitLine: {show:false},
+                    axisLine: {show:true,lineStyle:{color:"#6173a3"}},
+                }
+            ],
+            series: [
+                {
+                    name: '单设备销售额 一级类目',
+                    type: 'pie',
+                    radius: ['22%', '30%'],
+                    center: ['22%', '25%'],
+                    data:class1_data,
+                    labelLine:{normal:{show:false}},
+                    itemStyle: {normal: {label:{ show: true,  formatter: '{b}:￥{c} \n ({d}%)', textStyle:{color:'#B1B9D3'}} },},
+                },
+                {
+                    name: '单设备销售额 二级类目',
+                    type: 'pie',
+                    radius: ['22%', '30%'],
+                    center: ['22%', '75%'],
+                    labelLine:{normal:{show:false}},
+                    data:class2_data,
+                    itemStyle: {normal: {label:{ show: true,  formatter: '{b}:￥{c} \n ({d}%)', textStyle:{color:'#B1B9D3'}} },},
+                },
+                {
+                    name: '设备热卖品类排行',
+                    type: 'bar',xAxisIndex: 0,yAxisIndex: 0,barWidth:'45%',
+                    itemStyle:{normal:{color:'#86c9f4'}},
+                    label:{normal:{show:true, position:"right",textStyle:{color:"#9EA7C4"}}},
+                    data: class_sv,
+                },
+
+            ]
+        };
+        myChart.setOption(option, true);
+    }
+
+
+    //库存模拟
+    function chart_store(key, value){
+        var myChart = echarts.init(document.getElementById('main7'));
+        var appusage_data = value;
+        var end_zoom = parseInt(100-12/value.length*100);
+        var data_Zoom = value.length>12?[{
+            show: true,
+            height: 400,
+            yAxisIndex: [0],
+            bottom: 50,
+            start: 100,
+            end: end_zoom,
+            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+            handleSize: '110%',
+            handleStyle:{color:"#d3dee5"},
+            textStyle:{color:"#fff"},
+            borderColor:"#90979c",
+            orient:'vertical',
+            zoomLock:true,
+            filterMode:'empty',
+            showDetail:false
+        }]:[];
+
+
+        var option = {
+            "title": {
+                "text": "设备热卖商品排行           当前设备商品情况：总SKU数("+value.length+") 总库存数("+total_stock+")",
+                "textStyle": {
+                    "color": "#bbb",
+                    "fontWeight": "bold",
+                    "fontSize": 14
+                },
+                "top": 10
+            },
+            tooltip: {
+                "trigger": "axis",
+                "axisPointer": {
+                    "type": "shadow",
+                    textStyle: {
+                        color: "#fff"
+                    }
+                }
+            },
+            "grid": {
+                left: 170
+            },
+
+
+            "calculable": true,
+            "yAxis": [{
+                "type": "category",
+                "data": key,
+                "position": 'left',
+                "nameLocation": 'start',
+                "offset": 170,
+                "axisLine": {
+                    "show": false
+                },
+                "axisTick": {
+                    "show": false,
+                    "alignWithLabel": true
+                },
+                "axisLabel": {
+                    "textStyle": {
+                        "color": "#7FA98E",
+                    },
+                    inside: true
+                },
+            }],
+            "xAxis": [{
+                "type": "value",
+                "axisLine": {
+                    "show": false
+                },
+                "axisTick": {
+                    "show": false
+                },
+                "axisLabel": {
+                    "show": false
+                },
+                "splitLine": {
+                    "show": false
+                }
+            }],
+
+            "dataZoom": data_Zoom,
+            "series": [{
+                "type": "bar",
+                "data": appusage_data,
+                "barGap": 10,
+                "barWidth":20,
+                "label": {
+                    "normal": {
+                        "show": true,
+                        "position": "right",
+                        "formatter": function(params) {
+                            return params.data.value;
+                        },
+                        "textStyle": {
+                            "color": "#333" //color of value
+                        }
+                    }
+                },
+                "itemStyle": {
+                    "normal": {
+                        "color": '#7FA98E'
+                    }
+                }
+            }],
+            toolbox: {
+                show : true,
+                feature : {
+                    dataView : {
+                        show: true,readOnly:true,
+                        optionToContent: function(opt) {
+                            var axisData = opt.series[0].data;
+                            var table = '<table style="width:100%;text-align:left"><tbody><tr>'
+                                    + '<td>商品名称</td>'
+                                    + '<td>销售件数</td>'
+                                    + '</tr>';
+                            for (var i = axisData.length-1; i >=0; i--) {
+                                table += '<tr>'
+                                        + '<td>' + axisData[i]['name'] + '</td>'
+                                        + '<td>' + axisData[i]['value'] + '</td>'
+                                        + '</tr>';
+                            }
+                            table += '</tbody></table>';
+                            return table;
+                        }},
+                }
+            },
+        };
+
+        myChart.setOption(option);
+        $('#main7').css('user-select', 'text');
+    }
+
+
+    function chart_money(data_k, data_v){
+        var myChart2 = echarts.init(document.getElementById('main3'));
+
+        // 指定图表的配置项和数据
+        var option2 = {
+            title: {
+                subtext:'支付金额(¥)',
+                subtextStyle:{
+                    fontSize:8,
+                    color:'#aaa',
+                    fontWeight:'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+            },
+            legend: {
+                data:['支付金额']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+//            boundaryGap: false,
+                data: data_k
+            },
+            yAxis: {
+                type: 'value',
+            },
+            series: [
+                {
+                    name: '支付金额',
+                    type: 'line',
+                    data: data_v,
+//                    data:[120, 132, 101, 134, 90, 230, 210]
+                    smooth:true,
+                }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option2);
+    }
+
+    var end_date = "<{$info['end']}>";
+
+    $(document).ready(function(){
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_date
+        });
+        $('#time1').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_date
+        });
+        init_page();
+
+        $('#eq-search-btn').click(function(){
+            init_page();
+        });
+    });
+</script>

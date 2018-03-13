@@ -1,0 +1,140 @@
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+	<div class="panel-heading">新增/编辑 告警规则</div>
+	<table class="table">
+		<form action="/warn_system/save" id="myform" name="myform" method="post" >
+		  <input name="id" value="<{$warn.id}>" type="hidden">
+		  <tr class="tr">
+		    <td width="22%" align="right" > 规则名称：</td>
+		    <td width="75%" ><input name="name" type="text" id="name" size="40" value="<{$warn.name}>" placeholder="规则名称" /></td>
+		  </tr>
+
+		  <tr class="tr">
+		    <td width="22%" align="right" > 告警类型：</td>
+		    <td width="75%" >
+		    	<select class="form-control" name="warn_type" id="warn_type" style="width:140px;">
+					<option value="1" <{if $warn.warn_type eq '1'}>selected<{/if}>>商品增多异常</option>
+					<option value="2"  <{if $warn.warn_type eq '2'}>selected<{/if}>>开关门异常</option>
+					<option value="3"  <{if $warn.warn_type eq '3'}>selected<{/if}>>支付失败</option>
+					<option value="4"  <{if $warn.warn_type eq '4'}>selected<{/if}>>标签绑定异常</option>
+					<option value="5"  <{if $warn.warn_type eq '5'}>selected<{/if}>>零售机心跳异常</option>
+					<option value="6"  <{if $warn.warn_type eq '6'}>selected<{/if}>>盘点差异巨大</option>
+					<option value="7" <{if $warn.warn_type eq '7'}>selected<{/if}>>消息重复推送</option>
+					<option value="8" <{if $warn.warn_type eq '8'}>selected<{/if}>>设备状态异常</option>
+					<option value="9" <{if $warn.warn_type eq '9'}>selected<{/if}>>不稳定标签</option>
+				 </select>
+		    </td>
+		  </tr>
+
+			<tr class="tr">
+				<td width="22%" align="right" > 告警方式：</td>
+				<td width="75%" >
+					<select class="form-control" name="warn_method" id="warn_method"  style="width:140px;">
+						<option value="email" <{if $warn.warn_method eq 'email'}>selected<{/if}>>邮件</option>
+						<option value="sms" <{if $warn.warn_method eq 'sms'}>selected<{/if}>>短信</option>
+						<option value="wechat" <{if $warn.warn_method eq 'wechat'}>selected<{/if}>>微信</option>
+					</select>
+				</td>
+			</tr>
+
+			<!--<tr class="tr">-->
+				<!--<td width="22%" align="right" > 告警对象：</td>-->
+				<!--<td width="75%" >-->
+					<!--<label>-->
+						<!--<input type="radio" <{if $warn.warn_object eq 'box_admin'}>checked<{/if}>  value="box_admin" name="warn_object">-->
+					<!--售货机管理员-->
+					<!--</label>-->
+					<!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+					<!--<label>-->
+						<!--<input type="radio" value="tech" name="warn_object" <{if $warn.warn_object eq 'tech'}>checked<{/if}>>-->
+					<!--技术相关人员-->
+					<!--</label>-->
+					<!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+					<!--<p>-->
+					<!--<input name="warn_object_input" type="text" id="warn_object_input" size="40" value="<{$warn.warn_object_input }>" placeholder="其他" />-->
+					<!--</p>-->
+				<!--</td>-->
+			<!--</tr>-->
+
+			<td width="22%" align="right" > 选择告警对象组：
+				<br/>
+				<br/>
+				<br/>
+				<label><input type="checkbox" value="" id="box_check_all"> 全选</label>
+			</td>
+			<td width="75%" >
+				<div class="store-box" style="min-height:250px;overflow-y:auto;max-height:200px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+					<{foreach key=key item=item from=$user_list}>
+					<label style="margin-right:10px;font-weight: normal">
+						<input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="group_ids[]"  value="<{$item['id']}>"> <{$item['name']}>
+					</label>
+					<{/foreach}>
+				</div>
+			</td>
+			</tr>
+		  <tr class="tr">
+		    <td width="22%" align="right" > 备注：</td>
+		    <td width="75%" ><input name="note" type="text" id="note" size="40" value="<{$warn.note }>" /></td>
+		  </tr>
+		  <tr class="tr">
+		    <td align="right" >&nbsp;</td>
+		    <td ><input type="button" onclick="submitForm()" name="Submit" class="lostfocus" onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";' onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+			value="保存">
+			<input type="button" value="返回" onclick="history.back();" />
+		  </tr>
+		</form>
+	</table>
+</div>
+<script type="text/javascript">
+
+function submitForm(){
+	if ($('#name').val() == ''){
+		alert('填写名称！');
+		return;
+	}
+//    var obj = $('input:radio:checked').val();
+//    var obj_input = $('#warn_object_input').val();
+//    if(!obj && !obj_input){
+//        alert('填写告警对象');
+//        return;
+//	}
+	$('#myform').submit();
+}
+
+
+
+    $(function(){
+        $('#box_check_all').click(function(){
+            var flag = $(this).prop('checked');
+            $('.store-box').find('input[type="checkbox"]').prop('checked', flag)
+        });
+
+        $("#update_address").on('click', function(){
+        	var province = $('#select_province').val();
+        	var province_html = $('#select_province option:selected').text();
+        	var city = $('#select_city').val();
+        	var city_html = $('#select_city option:selected').text();
+        	var area = $('#select_area').val();
+        	var address = $('#address').val();
+        	var address_all = province_html + city_html + address;
+        	if (province == -1 || city == -1){
+        		alert('请先选择省市区！');
+        		return;
+        	}
+        	$.post("/warn_system/updateFromAddress",{address: address},function(respData){
+	            if(respData.status== 'success'){
+	            	$('#baidu_xyz').val(respData.lonlat);
+	            	$('#base_location').val(respData.tmscode);
+	            } else {
+	            	alert(respData.msg);
+	            	return;
+	            }
+	        },'json');
+        });
+
+    });
+</script>
+

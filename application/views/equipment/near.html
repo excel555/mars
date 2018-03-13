@@ -1,0 +1,83 @@
+<div class="panel panel-default">
+	<div class="panel-heading">坐标附近的设备</div>
+	<table class="table">
+		  <tr class="tr">
+		    <td width="22%" align="right" > 盒子经纬度：</td>
+		    <td width="75%" ><input name="lng" type="text" id="lng" size="10" value="" placeholder="经度" />&nbsp;<input name="lat" type="text" id="lat" size="10" value="" placeholder="纬度" /></td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 坐标半径：</td>
+		    <td width="75%" >
+		    	<select class="form-control" name="distance" id="distance"  style="width:100px;">
+					<option value="0.5">0.5公里</option>
+					<option value="1">1公里</option>
+					<option value="2">2公里</option>
+					<option value="3">3公里</option>
+				 </select>
+		    </td>
+		  </tr>
+		  
+		  
+		  <tr class="tr">
+		    <td align="right" >&nbsp;</td>
+		    <td ><input type="button" onclick="getEquipment()" name="Submit" class="lostfocus" onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";' onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+			value="查询">
+			<input type="button" value="返回" onclick="history.back();" />
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 设备列表：</td>
+		    <td width="75%" >
+		    	<textarea rows="5" cols="130" id="box_ids" readonly="readonly"></textarea>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 设备列表(仅显示)：</td>
+		    <td width="75%" >
+		    	<textarea rows="5" cols="130" id="box_names" readonly="readonly"></textarea>
+		    </td>
+		  </tr>
+	</table>
+</div>
+
+<script type="text/javascript">
+	function getEquipment(){
+		var lng = $('#lng').val();
+		var lat = $('#lat').val();
+		var distance = $('#distance').val();
+		if (lng && lat){
+			$.ajax({
+            type: "post",
+            url: "/equipment/ajaxGetNearEquipment",
+            dataType: 'json',
+            data: {
+                lng:lng,
+                lat:lat,
+                distance:distance
+            },
+            success: function (data, status) {
+            	if (data.status == true){
+            		MessageBox.success(data.msg);
+            		$('#box_ids').val(data.equipments);
+            		$('#box_names').val(data.equipments_name);
+            		//$(obj).parent().html("<a onclick=\"showadmin('"+equipment_id+"')\">查看管理员</a>");
+            	} else {
+            		MessageBox.warning(data.msg);
+            	}
+                
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+
+        });
+		}
+		
+	}
+</script>
+

@@ -1,0 +1,62 @@
+<style>
+	.modal-dialog{width: 900px}
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="exampleModalLabel">新增库存冻结</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label col-form-label">备注</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" value="<{$detail.name}>" name="name">
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label col-form-label">仓库</label>
+                <div class="col-sm-5">
+                    <select name="warehouse_id" class="form-control">
+                        <option value="-1">-请选择仓库-</option>
+                        <{foreach $warehouse as $k=>$v}>
+                        <option value="<{$v['id']}>" <{if $v['id'] == $detail.warehouse_id }>selected<{/if}>><{$v['name']}></option>
+                        <{/foreach}>
+                    </select>
+                </div>
+            </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label col-form-label">商品ID</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" <{if $detail.product_id}>readonly<{/if}> value="<{$detail.product_id}>" name="product_id" id="pro_code">
+                <ul class="list-group" id="pro_code_suggest"></ul>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label col-form-label">冻结数量</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" value="<{$detail.qty}>" name="qty">
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label col-form-label">有效时间</label>
+            <div class="col-sm-10 form-inline">
+                <input type="text" value="<{$detail.start_date}>" name="start_date" readonly class="form-control start_date">
+                <span>-</span>
+                <input type="text" name="end_date" value="<{$detail.end_date}>" readonly class="form-control end_date">
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-5">
+                <label class="checkbox-inline">
+                        <input type="checkbox" name="is_valid"  <{if $detail.is_valid == 1}>checked<{/if}> value="1">启用
+                </label>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="<{$detail.id|default:0}>" />
+    </form>
+</div>
+<div class="modal-footer">
+    <span class="btn btn-danger btn-save">保存</span>
+    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+</div>

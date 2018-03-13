@@ -1,0 +1,120 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> 异常日志 </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_name" placeholder="设备名称">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_id" placeholder="设备ID">
+                </div>
+                <!--<div class="col-sm-3">-->
+                    <!--<div class="input-group date  col-md-10" data-link-field="dtp_input1" id="time" >-->
+                        <!--<input class="form-control" type="text" name="search_start_time"  placeholder="开始时间"  readonly>-->
+                        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
+                        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="col-sm-3">-->
+                    <!--<div class="input-group date  col-md-10" data-link-field="dtp_input2" id="to_date" >-->
+                        <!--<input class="form-control" type="text" name="search_end_time"  placeholder="结束时间"  readonly>-->
+                        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
+                        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="col-sm-2">
+                    <select class="form-control" name="search_log_type">
+                        <option value="0">异常类型</option>
+                        <option value="1">商品增多</option>
+                        <option value="2">开关门状态异常</option>
+                        <option value="3">支付不成功</option>
+                        <option value="4">商品绑定异常</option>
+                        <option value="5">零售机心跳异常</option>
+                        <option value="6">盘点差异超过10件</option>
+                        <option value="7">消息重复发送</option>
+                        <option value="8">硬件设备告警</option>
+                        <option value="9">不稳定标签</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <input type="hidden" id="origin_url" value="/showlog/abnormal_log_table">
+            </div>
+
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/showlog/abnormal_log_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="20" data-side-pagination="server" data-page-list="[20,50,100]">
+                <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="name" data-align="center">设备名称</th>
+                    <th data-field="addTime" data-align="center">异常发生时间</th>
+                    <th data-field="uid" data-align="center">用户id</th>
+                    <th data-field="log_type" data-align="center">日志类型</th>
+                    <th data-field="content_n" data-align="center">异常详情</th>
+                    <th data-field="is_send_warn" data-align="center">是否发送告警</th>
+
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ckRadio(){
+        var curr_id = $("input[type=radio]:checked").parent().next().html();
+        if(typeof(curr_id) == "undefined"){
+            $("#curr_id").val(0);
+        }else{
+            $("#curr_id").val(curr_id);
+        }
+    }
+
+    $(function(){
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $('#to_date').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+
+        $('#config-table').bootstrapTable({
+        }).on('click-row.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+
+    });
+</script>

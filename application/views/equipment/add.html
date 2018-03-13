@@ -1,0 +1,106 @@
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+    <div class="panel-heading">新增设备</div>
+    <table class="table">
+        <form action="/equipment/add_save" id="myform" name="myform" method="post">
+            <tr class="tr">
+                <td width="22%" align="right"> 设备ID：</td>
+                <td width="75%"><input name="equipment_id" type="text" id="equipment_id" size="30" value=""
+                                       placeholder="盒子ID，设备唯一编号"/></td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 名称：</td>
+                <td width="75%"><input name="name" type="text" id="name" size="30" value="" placeholder="盒子别名，如 XX公司"/>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 盒子编码：</td>
+                <td width="75%"><input name="code" type="text" id="code" size="30" value=""
+                                       placeholder="盒子编码，如A000001"/></td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 设备类型：</td>
+                <td width="75%">
+                <select style="width: 220px" id="select_type" class="form-control" name="type">
+                    <option value="rfid">RFID</option>
+                    <option value="scan">扫码</option>
+                    <option value="vision">视觉</option>
+                </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right"> 省市区：</td>
+                <td width="75%">
+                    <select style="width: 220px;display:inline;" id="select_province" class="form-control" name="province">
+                        <option value="-1">===请选择省份===</option>
+                    </select>
+                    <select style="width: 220px;display:inline;" id="select_city" class="form-control" name="city">
+                        <option value="-1">===请选择市区===</option>
+                    </select>
+                    <select style="width: 220px;display:inline;" id="select_area" class="form-control" name="area">
+                        <option value="-1">===请选择地区===</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 地址：</td>
+                <td width="75%"><input name="address" type="text" id="address" size="30" value=""/></td>
+            </tr>
+
+
+            <tr class="tr">
+                <td align="right">&nbsp;</td>
+                <td><input type="button" onclick="submitForm()" name="Submit" class="lostfocus"
+                           onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";'
+                           onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+                           value="保存">
+                    <input type="button" value="返回" onclick="history.back();"/>
+            </tr>
+        </form>
+    </table>
+</div>
+<script type="text/javascript">
+
+    function submitForm() {
+        if ($('#equipment_id').val() == '') {
+            alert('请输入盒子id！');
+            return;
+        }
+        $('#myform').submit();
+    }
+
+
+    $(function () {
+        $("#update_address").on('click', function () {
+            var province = $('#select_province').val();
+            var province_html = $('#select_province option:selected').text();
+            var city = $('#select_city').val();
+            var city_html = $('#select_city option:selected').text();
+            var area = $('#select_area').val();
+            var address = $('#address').val();
+            var address_all = province_html + city_html + address;
+            if (province == -1 || city == -1) {
+                alert('请先选择省市区！');
+                return;
+            }
+            $.post("/equipment/updateFromAddress", {address: address}, function (respData) {
+                if (respData.status == 'success') {
+                    $('#baidu_xyz').val(respData.lonlat);
+                    $('#base_location').val(respData.tmscode);
+                } else {
+                    alert(respData.msg);
+                    return;
+                }
+            }, 'json');
+        });
+
+    });
+</script>
+

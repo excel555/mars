@@ -1,0 +1,192 @@
+<style type="text/css">
+	.pagination-detail { padding-left: 10px }
+
+	.pagination { padding-right: 10px }
+
+	table {
+		font-size: 12px;
+	}
+</style>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="pull-left toolbar">
+			<span class="btn btn-info btn-sm btn-add">新增库存冻结</span>
+		</div>
+		<div class="pull-right form-inline searchbar">
+            <div class="form-group form-group-sm">
+                <select name="warehouse_id" class="form-control">
+                    <option value="-1">-请选择仓库-</option>
+                    <{foreach $warehouse as $k=>$v}>
+                    <option value="<{$v['id']}>"><{$v['name']}></option>
+                    <{/foreach}>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select name="status" id="status" class="form-control">
+                    <option value="-1">-状态-</option>
+                    <option data-name="is_valid" value="1">有效</option>
+                    <option data-name="is_valid" value="0">无效</option>
+                </select>
+            </div>
+			<div class="form-group form-group-sm">
+				<input type="text" class="form-control" name="name" placeholder="商品名称或商品ID">
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-default btn-sm btn-search">查找</button>
+			</div>
+		</div>
+
+		<div style="clear: both"></div>
+	</div>
+</div>
+<table id="tableBody" class="table table-striped"></table>
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var toolbar = $('.toolbar');
+        var searchbar = $('.searchbar');
+        var table = $('#tableBody'),
+            modal = $('.modal'),
+            modalContent = $('.modal-content');
+
+        var columns = [
+            {field: 'id', title: 'ID'},
+            {field: 'product_id', title: '商品ID'},
+            {field: 'product_name', title: '商品名称'},
+            {field: 'start_date', title: '开始日期'},
+            {field: 'end_date', title: '结束日期'},
+            {field: 'qty', title: '冻结数量'},
+            {field: 'is_valid', title: '是否启用', formatter: function(value, row, index){
+	            return value == 1 ? '启用' : '未启用';
+                }
+	        },
+            {
+                field: 'operation', title: '操作', align: 'center',
+                formatter: function (value, row, index) {
+                    return ['<span data-id="' + row.id + '" class="btn btn-xs btn-info btn-edit">编辑</span>'].join('');
+                }
+            }
+        ];
+        
+        function queryParams(params) {
+            params = params || {};
+            searchbar.find('input, select').each(function () {
+                var _this = $(this), _val = $.trim(_this.val()), _tagName = _this.get(0).tagName;
+                if ((_tagName == 'INPUT' && _val != '') || (_tagName == 'SELECT' && _val != '-1')) {
+                    var name = $(this).find("option:selected").data('name') || $(this).data('name') || $(this).attr('name');
+                    params[name] = _val;
+                }
+
+            });
+            return params;
+        }
+        table.bootstrapTable({
+            url: '/warehouse/stock_lock_data/',
+            columns: columns,
+            sidePagination: "server",
+            queryParams: queryParams,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 25, 50, 100]
+        });
+
+        function modalShow(resp){
+            modalContent.html(resp);
+            modal.modal('show');
+            modalContent.find('.end_date').datetimepicker({
+                        language: 'zh', //汉化
+                        autoclose: 1,
+                        format: 'yyyy-mm-dd',
+                        minView: 2
+                    });
+        }
+
+        table.on('click', '.btn-edit', function(){
+            modalContent.html('loading...');
+            $.ajax({
+                url: '/warehouse/stock_lock_add/' + $(this).data('id'),
+                type: "POST",
+                dataType: 'html',
+                success: function (resp) {
+                    modalShow(resp);
+                }
+            });
+        });
+
+        toolbar.on('click', '.btn-add', function () {
+            modalContent.html('loading...');
+            $.ajax({
+                url: '/warehouse/stock_lock_add/',
+                type: "POST",
+                dataType: 'html',
+                success: function (resp) {
+                    modalShow(resp);
+                }
+            });
+        });
+
+        modalContent.on('click', '.btn-save', function(){
+            var _this = $(this);
+            _this.addClass('disabled');
+            var data = modalContent.find('form').serialize();
+            $.ajax({
+                url: '/warehouse/stock_lock_save/',
+                type: "POST",
+                dataType: 'json',
+                data: data,
+                error: function(jqXHR, textStatus, errorThrown){
+                    MessageBox.error(errorThrown);
+                },
+                success: function (resp) {
+                    if(resp.status != 'y'){
+                        MessageBox.error(resp.msg);
+                        _this.removeClass('disabled');
+                        return;
+                    }
+                    modal.modal('hide');
+                    MessageBox.success('保存成功');
+                    table.bootstrapTable('refresh');
+                }
+            });
+        }).on('keyup', '#pro_code', function (e) {
+            var v = $(this).val().trim();
+            if (v == '') {
+                $('#pro_code_suggest').html('');
+                return;
+            }
+            $.ajax({
+                url: '/warehouse/product_suggest/',
+                type: "POST",
+                data: {keyword: v},
+                dataType: 'json',
+                success: function (resp) {
+                    var li = [];
+                    if (resp && resp.status == 'y') {
+                        $.each(resp.data, function () {
+                            li.unshift('<li class="list-group-item" data-code="' + this.product_id + '">' + this.product_name + ' <span class="badge">' + this.product_id + '</span></li>');
+
+                        });
+                    }
+                    $('#pro_code_suggest').html(li.join(''));
+                }
+            });
+        }).on('click', function (e) {
+            $('#pro_code_suggest').html('');
+        }).on('click', '#pro_code_suggest li', function (e) {
+            var pro_code = $(this).data('code');
+            $('#pro_code').val(pro_code);
+            $('.btn-pro-code').trigger('click');
+
+        });
+
+        searchbar.on('click', '.btn-search', function () {
+            table.bootstrapTable('refresh');
+        });
+
+    });
+</script>

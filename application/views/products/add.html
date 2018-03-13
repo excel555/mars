@@ -1,0 +1,187 @@
+<style>
+	.col-sm-3{
+		padding-left:0px;
+	}
+	.Validform_checktip{
+		margin-left:15px;
+	}
+</style>
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>	
+<{/if}>
+<div class="panel panel-default">
+	<div class="panel-heading">添加自有商品</div>
+		<form action="/products/add_save" enctype="multipart/form-data" role="form" id="add-user-form" name="myform" method="post" >
+		<table class="table">
+		  <tr class="tr">
+		    <td width="22%" align="right" > 商品类目：</td>
+		    <td width="75%" >
+		    	<{$class_info}>
+		    </td>
+		  </tr>
+
+		  <tr class="tr">
+		    <td width="22%" align="right" > 商品名称：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="product_name" type="text" id="product_name" size="30" datatype="*" nullmsg="请输入商品名！" />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 商品价格：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="price" type="text" id="price" size="30" datatype="*" nullmsg="请输入商品价格！"  />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 商品原价：</td>
+		    <td width="75%" >
+		    	<input name="old_price" type="text" id="old_price" size="30"  />
+		    </td>
+		  </tr>
+		  <tr class="tr">
+		    <td width="22%" align="right" > 商品进价：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="purchase_price" type="text" id="purchase_price" size="30" datatype="*" nullmsg="请输入商品进价！" />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 规格：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="volume" type="text" id="volume" size="30" datatype="*" nullmsg="请输入商品规格！"  />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 计量单位：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="unit" type="text" id="unit" size="30" datatype="*" nullmsg="请输入计量单位！" />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 保鲜期（天）：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+		    		<input name="preservation_time" type="text" id="preservation_time" size="30" datatype="*" nullmsg="请输入商品保鲜期！"  />
+		    	</div>
+		    	<div class="Validform_checktip"></div>
+		    </td>
+		  </tr>
+
+		  <tr class="tr">
+		    <td width="22%" align="right" > 69码：</td>
+		    <td width="75%" >
+		    	<div class="col-sm-3">
+					<table id="extra_serial_num_table">
+						<tr><td><input name="extra_serial_num[]" type="text" placeholder="69码"/></td><td><b class="addLine" onclick="addLine(this)">[+]</b><b class="minusLine" onclick="minusLine(this)">[-]</b></td></tr>
+					</table>
+		    	</div>
+		    </td>
+		  </tr>
+		  
+
+		  <tr class="tr">
+			<td width="22%" align="right" > 是否冷藏：</td>
+			<td width="75%" >
+				<div class="col-sm-3">
+					<select name="refrigeration">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				<div class="Validform_checktip"></div>
+			</td>
+		  </tr>
+
+		  <tr>
+        	<td width="22%" align="right"> 商品图片：</td>
+        	<td width="75%" >
+        		<input name="img_url" type="file" id="img_url" datatype="*" nullmsg="必须上传一张商品图片！">
+        		上传的商品图片大小为：1000x1000 <span style="color: #FF0000">*</span>
+        		<div class="Validform_checktip"></div>
+        	</td>
+          </tr>
+          
+		  <tr class="tr">
+		    <td align="right" >&nbsp;<input type ="hidden" id="inner_code" name="inner_code" value="" /><input type ="hidden" id="product_no" name="product_no" value="" /></td>
+		    <td ><input type="button" onclick="CheckValid()" name="Submit" class="lostfocus" onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";' onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+			value="确认添加">
+			<input type="button" value="返回" onclick="history.back();" />
+		  </tr>
+		</table>
+		</form>
+</div>
+<script type="text/javascript">
+	$("#add-user-form").Validform(
+		{tiptype:2}
+	);
+	function CheckValid(){
+		if ($('#img_url').val() == ''){
+			alert('必须上传一张商品图片！');
+			return;
+		}
+        $('#add-user-form').submit();
+	}
+	
+	$("#search-btn").on('click', function(){
+    	var product_no = $('#product_code').val();
+        $.post("/products/search_product",{product_no: product_no},function(respData){
+            if(respData.result== 200){
+            	$('#product_name').val(respData.product_data.product_name);
+            	$('#price').val(respData.product_data.price);
+            	$('#old_price').val(respData.product_data.old_price);
+            	$('#volume').val(respData.product_data.volume);
+            	$('#unit').val(respData.product_data.unit);
+            	$('#inner_code').val(respData.product_data.inner_code);
+            	$('#product_no').val(respData.product_data.product_no);
+            } else {
+            	alert(respData.msg);
+            	return;
+            }
+        },'json');
+    });
+    
+
+
+    function addLine(obj){
+        if($(obj).parent().parent().siblings().length>=8){
+            return false;
+        }
+        var html = $(obj).parent().parent().clone();
+        $(obj).parent().parent().parent().append(html);
+    }
+
+    function minusLine(obj){
+        if($(obj).parent().parent().siblings().length<=0){
+            return false;
+        }
+        $(obj).parent().parent().remove();
+
+    }
+
+    $('.btn_serial_num').on('click', function(){
+        $.get('/products/gen_product_unique_code', function(e){
+            $('#serial_num').val(e);
+        })
+    });
+
+</script>

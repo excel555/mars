@@ -846,16 +846,17 @@ form .single .val {
 }
 .dialog .panel-title {
     font-size: .2rem;
-    margin: 0 0 .1rem 0;
+    /*margin: 0 0 .1rem 0;*/
     color: #E95417;
     font-weight: normal;
-    height: .36rem;
-    line-height: .36rem;
+    height: .26rem;
+    /*line-height: .36rem;*/
 }
 .dialog .panel-buttons {
     position: absolute;
-    bottom: 15px;
+    bottom: 5px;
     left: 0;
+    /*display: none;*/
     /*width: 100%;*/
     /*border-top: 0.01rem solid #bfbfbf;*/
 }
@@ -871,7 +872,7 @@ form .single .val {
 .dialog .panel-text {
     font-size: .12rem;
     overflow: auto;
-    width: 65%;
+    /*width: 5%;*/
     margin: auto;
 }
 .dialog .panel-text img {
@@ -922,10 +923,10 @@ form .single .val {
 .dialog .dialog-content {
     position: fixed;
     z-index: 99;
-    top: calc(50% - 168px );
+    top: calc(50% - 62px );
     left: calc(50% - 147px );
     width: 295px;
-    min-height: 336px;
+    /*min-height: 336px;*/
 
     background: white;
     overflow: hidden;
@@ -934,15 +935,16 @@ form .single .val {
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5); }
 .dialog .panel-cell {
     padding: 0.08rem;
-    display: table-cell;
+    /*display: table-cell;*/
     vertical-align: middle;
     line-height: 1.6;
-    border: 20px solid #E95417;
-    height: 208px;
+    border: 0px solid #E95417;
+    height: 108px;
 }
 .dialog .panel-cell>img{
     width: 73px;
     margin: auto;
+    display: none;
 }
 
 .dialog .panel-close {
@@ -1463,6 +1465,6 @@ body.move{
     text-align: center;
     background-image: url('../img/opening.gif');
     background-repeat: no-repeat;
-    background-position: center 80%;
-    background-size: auto 60px;
+    background-position: center;
+    background-size: auto 500px;
 }

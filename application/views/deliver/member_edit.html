@@ -1,0 +1,73 @@
+<{if $tips eq ''}>
+<{elseif $tips eq '保存成功'}>
+<div class="alert alert-success" role="alert"><{$tips}></div>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<{if $is_add eq 1}>添加<{else}>编辑<{/if}>配送员
+		<a href='/deliver/member' role="button" class="btn btn-info btn-sm">返回上一级</a>
+	</div>
+	<div class="panel-body">
+		<form id="add-group-form" class="form-horizontal" role="form" method="post" action="<{if $is_add eq 1}>/deliver/add_member<{else}>/deliver/edit_member/<{/if}><{$id}>">
+		   <div class="form-group">
+			  <label for="mobile" class="col-sm-2 control-label">用户手机号:</label>
+			  <div class="col-sm-4">
+				 <input type="text" class="form-control" id="mobile" name="mobile" datatype="*" nullmsg="请输入用户手机号！" placeholder="用户手机号" value="<{$info.mobile}>">
+			  </div>
+			  <div class="Validform_checktip"></div>
+		   </div>
+			<div class="form-group">
+				<label for="mobile" class="col-sm-2 control-label">配送员:</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="name" name="name" datatype="*" nullmsg="请输入配送员名字！" placeholder="配送员" value="<{$info.name}>">
+				</div>
+				<div class="Validform_checktip"></div>
+			</div>
+
+			<div class="form-group">
+				<label for="mobile" class="col-sm-2 control-label">选择配送仓:</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="replenish_location" id="replenish_location" style="width:100px;">
+						<{foreach $stores as $val}>
+						<option value="<{$val.code}>" <{if $info.replenish_location eq $val.code}>selected<{/if}>><{$val.name}></option>
+						<{/foreach}>
+					</select>
+				</div>
+				<div class="Validform_checktip"></div>
+			</div>
+
+		   <div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-10">
+				 <input type="hidden" name="submit" value="1">
+				 <button type="submit" class="btn btn-default">确定</button>
+			  </div>
+		   </div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript"> 
+	$("#add-group-form").Validform(
+		{tiptype:2}
+	);
+	$(function () {
+		$("#name").blur(function(){
+            $.ajax({
+                url: '/deliver/ajax_is_same_deliver_member_name',
+                data: {name:$(this).val()},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if(data.code=='300'){
+                        alert(data.msg);
+                    }else{
+//                        alert(22);
+					}
+                }
+            });
+		});
+    })
+</script>

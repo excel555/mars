@@ -1,0 +1,92 @@
+<{if $tips eq ''}>
+<{elseif $tips eq '新增成功'}>
+<div class="alert alert-success" role="alert"><{$tips}></div>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		添加权限
+		<a href='/deliver/permission' role="button" class="btn btn-info btn-sm">返回上一级</a>
+	</div>
+	<div class="panel-body">
+		<form id="add-group-form" class="form-horizontal" role="form" method="post" action="/deliver/add_permission">
+		   <div class="form-group">
+			  <label for="mobile" class="col-sm-2 control-label">用户手机号:</label>
+			  <div class="col-sm-4">
+				 <input type="text" class="form-control" id="mobile" name="mobile" datatype="*" nullmsg="请输入用户手机号！" placeholder="用户手机号">
+			  </div>
+			  <div class="Validform_checktip"></div>
+		   </div>
+
+			<!--<div class="form-group">-->
+				<!--<label for="equipment_id" class="col-sm-2 control-label">设备id:</label>-->
+				<!--<div class="col-sm-4">-->
+					<!--<input type="text" class="form-control" id="equipment_id" name="equipment_id" datatype="*" nullmsg="请输入设备id！" placeholder="ex:68805328909,68805328902">-->
+				<!--</div>-->
+				<!--<div class="Validform_checktip"></div>-->
+			<!--</div>-->
+
+			<div class="form-group">
+				<label  class="col-sm-2 control-label">管理设备ID：
+					<br><br><br><br>
+					<input type="checkbox" value="" id="box_check_all"> 全选
+
+				</label>
+				<div class="col-sm-10">
+					<div class="store-box" style="min-height:250px;overflow-y:auto;max-height:200px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+						<{foreach key=key item=item from=$equipment_list}>
+						<label style="margin-right:10px;font-weight: normal">
+							<input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="box_no[]" data-store-type="<{$item['replenish_warehouse']}>" value="<{$item['equipment_id']}>"> <{$item['name']}>[<{$item['equipment_id']}>]
+						</label>
+						<{/foreach}>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="add_time" class="col-sm-2 control-label">权限开始日期:</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="add_time" name="add_time" datatype="*" nullmsg="请输入权限开始日期！" placeholder="权限开始日期" value="<{$add_time}>">
+				</div>
+				<div class="Validform_checktip"></div>
+			</div>
+
+			<div class="form-group">
+				<label for="add_time" class="col-sm-2 control-label">权限结束日期:</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="end_time" name="end_time" datatype="*" nullmsg="请输入权限结束日期！" placeholder="权限结束日期" value="<{$add_time}>">
+				</div>
+				<div class="Validform_checktip"></div>
+			</div>
+
+			<div class="form-group">
+				<label for="add_time" class="col-sm-2 control-label">开通旧版开门权限:</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="old_deliver" id="old_deliver"  style="width:100px;">
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+				</div>
+				<div class="Validform_checktip"></div>
+			</div>
+
+		   <div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-10">
+				 <input type="hidden" name="submit" value="1">
+				 <button type="submit" class="btn btn-default">确定</button>
+			  </div>
+		   </div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript"> 
+	$("#add-group-form").Validform(
+		{tiptype:2}
+	);
+    $('#box_check_all').click(function(){
+        var flag = $(this).prop('checked');
+        $('.store-box').find('input[type="checkbox"]').prop('checked', flag)
+    });
+</script>

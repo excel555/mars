@@ -4,6 +4,7 @@ class MY_Model extends CI_Model{
     /**
      * @param int $db_type  gold:gold库  sns:sns_db库
      */
+
     public function __construct($db_type = null) {
 
         if ($db_type == 'sns') {
@@ -161,5 +162,9 @@ class MY_Model extends CI_Model{
     public function get_sechma()
     {
     	return array();
+    }
+    public function get_platform(){
+        $sess_admin_data = $this->session->userdata('sess_admin_data');
+        $this->platform_id = $sess_admin_data['adminPlatformId'];
     }
 }

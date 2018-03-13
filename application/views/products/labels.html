@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+    <div class="panel-heading">录入商品标签</div>
+    <table class="table">
+        <form action="/products/labels_save" name="myform" method="post">
+            <tr class="tr">
+                <td width="12%" align="right"> 标签列表：</td>
+                <td width="85%">
+                    <textarea placeholder="请输入标签 多个用换行分割" class="form-control" name="labels" id="labels" cols="30" rows="10" style="width: 50%"></textarea>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="12%" align="right"> 商品id：</td>
+                <td width="85%">
+                    <input name="product_id" placeholder="输入商品名称搜索" class="search_product form-control" type="text" id="product_id"  style="width:200px;" size="30"/>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td align="right">&nbsp;</td>
+                <td>
+                    <input type="button" name="Submit" class="btn btn-success" value="添加">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button"  class="btn btn-default" value="返回" onclick="history.back();"/>
+                </td>
+            </tr>
+        </form>
+    </table>
+
+</div>
+<script type="application/javascript">
+    $(document).ready(function(){
+        $(".btn-success").click(function () {
+            var product_id = $('input[name="product_id"]').val();
+            var labels = $('textarea[name="labels"]').val();
+            var warehose = $('#warehose').val();
+            if (labels == '') {
+                MessageBox.error('标签不能为空');
+                return;
+            }
+            if (product_id == '') {
+                MessageBox.error('商品id不能为空');
+                return;
+            }
+//            if (warehose == 0) {
+//                MessageBox.error('仓库不能为空');
+//                return;
+//            }
+
+            $.ajax({
+                url:"/products/labels_save",
+                async:false,
+                dataType:'json',
+                data:{product_id:product_id, labels:labels,warehose:warehose},
+                type:'POST',
+                success:function(data){
+                    console.log(data);
+                    if(data.status=='success'){
+                        MessageBox.success(data.msg);
+                    }else{
+                        MessageBox.error(data.msg);
+                    }
+                }
+            });
+        });
+	
+    });
+
+
+    
+</script>

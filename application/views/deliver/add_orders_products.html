@@ -1,0 +1,170 @@
+<div class="panel panel-default">
+	<div class="panel-heading">批量增加补货单商品</div>
+	<form method="post" action="/deliver/shipping_do_insert_batch_order_products" id="add_products_form">
+		<table class="table">
+			  <tr class="tr">
+				<td width="22%" align="right" > 订单号：</td>
+				<td width="75%" >
+					<{$choose_orders}>
+					<input type="hidden" value="<{$choose_num}>" id="choose_num">
+					<input type="hidden" value="<{$ids}>" name="choose_ids" id="choose_ids">
+				</td>
+			  </tr>
+
+			  <tr class="tr">
+				<td width="22%" align="right" > 批量新增商品</td>
+				<td width="75%" >
+					<input type="button" class="btn btn-info" value="添加" onclick="searchProduct()" />
+					<input class="search_product form-control" id="search_name" type="text" style="width:180px;display:inline;" placeholder="请输入商品名称搜索" />
+					<p></p>
+					<table class="table table_product">
+						<tr class="tr">
+							<td>商品名</td>
+							<td>可用库存</td>
+							<td>冻结库存</td>
+							<td >价格（不显示溢价设备最终价格）</td>
+							<td width="80px">补货量</td>
+							<td>总计</td>
+							<td>操作</td>
+						</tr>
+					</table>
+				</td>
+			  </tr>
+
+			  <tr class="tr">
+				<td colspan="2" style="text-align:center;">
+					<input class="btn btn-primary ajaxpost" type="submit" value="提交">
+				</td>
+			  </tr>
+		</table>
+	</form>
+</div>
+<script type="text/javascript">
+	$(function(){
+        $("#add_products_form").Validform({//$(".demoform")指明是哪一表单需要验证,名称需加在form表单上;
+            btnSubmit:".ajaxpost", //#btn_sub是该表单下要绑定点击提交表单事件的按钮;如果form内含有submit按钮该参数可省略;
+            tiptype:4,
+            showAllError:false,//可选项 true | false，true：提交表单时所有错误提示信息都会显示，false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+            postonce:true, //可选项 表单是否只能提交一次，true开启，不填则默认关闭;
+            ajaxPost:true, //使用ajax方式提交表单数据，默认false，提交地址就是action指定地址;
+            callback:function(data){
+//                console.log(data);
+                if(data.status=='y'){
+                    MessageBox.success(data.msg);
+                    setTimeout("window.location.href = '"+data.to_url+"'",1000);
+                    return;
+                }else{
+                    MessageBox.success(data.msg);
+                    return;
+                }
+            }
+        });
+	})
+
+	var choose_num = $("#choose_num").val();
+	function myReload(){
+        window.location.reload();
+    }
+
+    function searchProduct(){
+        if ($('#search_name').val() != ''){
+            $.post("/products/ajax_search_product",{search_name:$('#search_name').val(),replenish_warehouse: '<{$replenish_warehouse}>'},function(respData){
+                if(respData.status=='success'){
+                    var product_info = respData.product_info[0];
+                    var after_tr = $('.table_product tr:last');
+                    var canDo = true;
+
+                    $(".table_product tr").each(function(){
+                        if($(this).find('td:eq(0)').html() == product_info['product_name']){
+                            canDo = false;
+                        }
+                    });
+
+                    if(!canDo){
+                        MessageBox.error('该商品已经存在');
+						return;
+                	}
+
+					var insert_html = '<tr class="tr"><td><input type="hidden" class="product_id" name="product_id[]" value="'+product_info['id']+'"><input type="hidden" class="product_name" name="product_name[]" value="'+product_info['product_name']+'"><input type="hidden" class="price" name="price[]" value="'+product_info['price']+'">'+product_info['product_name']+'</td>';
+					insert_html +='<td>'+(product_info['wh_stock']['stock_usable'] || 0)+'</td>';
+					insert_html +='<td>'+(product_info['wh_stock']['stock_lock'] > 0 ? '<span data-lock-purchase="'+product_info['wh_stock'].stock_lock_purchase+'" data-toggle="popover" data-replenish-warehouse="'+product_info['wh_stock']['replenish_warehouse']+'" data-product-id="'+product_info['wh_stock']['product_id']+'" data-warehouse-id="'+product_info['wh_stock']['warehouse_id']+'" class="btn btn-info btn-xs btn-stock-lock">' + product_info['wh_stock']['stock_lock'] + '</span>' : 0)+'</td>';
+					insert_html +='<td class="price">'+product_info['price']+'</td>';
+					insert_html +='<td class="add_qty" data-id="0" data-name="add_qty" data-value="0"><input type="text" name="add_num[]" value="1"></td>';
+					insert_html +='<td class="total_qty">'+(choose_num*1)+'</td>';
+					insert_html +='<td><button type="button" class="btn btn2 btn-info btn-sm delete">删除</button></td>';
+                    $(insert_html).insertAfter(after_tr);
+
+                    $(".table td .add_qty input").off('blur').on('blur',function(){
+                        if(isNaN(parseInt($(this).val()))){
+                            MessageBox.error('补货量只能是数字.');
+                            $(this).focus();
+                            return false;
+                        }
+						$(this).parent().parent().find('.total_qty').text($(this).val()*choose_num);
+                    });
+
+                    $(".table td .delete").off('click').on('click',function(){
+                        if(confirm("确定要删除吗？")){
+                            $(this).parent().parent().remove();
+                            console.log($(this).parent().parent().html());
+                        }
+                    });
+
+                } else {
+                    location.reload();
+                }
+            },'json');
+        }
+
+    }
+
+    $('.table').on('mousedown', '.btn-stock-lock', function(){
+        var _this = $(this);
+        var data = _this.data();
+        if(_this.data('loading') == 1 || _this.data('has-popover') == 1){
+            return false;
+        }
+        _this.data('loading', 1);
+        $.ajax({
+            url: '/warehouse/stock_lock_info/',
+            type: "POST",
+            data: {replenish_warehouse: data['replenishWarehouse'], product_id: data['productId'], warehouse_id: data['warehouseId']},
+            dataType: 'json',
+            success: function (resp) {
+                _this.data('loading', 0);
+                if (resp.status != 'y') {
+                    alert(resp.msg);
+                    return;
+                }
+                var _html = '';
+                for(var i in resp.data){
+                    _html += '<div style="display: inline-block; margin-right: 10px"><a target="_blank" href="/deliver/shipping_view_order_products/'+resp.data[i]['id']+'" >'+resp.data[i]['name']+'</a>: <span style="color: red">'+resp.data[i]['add_qty']+'</span></div>'
+                }
+                if(_this.data('lockPurchase') > 0){
+                        _html = '<div style="display: inline-block; margin-right: 10px; color: red">采购冻结: ' + _this.data('lockPurchase') + '</div>' +_html;
+                    }
+                if(_this.data('has-popover') != 1){
+                    _this.popover({
+                        title: '冻结库存明细',
+                        placement: 'top',
+                        html: true,
+                        content: '<div style="max-height: 200px; font-size: 11px;overflow-y:auto">' +_html + '</div>'
+                    });
+                    _this.popover('show');
+                    _this.data('has-popover', 1);
+                }
+            }
+
+        });
+        return false
+    });
+    $('body').on('click', function(e){
+        var target = $(e.target);
+        var popo = $('[data-toggle="popover"]').not(target);
+        var show_popo = popo.next();
+        if(show_popo.length > 0 && target.parents('.popover.in').length === 0){
+            show_popo.prev().popover('hide');
+        }
+    });
+
+</script>

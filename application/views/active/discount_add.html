@@ -1,0 +1,784 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">活动设置</h3>
+    </div>
+    <div class="panel-body">
+        <form method="post"  enctype="multipart/form-data" class="form-horizontal"  action="/active/discount_save" onsubmit="return submit_model(this);" data-url="/active/discount" >
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">补货仓：</label>
+                <div class="col-sm-10">
+                    <{foreach key=key item=item from=$store_list}>
+                    <label style="margin-right:10px;font-weight: normal">
+                        <input onclick="get_box_list(this)" type="checkbox" name="store_id[]" data-store-type="<{$item['code']}>" value="<{$item['code']}>"> <{$item['name']}>
+                    </label>
+                    <{/foreach}>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">参加活动设备：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="radio" name="box_num" value="0" <{if $detail['box_num'] eq 0}>checked="checked"<{/if}> >  部分设备
+                        </label>
+                        <label>
+                            <input type="radio" name="box_num" value="1" <{if $detail['box_num'] eq 1}>checked="checked"<{/if}> >  所有设备
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="box_select <{if $detail['box_num'] neq 0}>hide<{/if}>">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">导入设备id(#号分割)：</label>
+                    <div class="col-sm-10">
+                        <textarea rows="5" cols="130" id="eq_box_id"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">参加活动设备ID：
+                        <br><br><br><br>
+                        <input type="checkbox" value="" id="box_check_all"> 全选
+                    </label>
+                    <div class="col-sm-10">
+                        <div class="store-box" style="min-height:150px;overflow-y:auto;max-height:200px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+                            <{foreach key=key item=item from=$equipment_list}>
+                            <label style="margin-right:10px;font-weight: normal">
+                                <input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="box_no[]" data-store-type="<{$item['replenish_warehouse']}>" value="<{$item['equipment_id']}>"> <{$item['name']}>
+                            </label>
+                            <{/foreach}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">参加活动商品类目：</label>
+                <div class="col-sm-10">
+                    <div class="class-box" style="min-height:50px;overflow-y:auto;max-height:100px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+                        <label style="margin-right:10px;font-weight: normal">
+                            <input type="checkbox" name="click_all" onclick="get_class_list(this)"  value="0">全选
+                        </label>
+                        <{foreach key=key item=item from=$class_list}>
+                        <label style="margin-right:10px;font-weight: normal">
+                            <input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="class_id[]"  value="<{$item['id']}>"> <{$item['name']}>
+                        </label>
+                        <{/foreach}>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">参加活动的商品id：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="product_ids" value="<{$detail['product_ids']}>" placeholder="参加活动的商品id">
+                </div>
+                <label  class="control-label" style="color: #FF0000;font-size: 10px;">(多个商品用#号分割)</label>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">不参加活动的商品id：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="black_product" value="<{$detail['black_product']}>" placeholder="不参加活动的商品id">
+                </div>
+                <label  class="control-label" style="color: #FF0000;font-size: 10px;">(多个商品用#号分割)</label>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">订单最低金额：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="min_money" value="<{$detail['min_money']}>" placeholder="订单最低金额">
+                </div>
+                <label  class="control-label" style="color: #aaa;font-size: 10px;">(参加活动的门槛)</label>
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开始时间：</label>
+                <div class="col-sm-5">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input1" id="time" >
+                        <input class="form-control" type="text" name="start_time" value="<{$detail['start_time']}>" placeholder="开始时间"  readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">截止时间：</label>
+                <div class="col-sm-5">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input2" id="to_date" >
+                        <input class="form-control" type="text" name="end_time" value="<{$detail['end_time']}>" placeholder="结束时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">用户来源：</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="refer">
+                        <option value="all" <{if $detail['refer'] eq 'all'}>selected="true"<{/if}> >所有来源</option>
+                        <option value="alipay" <{if $detail['refer'] eq 'alipay'}>selected="true"<{/if}> >支付宝</option>
+                        <option value="wechat" <{if $detail['refer'] eq 'wechat'}>selected="true"<{/if}> >微信</option>
+                        <option value="fruitday" <{if $detail['refer'] eq 'fruitday'}>selected="true"<{/if}> >天天果园</option>
+                        <option value="gat" <{if $detail['refer'] eq 'gat'}>selected="true"<{/if}> >关爱通</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">目标用户：</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="active_people">
+                        <option value="0" <{if $detail['active_people'] eq '0'}>selected="true"<{/if}>>全体用户</option>
+                        <option value="1" <{if $detail['active_people'] eq '1'}>selected="true"<{/if}>>仅新用户</option>
+                        <option value="2" <{if $detail['active_people'] eq '2'}>selected="true"<{/if}>>白名单用户</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group white_mobile <{if $detail['active_people'] neq '2'}>hide<{/if}>">
+                <label class="col-sm-2 control-label">白名单：<br><span style="color: #aaa;font-size: 10px">填手机,多个#号分割</span></label>
+                <div class="col-sm-10">
+                    <textarea rows="5" class="form-control" name="white_mobile" placeholder="白名单(填手机,多个#号分割)"><{$white_mobile['mobile']|default:''}></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动类型：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="radio" name="active_type" value="0" <{if $detail['active_type'] eq 0}>checked="checked"<{/if}> >  满额减
+                        </label>
+                        <label>
+                            <input type="radio" name="active_type" value="1" <{if $detail['active_type'] eq 1}>checked="checked"<{/if}> >  随机减
+                        </label>
+                        <!--<label>-->
+                            <!--<input type="radio" name="active_type" value="2" <{if $detail['active_type'] eq 2}>checked="checked"<{/if}> >  首件商品减-->
+                        <!--</label>-->
+                        <label>
+                            <input type="radio" name="active_type" value="3" <{if $detail['active_type'] eq 3}>checked="checked"<{/if}> >  分时折扣
+                        </label>
+                        <label>
+                            <input type="radio" name="active_type" value="4" <{if $detail['active_type'] eq 4}>checked="checked"<{/if}> >  搭配购
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">次数限制：</label>
+                <div class="col-sm-5">
+                    <div class="checkbox">
+                        <label><input type="radio" class="click_max_times" data-type="0" name="max_times" value="0" <{if $detail['max_type'] eq 0}>checked="checked"<{/if}>>&nbsp;无限制</label>
+                        <label><input type="radio" class="click_max_times" data-type="1" name="max_times" value="<{$detail['max_times']|default:1}>" <{if $detail['max_type'] eq 1 }>checked="checked"<{/if}>>&nbsp;各用户每日<input style="width: 40px" type="text" class="max_times_input" value="<{$detail['max_times']|default:1}>" />单</label>
+                        <!--各用户共计N单-->
+                        <label><input type="radio" class="click_max_times" data-type="2" name="max_times" value="<{$detail['max_times']|default:1}>" <{if $detail['max_type'] eq 2 }>checked="checked"<{/if}>>&nbsp;各用户共计<input style="width: 40px" type="text" class="max_times_input" value="<{$detail['max_times']|default:1}>" />单</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="suiji_jian <{if $detail['active_type'] neq 1}>hide<{/if}> zhekou_div">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">活动奖励：</label>
+                    <div class="col-sm-10">
+                        <table class="table table-striped table-bordered ">
+                            <tr>
+                                <th width="25%">中奖概率<span style="color:#aaa;font-size: 12px">(总和不能超过100%)</span></th>
+                                <th width="35%">奖励方式</th>
+                                <th width="30%">减免金额上限</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                            <{if $detail['config']|@count gt 0 && $detail['active_type'] eq 1}>
+                            <{foreach key=key item=item from=$detail['config']}>
+                            <tr >
+                                <td>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="percent[]"  value="<{$item['percent']}>" placeholder="中奖概率">
+                                    </div>
+                                    <label class="col-sm-4 control-label" style="padding-left:0;padding-right:0;text-align:left">%</label>
+                                </td>
+                                <td>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="discount_s[]" value="<{$item['discount_s']}>" onchange="check_zhe(this.value, this)">
+                                    </div>
+                                    <label class="col-sm-7 control-label" style="padding-left:0;padding-right:0;text-align:left">折<span style="color:#aaa;font-size: 12px">(0-10,0:免单,10:不打折)</span></label>
+                                </td>
+                                <td>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="max_money[]" value="<{$item['max_money']}>">
+                                    </div>
+                                    <label class="col-sm-7 control-label" style="padding-left:0;padding-right:0;text-align:left">元</label>
+                                </td>
+                                <td>
+                                    <i class="glyphicon-plus" onclick="ruleAdd(this)"></i>&nbsp;&nbsp;&nbsp;
+                                    <i class="glyphicon-minus" onclick="ruleDel(this)"></i>
+                                </td>
+                            </tr>
+                            <{/foreach}>
+                            <{else}>
+                            <tr >
+                                <td>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="percent[]"  value="" placeholder="中奖概率">
+                                    </div>
+                                    <label class="col-sm-4 control-label" style="padding-left:0;padding-right:0;text-align:left">%</label>
+                                </td>
+                                <td>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="discount_s[]" value="10" placeholder="折扣" onchange="check_zhe(this.value, this)">
+                                    </div>
+                                    <label class="col-sm-7 control-label" style="padding-left:0;padding-right:0;text-align:left">折<span style="color:#aaa;font-size: 12px">(0-10,0:免单,10:不打折)</span></label>
+                                </td>
+                                <td>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="max_money[]" value="" placeholder="上限">
+                                    </div>
+                                    <label class="col-sm-7 control-label" style="padding-left:0;padding-right:0;text-align:left">元</label>
+                                </td>
+                                <td>
+                                    <i class="glyphicon-plus" onclick="ruleAdd(this)"></i>&nbsp;&nbsp;&nbsp;
+                                    <i class="glyphicon-minus" onclick="ruleDel(this)"></i>
+                                </td>
+                            </tr>
+                            <{/if}>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="maner_jian <{if $detail['active_type'] neq 0}>hide<{/if}> zhekou_div">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">折扣：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="discount" value="<{$detail['discount']}>" placeholder="0-10折 -- 折扣与优惠金额二选一" onchange="check_zhe(this.value, this)">
+                    </div>
+                    <label  class="control-label"><span style="color:red;font-size: 12px">(0-10折-- 折扣与优惠金额二选一 )</span></label>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">优惠金额：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="discount_money" value="<{$detail['discount_money']}>" placeholder="折扣与优惠金额二选一">
+                    </div>
+                    <span style="color:red;font-size: 12px">(折扣与优惠金额二选一)</span>
+                </div>
+            </div>
+            <div class="shoudan_jian <{if $detail['active_type'] neq 2}>hide<{/if}> zhekou_div">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">奖励方式：</label>
+                    <div class="col-sm-5">
+                        <div class="checkbox">
+                            <label><input type="radio"  name="rewards" value="1" checked="checked">&nbsp;价格最高商品0折</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">减免金额上限：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="shoudan_max_money" value="<{$detail['config']['max_money']}>" placeholder="默认不填为无上限">
+                    </div>
+                    <label class="control-label">元</label>
+                </div>
+            </div>
+            <{include file="active/fenshi.html"}>
+            <{include file="active/dapei.html"}>
+            <div class="form-group join_again <{if $detail['active_type'] neq 3 and $detail['active_type'] neq 4 }>hide<{/if}>">
+                <label class="col-sm-2 control-label">多份时重复享受：</label>
+                <div class="col-sm-2">
+                    <label>
+                        <input type="radio" name="join_again" value="0" <{if $detail['join_again'] eq 0 }>checked="checked" <{/if}> > 否 &nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="radio" name="join_again" value="1" <{if $detail['join_again'] eq 1 }>checked="checked" <{/if}> >  是
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">主标题：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="remarks" placeholder="主标题" value="<{$detail['remarks']}>">
+                </div>
+                <label class="control-label" style="color:#aaa;font-size: 12px">展示在开门成功页</label>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="col-sm-2 control-label">副标题：</label>-->
+                <!--<div class="col-sm-5">-->
+                    <!--<input type="text" class="form-control" name="sub_title" maxlength="50" placeholder="副标题" value="<{$detail['sub_title']}>">-->
+                <!--</div>-->
+                <!--<label class="control-label" style="color:#aaa;font-size: 12px">展示在开门成功页</label>-->
+            <!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">优惠文案：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="active_title" maxlength="50" placeholder="优惠文案需严谨" value="<{$detail['active_title']}>">
+                </div>
+                <label class="control-label" style="color:#aaa;font-size: 12px">展示在结算成功页，订单详情面</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动banner图：</label>
+                <div class="col-sm-5">
+                    <input type="file" name="img_banner_file" id="img_banner_file" class="pull-left" data-attr="活动banner图不能为空" onchange="ajaxFileUpload(this.id);">
+                    <input type="hidden" name="img_banner" value="<{$detail['img_banner']}>">
+                    <a class="show_img <{if $detail['img_banner'] eq ''}>hide<{/if}>" href="javascript:void(0)" data-content="<img src='<{$img_http}><{$detail['img_banner']}>' width='200px'>" data-original-title="" title="">查看</a>
+                    <{if $detail['img_banner'] neq ''}>
+                    <a  href="javascript:void(0)" onclick="del_img(<{$detail['id']}>, 'img_banner')" data-content="" data-original-title="" title="">删除</a>
+                    <{/if}>
+                </div>
+                <label class="control-label" style="color:#aaa;font-size: 12px">建议尺寸(1080 x 450)</label>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="col-sm-2 control-label">活动icon图：</label>-->
+                <!--<div class="col-sm-5">-->
+                    <!--<input type="file" name="img_icon_file" id="img_icon_file" class="pull-left" data-attr="活动icon图不能为空" onchange="ajaxFileUpload(this.id);">-->
+                    <!--<input type="hidden" name="img_icon" value="<{$detail['img_icon']|default:''}>">-->
+                    <!--<a class="show_img <{if $detail['img_icon'] eq ''}>hide<{/if}>" href="javascript:void(0)" data-content="<img src='<{$img_http}><{$detail['img_icon']|default:''}>' width='200px'>" data-original-title="" title="">查看</a>-->
+                    <!--<{if $detail['img_icon'] neq ''}>-->
+                    <!--<a  href="javascript:void(0)" onclick="del_img(<{$detail['id']}>, 'img_icon')" data-content="" data-original-title="" title="">删除</a>-->
+                    <!--<{/if}>-->
+                <!--</div>-->
+                <!--<label class="control-label" style="color:#aaa;font-size: 12px">建议尺寸(315 x 240)</label>-->
+            <!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">新首页活动icon图：</label>
+                <div class="col-sm-5">
+                    <input type="file" name="img_icon_new_file" id="img_icon_new_file" class="pull-left" data-attr="新首页活动icon图不能为空" onchange="ajaxFileUpload(this.id);">
+                    <input type="hidden" name="img_icon_new" value="<{$detail['img_icon_new']|default:''}>">
+                    <a class="show_img <{if $detail['img_icon_new'] eq ''}>hide<{/if}>" href="javascript:void(0)" data-content="<img src='<{$img_http}><{$detail['img_icon_new']|default:''}>' width='200px'>" data-original-title="" title="">查看</a>
+                    <{if $detail['img_icon_new'] neq ''}>
+                    <a  href="javascript:void(0)" onclick="del_img(<{$detail['id']}>, 'img_icon_new')" data-content="" data-original-title="" title="">删除</a>
+                    <{/if}>
+                </div>
+                <label class="control-label" style="color:#aaa;font-size: 12px">建议尺寸(1080 x 450)</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">点击类型：</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="click_type" id="click_type">
+                        <option value="0" <{if $detail['click_type'] eq '0'}>selected="true"<{/if}>>无动作</option>
+                        <option value="1" <{if $detail['click_type'] eq '1'}>selected="true"<{/if}>>跳转url</option>
+                        <option value="2" <{if $detail['click_type'] eq '2'}>selected="true"<{/if}>>弹出图片</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="click_div" class="form-group <{if $detail['click_type'] eq '0' || !$detail}>hide<{/if}>">
+                <label class="col-sm-2 control-label" id="click_str"><{if $detail['click_type'] eq '1'}>跳转url：<{/if}><{if $detail['click_type'] eq '2'}>弹出图片：<{/if}></label>
+                <div id="div_redirect_url" class="col-sm-5 <{if $detail['click_type'] neq '1'}>hide<{/if}>">
+                	<input type="text" class="form-control" name="redirect_url" placeholder="跳转链接" value="<{$detail['click_url']}>">
+                </div>
+                <div id="div_pop_img" class="col-sm-5 <{if $detail['click_type'] neq '2'}>hide<{/if}>">
+                    <input type="file" name="img_click_file" id="img_click_file" class="pull-left" data-attr="弹出图片不能为空" onchange="ajaxFileUpload(this.id);">
+                    <input type="hidden" name="img_click" value="<{$detail['click_url']}>">
+                    <a class="show_img <{if $detail['click_url'] eq ''}>hide<{/if}>" href="javascript:void(0)" data-content="<img src='<{$img_http}><{$detail['click_url']}>' width='200px'>" data-original-title="" title="">查看</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">展示到左图右文：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="radio" name="icon_show" value="0" <{if $detail['icon_show'] eq 0}>checked="checked"<{/if}> >  否
+                        </label>
+                        <label>
+                            <input type="radio" name="icon_show" value="1" <{if $detail['icon_show'] eq 1}>checked="checked"<{/if}> >  是
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动是否同享：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="radio" name="is_share" value="0" <{if $detail['is_share'] eq 0}>checked="checked"<{/if}> >  不同享
+                        </label>
+                        <label>
+                            <input type="radio" name="is_share" value="1" <{if $detail['is_share'] eq 1}>checked="checked"<{/if}> >  同享
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">会员等级：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <{foreach key=key item=item from=$user_rank}>
+                        <label>
+                            <input type="checkbox" name="user_rank" value="<{$item['key']}>" <{if $item['checked'] eq 1}>checked="checked"<{/if}> >  <{$item['name']}>
+                        </label>
+                        <{/foreach}>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动限次(基于设备)：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="active_limit" maxlength="50" placeholder="活动限次(基于设备)" value="<{$detail['active_limit']}>">
+                </div>
+                <label  class="control-label" style="color: red;font-size: 10px;">(活动开始后 禁止随便修改，修改会刷新限次)</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">会员专享文案：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="member_title" maxlength="255" placeholder="会员专享文案需严谨" value="<{$detail['member_title']}>">
+                </div>
+                <label  class="control-label" style="color: #aaa;font-size: 10px;">显示在开门首页会员专享</label>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">管理员：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="admin_name" readonly="readonly" value="<{$adminname}>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">排序：</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" maxlength="3" name="weight" value="<{$detail['weight']}>" placeholder="排序-填数字（0-100）">
+                </div>
+                <label  class="control-label" style="color: #aaa;font-size: 10px;">（0-100）从大到小显示</label>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="hidden" class="form-control" name="id" value="<{$detail['id']|default:0}>">
+                    <input type="hidden" class="form-control" name="max_type" value="<{$detail['max_type']|default:0}>">
+                    <input class="btn btn-primary" type="submit" value="提交">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="application/javascript" src="/assets/js/ajaxfileupload.js"></script>
+
+<script>
+    var today = '<{$today}>';
+    $(function(){
+
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format:'yyyy-mm-dd hh:ii:00',      //格式化日期
+            timepicker:false    //关闭时间选项
+        });
+        $('#to_date').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:ii:00',
+            timepicker:false    //关闭时间选项
+        });
+        $('input[name="active_type"]').click(function(){
+            var this_val = $(this).val();
+            $('.zhekou_div').addClass('hide');
+            $('input[name="max_times"]').prop('checked', false);
+            if(this_val==0){
+                $('.maner_jian').removeClass('hide');
+            }else if(this_val==1){
+                $('.suiji_jian').removeClass('hide');
+            }else if(this_val==2){
+                $('.shoudan_jian').removeClass('hide');
+            }else if(this_val==3){
+                $('.fenshi').removeClass('hide');
+            }else if(this_val==4){
+                $('.dapei').removeClass('hide');
+                $('.class-box').find('input[type="checkbox"]').prop('checked', false);
+                $('input[name="product_ids"]').val('');
+            }
+            if(this_val==3 || this_val==4){
+                $('.join_again').removeClass('hide');
+            }else{
+                $('.join_again').addClass('hide');
+            }
+        });
+        $('#box_check_all').click(function(){
+            var flag = $(this).prop('checked');
+            $('.store-box').find('input[type="checkbox"]').prop('checked', flag)
+        });
+        $('.max_times_input').change(function(){
+            var value = $(this).val();
+            $(this).siblings('input[type="radio"]').val(value);
+        });
+
+        $('.click_max_times').click(function(){
+            var max_type = $(this).attr('data-type');
+            $('input[name="max_type"]').val(max_type);
+        });
+
+        $(".show_img").popover({
+            placement: 'right',
+            trigger: 'hover',
+            html: true
+        });
+
+        $("select[name='active_people']").change(function(){
+            if($(this).val() == 2){
+                $('.white_mobile').removeClass('hide');
+            }else{
+                $('textarea[name="white_mobile"]').val('');
+                $('.white_mobile').addClass('hide');
+            }
+        });
+
+
+        //修改库存
+        $('input[name="active_limit"]').change(function(){
+            var id = $('input[name="id"]').val();
+            if(!id){
+                return false;
+            }
+            var active_limit = $(this).val();
+            //var box_no = $('input[name="box_no[]"]').val();
+
+            var box_no = {};
+            $('.store-box').find('input[type="checkbox"]:checked').each(function(i,v){
+                box_no[i]=$(this).val();
+            });
+
+            if(confirm('是否更新库存？')){
+                $.post("/active/ajax_update_stock", {id: id, active_limit:active_limit,box_no:box_no }, function (data) {
+                    if (data.status == 'success') {
+
+                    }
+                }, 'json');
+            }else{
+            }
+
+        });
+
+        $('#eq_box_id').change(function(){
+            var arr = $(this).val().split('#');
+            $('.store-box').find('input').each(function(i,v){
+                var _this_val = $(this).val();
+                if($.inArray(_this_val, arr)>-1){
+                    $(this).prop('checked', true);
+                }else{
+                    $(this).prop('checked', false);
+                }
+            });
+        });
+        
+        $("#click_type").change(function(){
+            if($(this).val() == 2 || $(this).val() == 1){
+                $('#click_div').removeClass('hide');
+                if ($(this).val() == 1){
+                	$('#click_str').html('跳转url：');
+                	$('#div_redirect_url').removeClass('hide');
+                	$('#div_pop_img').addClass('hide');
+                } else {
+                	$('#click_str').html('弹出图片：');
+                	$('#div_redirect_url').addClass('hide');
+                	$('#div_pop_img').removeClass('hide');
+                }
+            }else{
+                $('#click_div').addClass('hide');
+            }
+        });
+
+        $('input[name="box_num"]').click(function(){
+            if($(this).val()==0){
+                $('.box_select').removeClass('hide');
+            }else{
+                $('.box_select').addClass('hide');
+                $('.store-box').find('input[type="checkbox"]').prop('checked', false)
+            }
+
+        });
+    });
+
+    function submit_model(obj){
+        var dataPara = getFormJson(obj);
+        if(dataPara['remarks'] == ''){
+            alert('主标题不能为空');
+            return false;
+        }
+        if(dataPara['active_title'] == ''){
+            alert('优惠文案不能为空');
+            return false;
+        }
+        var flag = true;
+        $.ajax({
+            url: '/active/get_active',
+            data: dataPara,
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                if(data.status=='success'){
+                    if(confirm(data.msg)){
+                        flag=true;
+                    }else{
+                        flag=false;
+                    }
+                }
+            }
+        });
+        if(flag===false){
+            return false;
+        }
+        if($(obj).attr('lock') == 1){
+            return false;
+        }
+        $(obj).attr('lock', 1);
+        var _url = $(obj).attr('data-url');
+        ajaxSubmit(obj, function(data){
+            $(obj).attr('lock', 0);
+            if(data.status=='success'){
+                alert('成功');
+                location.href=_url;
+            }else{
+                alert(data.msg);
+                return false;
+            }
+        });
+        return false;
+    }
+    //将form转为AJAX提交
+    function ajaxSubmit(frm, fn) {
+        var dataPara = getFormJson(frm);
+        $.ajax({
+            url: frm.action,
+            type: frm.method,
+            data: dataPara,
+            dataType:'json',
+            success: fn
+        });
+    }
+
+    //将form中的值转换为键值对。
+    function getFormJson(frm) {
+        var o = {};
+        var a = $(frm).serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push($.trim(this.value) || '');
+            } else {
+                o[this.name] = $.trim(this.value) || '';
+            }
+        });
+        return o;
+    }
+
+    function get_box_list(obj){
+        var code = $(obj).attr('data-store-type');
+        var flag = $(obj).prop('checked');
+        $('.store-box').find('input[data-store-type="'+code+'"]').prop('checked', flag)
+    }
+    function get_class_list(obj){
+        var flag = $(obj).prop('checked');
+        $('.class-box').find('input[type="checkbox"]').prop('checked', flag)
+    }
+    function ruleAdd(obj){
+        var html = $(obj).parent().parent().clone();
+        $(html).find("input[name='dapei_product[]']").val('');
+        $(obj).parent().parent().parent().append(html);
+    }
+    function ruleDel(obj){
+        if($(obj).parent().parent().siblings().length<=0){
+            return false;
+        }
+        $(obj).parent().parent().remove();
+    }
+
+
+    function check(){
+        var input = document.getElementById("img_icon_file");
+        if(input.files){
+            //读取图片数据
+            var f = input.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                //加载图片获取图片真实宽度和高度
+                var image = new Image();
+                image.onload=function(){
+                    var width = image.width;
+                    var height = image.height;
+                    if( width<285 || width>345 || height<210 || height>270 ){
+                        alert('活动icon图注意图片尺寸');
+                    }
+                };
+                image.src= data;
+            };
+            reader.readAsDataURL(f);
+        }
+    }
+
+
+//ajax上传图片
+    function ajaxFileUpload(elementId) {
+
+        if( elementId == 'img_icon_file'){
+            check();
+        };
+        $.ajaxFileUpload({
+            url: '/active/ajax_upload_img', //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: elementId, //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data, status)  //服务器成功响应处理函数
+            {
+                if(data.status=='error'){
+                    alert(data.msg);
+                    return false;
+                }
+                if (typeof (data.status) != 'undefined') {
+                    $("#"+elementId).next().val(data.url);
+                    var html = "<img src='"+data.img_http+data.url+"' width='200px'>";
+                    $("#"+elementId).next().next().removeClass('hide').attr('data-content', html);
+                }
+            },
+            error: function (data, status, e)//服务器响应失败处理函数
+            {
+                alert(e);
+            }
+        });
+        return false;
+    }
+
+    function del_img(id, type) {
+        if (!id) {
+            return false;
+        }
+        $.post("/active/del_img", {id: id, type:type}, function (data) {
+            if (data.status == 'success') {
+                alert("删除成功");
+                window.location.reload()
+            }
+        }, 'json');
+    }
+
+    //折扣4ce
+    function check_zhe(val, obj){
+        if(val<=4){
+            if(confirm('你确定要这么便宜的折扣吗？')){
+
+            }else{
+                $(obj).val(10);
+            }
+        }
+
+    }
+
+    function dapei_p(obj){
+        var value = $(obj).val();
+        $(obj).parent().parent().siblings().each(function(i,v){
+            if(value == $(this).find("input[name='dapei_product[]']").val()){
+                alert('注意两个商品id不能一样');
+                $(obj).val('');
+            }
+        })
+    }
+    function get_time(obj){
+        $(obj).datetimepicker({
+            startDate: today,
+            language:  'zh',
+            todayBtn:  'linked',
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 1,
+            minView: 0,
+            maxView: 0,
+            forceParse: 0,
+            format:'hh:ii:00',
+            minuteStep:1,
+        });
+    }
+
+</script>

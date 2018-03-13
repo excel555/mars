@@ -1,0 +1,147 @@
+<style>
+	.hide-th{
+		display:none;
+	}
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">待分配设备&nbsp;<button type="button" class="btn btn-warning" id="new_box" onclick="location.href='/equipment/newbox';">线索待分配新设备</button></h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+            	<div class="col-sm-2">
+                	<input type="text" class="form-control" name="search_name" placeholder="设备名称">
+                </div>
+                <div class="col-sm-2">
+                	<input type="text" class="form-control" name="search_code" placeholder="设备编码">
+                </div>
+                <div class="col-sm-2">
+                	<input type="text" class="form-control" name="search_equipment_id" placeholder="设备id">
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <input type="hidden" id="origin_url" value="/equipment/oldbox_table">
+            </div>
+            
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-toolbar">
+        	<!--<button type="button" class="btn btn-info btn-sm" id="equipment_add">添加设备</button>-->
+        	<!--<button type="button" class="btn btn-success btn-sm" id="equipment_export">同步设备</button>-->
+            <!--<button type="button" class="btn btn-info btn-sm" id="equipment_edit">编辑</button>
+            <button type="button" class="btn btn-danger btn-sm" id="equipment_stock">查看库存</button>
+            <button type="button" class="btn btn-warning btn-sm" id="equipment_pandian">发起盘点</button>
+            <button type="button" class="btn btn-warning btn-sm" id="equipment_heart">查看心跳</button>
+            <button type="button" class="btn btn-success btn-sm" id="equipment_exportall">导出设备</button>
+		    <button type="button" class="btn btn-info btn-sm" id="equipment_ordertime">同步运营时间</button>
+            <button style="float:right;margin:0 10px;" type="button" class="btn btn-danger btn-sm" id="equipment_stop">停用</button>
+            <button style="float:right;" type="button" class="btn btn-success btn-sm" id="equipment_start">启用</button>-->
+            <input type="hidden" id="curr_id" value="0">
+            <input type="hidden" id="device_id" value="0">
+            <!--<a href='javascript:void(0)' onclick="refresh_cache()" role="button" class="btn btn-info btn-sm">刷新配置缓存</a>-->
+        </div>
+        <div id="config-body">
+        <table id="config-table" data-toggle="table" data-url="/equipment/oldbox_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="100" data-side-pagination="server" data-page-list="[5,10,15,20,50,100]">
+            <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-class="hide-th" data-align="center">#</th>
+                    <th data-field="equipment_id" data-align="center">设备id</th>
+                    <th data-field="name" data-align="center">设备名称</th>
+                    <th data-field="code" data-align="center">设备编码</th>
+                    <th data-field="status_name" data-align="center">状态</th>
+                    <th data-field="created_time" data-align="center">添加时间</th>
+                    <th data-field="operation" data-align="center" >操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ckRadio(){
+        var curr_id = $("input[type=radio]:checked").parent().next().html();
+        if(typeof(curr_id) == "undefined"){
+            $("#curr_id").val(0);
+        }else{
+            $("#curr_id").val(curr_id);
+        }
+    }
+
+    $(function(){
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+            $("#device_id").val(row.equipment_id);
+        }).on('load-success.bs.table',function(data){
+	       $('.shift-info').each(function(){
+            	$(this).editableSelect({
+			        effects: 'slide',
+			        onSelect: function (element) {
+			            $(this).next('input').val(element.val());
+			        }
+			    }).prop('placeholder','请输入或选择管理员');
+            });
+	    });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        
+    });
+    
+    
+    function assign(obj){
+    	var equipment_id = $(obj).attr('equipment_id');
+    	var admin_id = $(obj).prev('input').val();
+    	if (admin_id != '' && admin_id != -1){
+    		$.ajax({
+	            type: "post",
+	            url: "/equipment/assign_admin_old",
+	            dataType: 'json',
+	            data: {
+	                equipment_id:equipment_id,
+	                admin_id:admin_id
+	            },
+	            success: function (data, status) {
+	            	if (data.status == true){
+	            		$(obj).parent().html('已分配');
+	            		MessageBox.success(data.msg);
+	            	} else {
+	            		MessageBox.warning(data.msg);
+	            	}
+	                
+	            },
+	            error: function () {
+	
+	            },
+	            complete: function () {
+	
+	            }
+	
+	        });
+    	} else {
+    		alert('请选择管理员！');
+    		return false;
+    	}
+    }
+    
+</script>

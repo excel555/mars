@@ -1,0 +1,54 @@
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+    <div class="panel-heading">新增/编辑 告警对象</div>
+    <table class="table">
+        <form action="/warn_system/save_user" id="myform" name="myform" method="post" >
+            <input name="id" value="<{$warn.id}>" type="hidden">
+            <tr class="tr">
+                <td width="22%" align="right" > 用户名：</td>
+                <td width="75%" ><input name="name" type="text" id="name" size="40" value="<{$warn.name}>" placeholder="用户名" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 手机号：</td>
+                <td width="75%" ><input name="mobile" type="text" id="mobile" size="40" value="<{$warn.mobile}>" placeholder="手机号" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 邮件：</td>
+                <td width="75%" ><input name="email" type="text" id="email" size="40" value="<{$warn.email}>" placeholder="邮件" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 微信id：</td>
+                <td width="75%" ><input name="wechat_id" type="text" id="wechat_id" size="40" value="<{$warn.wechat_id}>" placeholder="微信id" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 支付id：</td>
+                <td width="75%" ><input name="alipay_id" type="text" id="alipay_id" size="40" value="<{$warn.alipay_id}>" placeholder="支付id" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 是否启用：</td>
+                <td width="75%" >
+                    <select class="form-control" name="status" id="status" style="width:140px;">
+                        <option value="1" <{if $warn.status eq '1'}>selected<{/if}>>启用</option>
+                        <option value="0"  <{if $warn.status eq '0'}>selected<{/if}>>停用</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <td align="right" >&nbsp;</td>
+                <td ><input type="button" onclick="submitForm()" name="Submit" class="lostfocus" onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";' onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+                            value="保存">
+                    <input type="button" value="返回" onclick="history.back();" />
+            </tr>
+        </form>
+    </table>
+</div>
+<script type="text/javascript">
+    function submitForm(){
+        $('#myform').submit();
+    }
+</script>
+

@@ -20,55 +20,162 @@ class Account extends REST_Controller
 {
 
     const VCODE_LIVE_SECOND = 60;
-    const RANK_LIVE_SECOND = 60 * 60;//1小时
-    const RANK_KEY = 'mars_rank';//1小时
-    const RANK_SIZE = 10;
-    const RANK_LAST_UPDATE = '';
+    public $platforms = array();
 
     function __construct()
     {
         // Construct the parent class
         parent::__construct();
-        $this->load->model('user_fin_model');
-        $this->load->model('user_sign_model');
-        $this->load->model('user_friend_model');
-        $this->load->model('user_model');
+        $this->load->model("user_model");
+        $this->load->model('user_agreement_model');
+        $this->load->helper("utils");
+        $this->load->helper("aop_send");
+        $this->load->helper("mapi_send");
+        $this->load->helper('koubei_send');
+        $this->load->helper("message");
+        $this->load->helper("http_request");
+        $this->load->library("aop/request/AlipaySystemOauthTokenRequest");
+        $this->load->library("aop/request/AlipayUserUserinfoShareRequest");
     }
 
     public function get_info_get()
     {
-        $user = $this->get_curr_user();
-        if($user['mobile'] && $user['really_name'] && $user['idcard'] ){
-            $user['mobile'] =  substr($user['mobile'],0,4).'****'.substr($user['mobile'],8);
-            $user['really_name'] =  mb_substr($user['really_name'],0,1).'**';
-            $user['idcard'] =  substr($user['idcard'],0,4).'*********'.substr($user['idcard'],12);
-        }
-        $this->send_ok_response($user);
-    }
+        $rs = $this->get_curr_user();
 
-    public function get_rank_get()
-    {
-        $last_update = date("Y-m-d H:i:s");
-        $list = $this->cache->get(self::RANK_KEY);
-        if(!$list){
-            $list = $this->user_fin_model->get_rank(self::RANK_SIZE);
-            if(count($list) >= self::RANK_SIZE){
-                $this->cache->save(self::RANK_KEY,$list,self::RANK_LIVE_SECOND);
-                $this->cache->save(self::RANK_LAST_UPDATE,$last_update,self::RANK_LIVE_SECOND);
+//        $rs = $this->user_model->get_user_info_by_id($user['id']);
+        if ($rs) {
+            $this->load->model("shipping_permission_model");
+            $old = $this->shipping_permission_model->old_deliver_permission($rs['mobile']);
+            if($old){
+                $rs['view_old_deliver'] = 1;
+            }else{
+                $rs['view_old_deliver'] = 0;
             }
-        }else{
-            $last_update = $this->cache->get(self::RANK_LAST_UPDATE);
+            $rs['s_admin_id'] = $this->get_deliver_permission($rs['id']) ? 1 : 0;
+            $rs['platforms'] = $this->platforms;
+            $this->send_ok_response($rs);
+        } else {
+            $this->send_error_response("没有找到该用户信息");
         }
-        $this->send_ok_response(array('rank'=>$list,'last_update'=>$last_update));
+    }
+    public function auth_alipay_login_post()
+    {
+        $auth_code = $this->post('auth_code');
+        $device_id = $this->post('device_id');
+        $mianmi = $this->post('mianmi');//是否需要开通免密
+        if (!empty ($auth_code)) {
+            $token = $this->requestToken($auth_code,$device_id);
+            write_log(var_export($token, 1));
+            if (isset ($token->alipay_system_oauth_token_response)) {
+                $user_id = $token->alipay_system_oauth_token_response->user_id;
+                $user = $this->user_model->get_user_info_by_open_id($user_id, "alipay");
+                if (!$user || empty($user['mobile'])) {
+                    $token_str = $token->alipay_system_oauth_token_response->access_token;
+                    write_log("token_str:" . var_export($token_str, 1));
+                    $user_info = $this->requestUserInfo($token_str,$device_id);
+                    write_log("UserInfo:" . var_export($user_info, 1));
+                    if (isset ($user_info->alipay_user_info_share_response)) {
+                        $user_info_resp = $user_info->alipay_user_info_share_response;
+                        $user_data = array(
+                            "user_name" => isset($user_info_resp->nick_name) ? $user_info_resp->nick_name : "",
+                            "avatar" => isset($user_info_resp->avatar) ? $user_info_resp->avatar : "",
+                            "city" => isset($user_info_resp->city) ? $user_info_resp->city : "",
+                            "province" => isset($user_info_resp->province) ? $user_info_resp->province : "",
+                            "gender" => isset($user_info_resp->gender) ? $user_info_resp->gender : "",
+                            "source" => 'alipay',
+                            "reg_time" => date("Y-m-d H:i:s"),
+                            "open_id" => $user_info_resp->user_id,
+                            "is_black" => 0,
+                            "equipment_id" => 0,
+                            "mobile"=> isset($user_info_resp->mobile) ? $user_info_resp->mobile : ""
+                        );
+                        write_log(var_export($user_data, 1));
+
+                        if($user && empty($user['mobile']) && !empty($user_data['mobile'])){
+                            //更新手机号
+                            $this->user_model->update_mobile($user['id'],$user_data['mobile']);
+                        }else if(! $user){
+                            $rs = $this->user_model->adUser($user_data,$device_id);
+                            write_log("rs:" . var_export($rs, 1));
+                            if ($rs) {
+                                $user = $this->user_model->get_user_info_by_id($rs);
+
+                            } else {
+                                $this->send_error_response("用户信息注册异常");
+                            }
+                        }
+                        $user['mianmi'] = $mianmi;
+                        $this->login_user($user['id'],$device_id);
+                    } else {
+                        write_log("获取不到用户信息:" . var_export($user_info, 1));
+                        $this->send_error_response($user_info->error_response->sub_msg);
+                    }
+
+                } else {
+                    $user['mianmi'] = $mianmi;
+                    $this->login_user($user_id,$device_id);
+                }
+
+            } elseif (isset ($token->error_response)) {
+                // 记录错误返回信息
+                write_log($token->error_response->sub_msg);
+                $this->send_error_response($token->error_response->sub_msg);
+            }
+        } else {
+            $this->send_error_response("缺少auth_code参数");
+        }
     }
 
-    private function login_user($user_id)
+    private function requestToken($auth_code,$device_id)
+    {
+        $AlipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest ();
+        $AlipaySystemOauthTokenRequest->setCode($auth_code);
+        $AlipaySystemOauthTokenRequest->setGrantType("authorization_code");
+        $platform_config = get_platform_config_by_device_id($device_id);
+//        write_log('config:'.var_export($platform_config,1));
+        $is_isv = get_isv_platform($device_id);
+        if($is_isv){
+            $result = koubei_request_execute_for_obj($AlipaySystemOauthTokenRequest,null,$platform_config);
+        }else{
+            $result = aopclient_request_execute($AlipaySystemOauthTokenRequest,null,$platform_config);
+        }
+        return $result;
+    }
+
+
+    /**
+     * debug in broswer
+     * use login for url
+     */
+    public function test_login_get()
+    {
+        $id = $this->get("id");
+        $this->login_user($id,0);
+    }
+
+
+    private function login_user($user_id,$device_id)
     {
         $user = $this->user_model->get_user_info_by_id($user_id);
+
+
+        if($user['source'] === "alipay"  || $user['source'] === "wechat") {
+            $partner_id = get_3rd_partner_id_by_device_id($device_id, $user['source']);
+            $agreements = $this->user_agreement_model->get_user_agreement_3rd($user['id']);
+            write_log('$agreements=>'.var_export($agreements,1));
+            if ($agreements) {
+                foreach ($agreements as $agreement) {
+                    $thirdpart_id = $agreement['thirdpart_id'];
+                    $user[$thirdpart_id . '_agreement_no'] = $agreement['agreement_no'];
+                }
+            }
+            write_log($partner_id.'_agreement_no=>'.var_export($user[$partner_id.'_agreement_no'],1));
+
+        }
+
+
+        write_log("login_user".var_export($user,1).",device_id=".$device_id);
         if ($user) {
-            $fin = $this->user_fin_model->get_fin_by_id($user_id);
-            write_log($this->db->last_query());
-            $user['fin'] = $fin;
             $session_id = session_id_2_user($user['id']);
             $user_cache_key = 'user_'.$session_id;
             $this->cache->save($user_cache_key,$user,604800);//记录用户保存7天
@@ -81,139 +188,168 @@ class Account extends REST_Controller
         }
     }
 
-    /**
-     * 小程序 code 获取用户信息
-     */
-    public function wx_jscode2session_post(){
-        $js_code = $this->post('wxLoginCode');
-        $userInfo = $this->post('rawData');
-        $encrypted_data = $this->post('encryptedData');
-        $iv = $this->post('iv');
-        $invite_code = $this->post('inviteCode');
 
 
-        $this->check_null_and_send_error($js_code,'js_code 不能为空');
-        $this->load->helper('wechat_send');
-        $config  = get_platform_config_by_device_id(0);
-        $data= get_wx_jscode2session($js_code,$config);
-        write_log(var_export($data,1));
-        if(!$data){
-            $this->send_error_response("系统异常");
-        } else if(isset($data['errcode'])){
-            $this->send_error_response($data['errmsg']);
+    private function requestUserInfo($token,$device_id)
+    {
+        $AlipayUserUserinfoShareRequest = new AlipayUserUserinfoShareRequest ();
+        $platform_config = get_platform_config_by_device_id($device_id);
+        $is_isv = get_isv_platform($device_id);
+        //todo 口碑获取用户信息
+        if($is_isv){
+            $result = koubei_request_execute_for_obj($AlipayUserUserinfoShareRequest,$token,$platform_config);
         }else{
-            $userInfo = json_decode($userInfo,1);
-            $exist  = $this->user_model->is_registered($data['openid'],'wechat-program');
-            if($exist){
-                //登录
-                $user_id = $exist['user_id'];
-            }else{
-                $user_data = array(
-                    'user_name'=>$userInfo['nickName'],
-                    'gender'=>$userInfo['gender'],
-                    'city'=>$userInfo['city'],
-                    'province'=>$userInfo['province'],
-                    'avatar'=>$userInfo['avatarUrl'],
-                    'reg_time'=>date('Y-m-d H:i:s')
+            $result = aopclient_request_execute($AlipayUserUserinfoShareRequest, $token,$platform_config);
+        }
+        return $result;
+    }
+
+
+    /**
+     * 支付宝签约查询
+     */
+    private function get_user_agreement_query($alipay_user_id,$device_id)
+    {
+        $config = get_platform_config_by_device_id($device_id);
+        //todo 口碑 签约查询
+        $exist_koubei = get_isv_platform($device_id);
+        if($exist_koubei){
+            $result =  koubei_agreemt_query($alipay_user_id,$config);
+            write_log('koubei_agreemt_query=>'.var_export($result,1));
+            if (!$result) {
+                $this->send_error_response("查询用户是否签约失败，请联系管理员");
+            }else if($result['code']== 10000 && $result['agreement_no']){
+                $data = array(
+                    'principal_id'=>$result['principal_id'],//openid
+                    'thirdpart_id'=>$config['auth_app_id'],//协议id
+                    'agreement_no'=>$result['agreement_no'],
+                    'scene'=>$result['sign_scene'],
+                    'sign_time'=>$result['sign_time'],
                 );
-                $user_id = $this->user_model->adUser($user_data,$data['openid'],'wechat-program');
-                if($invite_code){
-                    $this->user_friend_model->invite($user_id,$invite_code);
-                }
+                return $data;
+            }else{
+                return false;
             }
-            $this->login_user($user_id);
+        }else{
+            $result = mapi_agreement_query_request($alipay_user_id,$config);
+            if (!$result) {
+                $this->send_error_response("查询用户是否签约失败，请联系管理员");
+            } else if ($result['is_success'] != 'T' || !isset($result['response']['userAgreementInfo']['agreement_no'])) {
+                return false;
+            } else {
+                return $result['response']['userAgreementInfo'];
+            }
         }
-    }
-    public function qr_code_get(){
-        $user = $this->get_curr_user();
-        $invite_code = $user['invite_code'];
-        $str = "https://lxy.bootoa.cn/public/c.html?c=".$invite_code;
-//        general_qr_code($str);
-        $qr_url = "http://qr.liantu.com/api.php?text=".urlencode($str)."";
-
-        $num = $this->user_friend_model->get_friend_count($user['id']);
-        if(!$num)
-            $num = 0;
-        $this->send_ok_response(array('qr'=>$qr_url,'user'=>$user,'num'=>$num));
-    }
-    public function fin_log_get(){
-        $user = $this->get_curr_user();
-        $logs = $this->user_fin_model->get_log($user['id']);
-        $this->send_ok_response($logs);
-    }
-    public function energy_log_get(){
-        $user = $this->get_curr_user();
-        $logs = $this->user_fin_model->get_energy_log($user['id']);
-        $this->send_ok_response($logs);
     }
 
-    public function get_fins_collect_get(){
-        $user = $this->get_curr_user();
-        $fins = $this->user_fin_model->get_fins_collect($user['id']);
-        foreach ($fins as &$v){
-            $v['top'] = rand(1,200);
-            $v['left'] = rand(1,200);
+
+    /**
+     * wechat签约查询
+     */
+    private function get_wechat_user_agreement_query($wechat_user_id,$device_id,$is_program)
+    {
+        $this->load->helper('wechat_send');
+        $platform_config = get_platform_config_by_device_id($device_id);
+        if($is_program == 'program'){
+            $platform_config['wechat_appid'] =  $platform_config['wechat_program_appid'];
+            $platform_config['wechat_secret'] = $platform_config['wechat_program_secret'];
         }
-        $this->send_ok_response($fins);
-    }
-    public function collect_fin_post(){
-        $id = $this->post('id');
-        $this->check_null_and_send_error($id,'缺少cans');
-        $fin_land = $this->user_fin_model->collect_fin($id);
-        $this->send_ok_response(array('land'=>$fin_land));
-    }
-    public function sign_today_post(){
-        $id = $this->post('id');
-        $user = $this->get_curr_user();
-//        $r = $this->user_sign_model->get_sign_today($user['id']);
-        $r = $this->user_sign_model->get_sign_today($user['id']);
-        if($id){
-            $this->user_sign_model->insert_form_id($user['id'],$id);
-        }
-        $this->send_ok_response(array('status'=>$r ? 'succ' : 'fail'));
+        $rs = get_querycontract_by_openid($wechat_user_id,$platform_config);
+        return $rs;
     }
 
-    public function task_status_get(){
-        $user = $this->get_curr_user();
-        $sign = $this->user_sign_model->is_sign_today($user['id']);
-        $invite_status = false;
-        $info_status = false;
-        if($user['mobile'] && $user['really_name'] && $user['idcard'] ) {
-            $info_status = true;
+
+
+
+    public function goto_sign_get(){
+        $refer = $this->get('refer');
+        $device_id = $this->get('device_id');
+        $this->send_ok_response($this->get_agreement_sign_url($refer,$device_id));
+
+    }
+
+    private function get_agreement_sign_url($refer = 'alipay',$device_id)
+    {
+        $platform_config = get_platform_config_by_device_id($device_id);
+        if(empty($refer) || $refer === 'alipay'){
+            //todo 口碑获取签约URL
+            $exist_koubei = get_isv_platform($device_id);
+            if($exist_koubei){
+                return koubei_request_agreement_url($platform_config,$device_id);
+            }else{
+                return mapiClient_request_get_agreement_url($platform_config,$device_id);
+            }
+        }elseif ($refer === 'wechat'){
+
+            $this->load->helper('wechat_send');
+            $data= array(
+                'contract_code'=>uuid_32(),
+                'contract_display_account'=>'魔盒CITYBOX微信免密支付',
+                'request_serial'=>uuid_32(),
+            );
+            return entrustweb($data,$platform_config);
         }
-        $n = $this->user_friend_model->get_friend_count($user['id']);
-        if($n >= 100){
-            $invite_status = true;
+    }
+
+    /**
+     * 支付宝-签免密协议异步通知
+     */
+    public function notify_agree_post()
+    {
+        $config = get_platform_config_by_device_id($_REQUEST['device_id']);
+        $sign = getSignVeryfy($_REQUEST,$_REQUEST['sign'],$config);
+        write_log("agreement notify:" .','. var_export($_REQUEST, 1).',config=>'.var_export($config,1).',rs='.var_export($sign,1));
+        if ($sign && isset($_REQUEST['agreement_no'])) {
+            $ret = $this->user_agreement_model->update_agreement_sign($_REQUEST['alipay_user_id'],$_REQUEST,'alipay',$_REQUEST['partner_id']);
+            if($ret){
+                update_user_cache($ret['user_id'],$ret);
+            }
+            echo "success";
+        }else{
+            echo "fail";
         }
-        $ret = array(
-            'invite_status'=>$invite_status,
-            'sign_status'=>$sign,
-            'info_status'=>$info_status,
+    }
+
+    public function return_get()
+    {
+        write_log(" return req:" . var_export($_REQUEST, 1));
+    }
+
+    /**
+     * 支付宝解约-推送
+     */
+    public function delete_sign_post(){
+        write_log(" delete_sign  :" . var_export($_REQUEST, 1),'info');
+
+        $this->load->model("receive_alipay_log_model");
+        $msg_data = array(
+            'msg_type'=>'alipay-del-sign',
+            'param'=>json_encode($_REQUEST),
+            'receive_time'=>date('Y-m-d H:i:s')
         );
-        $this->send_ok_response($ret);
+        $this->receive_alipay_log_model->insert_log($msg_data);
+
+        $sign = true;//getSignVeryfy($_REQUEST,$_REQUEST['sign']);
+        if ($sign && isset($_REQUEST['agreement_no'])) {
+            $ret = $this->user_agreement_model->delete_agreement_sign($_REQUEST['alipay_user_id'],'alipay',$_REQUEST["agreement_no"]);
+            if($ret){
+                update_user_cache($ret['user_id'],$ret);
+            }
+            echo "success";
+        }else{
+            echo "fail";
+        }
     }
 
-    public function finish_info_post(){
-        $mobile = $this->post('mobile');
-        $name = $this->post('name');
-        $idcard = $this->post('idcard');
-        $this->check_null_and_send_error($mobile,'手机号不能为空');
-        $this->check_null_and_send_error($name,'真实姓名不能为空');
-        $this->check_null_and_send_error($idcard,'身份证号不能为空');
-        $user = $this->get_curr_user();
-        $e = $this->user_model->get_user_info_by_mobile($mobile);
-        if($e){
-            $this->send_error_response("手机号已经注册过");
-        }
-        $this->user_model->update_user($user['id'],$mobile,$name,$idcard);
-        update_user_cache($user['id'],array(
-            'mobile'=>$mobile,
-            'really_name'=>$name,
-            'idcard'=>$idcard,
-        ));
-        $user['mobile'] =  substr($mobile,0,4).'****'.substr($mobile,8);
-        $user['really_name'] =  mb_substr($name,0,1).'**';
-        $user['idcard'] =  substr($idcard,0,4).'*********'.substr($idcard,12);
-        $this->send_ok_response($user);
+    /**
+     * 修改用户为黑名单用户
+     */
+    function update_user_black_get(){
+        $uid = $this->get('uid');
+        $this->check_null_and_send_error($uid,"uid不能为空");
+        $update_data = array('is_black'=>1);
+        $this->update_user_cache($uid,$update_data);
+        $this->send_ok_response("succ");
     }
+
 }

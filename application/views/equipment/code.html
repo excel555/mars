@@ -1,0 +1,106 @@
+<div class="panel panel-default">
+    <div class="panel-heading">生成设备二维码</div>
+    <table class="table">
+        <form action="/equipment/code" name="myform" method="post">
+            <tr class="tr">
+                <td width="12%" align="right">
+                     管理设备ID：
+                    <br><br><br><br>
+                    <input type="checkbox" value="" id="box_check_all"> 全选
+ 
+                
+                </td>
+                <td width="85%">
+                      
+              
+                <div class="col-sm-10">
+                    <div class="store-box" style="min-height:150px;overflow-y:auto;max-height:200px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+                        <{foreach key=key item=item from=$equipment_list}>
+                        <label style="margin-right:10px;font-weight: normal">
+                            <input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="box_no" data-store-type="<{$item['replenish_warehouse']}>" value="<{$item['equipment_id']}>"> <{$item['name']}>[<{$item['equipment_id']}>]
+                        </label>
+                        <{/foreach}>
+
+                    </div>
+                </div>
+            
+                </td>
+            </tr>
+
+           
+
+
+            <tr class="tr">
+                <td align="right">&nbsp;</td>
+                <td>
+                    <input type="hidden" name="submit" value="1">
+                    <input type="button" name="Submit" class="btn btn-success" value="生成" onclick="qrFruitdayCode('common')">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button"  class="btn btn-default" value="返回" onclick="history.back();"/>
+                </td>
+            </tr>
+
+        </form>
+    </table>
+<!-- <div class="qr_fruitday">
+  <img id="qr_fruitday" src="<{$info.qr_common}>" />
+</div>
+
+</div> -->
+<script type="application/javascript">
+        
+//全选
+    $("#box_check_all").click(function () {
+        if(this.checked){
+           $("[name=box_no]:checkbox").prop('checked',true);
+        
+        }else{
+           $("[name=box_no]:checkbox").prop('checked',false);
+        }
+ 
+
+    });      
+   
+        function qrFruitdayCode(refer){
+            var obj=document.getElementsByName('box_no'); //选择所有name的对象，返回数组
+//取到对象数组后，我们来循环检测它是不是被选中
+            var s='';
+            for(var i=0; i<obj.length; i++){
+                if(obj[i].checked) {
+                  s+=','+obj[i].value; //如果选中，将value添加到变量s中
+                }
+            } 
+            s = s.substr(1);
+            
+            if (s == '') {
+                MessageBox.error('设备不能为空');
+                return;
+            }
+            if (confirm('是否确认要生成二维码？\n\r如果已有二维码则会覆盖原二维码！')){
+                $.post("/equipment/code_fruitday",{equipment_id: s,refer:refer},function(respData){
+                     var success = "";
+                     var error   = "";
+                  $.each(respData,function(k,v){
+                    if(v.status == 'success'){
+                        success += '设备'+k+'已生成\n\r';
+                        // $('.qr_fruitday').append('设备id: '+k+'<img id="qr_fruitday" src="'+v.qrcode+'" />');
+                    } else {
+                        // alert(v.msg);
+                        // return;
+                        error += '设备'+k+'生成失败请重新生成';
+                    }
+
+                  })
+                    alert(success+error);
+                  
+                    
+                },'json');
+            }
+
+            
+        };
+	
+    
+
+
+    
+</script>

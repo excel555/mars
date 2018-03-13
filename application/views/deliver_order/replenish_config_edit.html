@@ -1,0 +1,96 @@
+<style>
+	.modal-dialog{width: 900px}
+</style>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">编辑自动补货商品配置</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<form class="form-horizontal" id="productForm">
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">备注</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" value="<{$replenish_config.name}>" name="name">
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">商品ID</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" value="<{$replenish_config.product_id}>" readonly name="product_id" id="pro_code">
+					<ul class="list-group" id="pro_code_suggest"></ul>
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">数量</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" placeholder="每台设备分配数量" value="<{$replenish_config.qty}>" name="qty">
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">有效时间</label>
+				<div class="col-sm-10 form-inline">
+					<div class="input-group">
+						<input type="text" value="<{$replenish_config.start_date}>" name="start_date" readonly class="form-control start_date">
+						<div class="input-group-addon btn-clear">&times;</div>
+					</div>
+					<span>-</span>
+					<div class="input-group">
+						<input type="text" name="end_date" value="<{$replenish_config.end_date}>" readonly class="form-control end_date">
+						<div class="input-group-addon btn-clear">&times;</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">类型</label>
+				<div class="col-sm-5">
+					<{foreach $rc_type as $k => $v}>
+					<label class="radio-inline">
+						<input type="radio" <{if $replenish_config.type == $k}>checked<{/if}> name="type" value="<{$k}>"><{$v}>
+					</label>
+					<{/foreach}>
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label">设备类型</label>
+				<div class="col-sm-5 eq_type">
+					<{foreach $rc_eq_type as $k => $v}>
+					<label class="radio-inline">
+						<input type="radio" <{if $replenish_config.eq_type == $k}>checked<{/if}> name="eq_type" value="<{$k}>"><{$v}>
+					</label>
+					<{/foreach}>
+				</div>
+			</div>
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label"></label>
+				<div class="col-sm-5 eq_value <{if $replenish_config.eq_type != 1}>hide<{/if}>"></div>
+				<div class="col-sm-5 eq_value <{if $replenish_config.eq_type != 2}>hide<{/if}>">
+					<input type="text" class="form-control" placeholder="设备多个值逗号分隔：A,B" value="<{if $replenish_config.eq_type == 2}><{$replenish_config.eq_value}><{/if}>" name="eq_value">
+				</div>
+				<div class="col-sm-8 eq_value <{if $replenish_config.eq_type != 3}>hide<{/if}>" id="eids">
+					<span class="btn btn-xs btn-primary btn-select-all">全选</span>
+					<textarea style="width: 90%; display: inline-block; height: auto; margin-bottom: 5px; vertical-align: middle" class="form-control" rows="2" placeholder="多个值逗号分隔：A,B 或 A#B"></textarea>
+					<div style="max-height: 95px; overflow: auto">
+					<{foreach $equipments as $e}>
+					<label style="font-weight: normal"><input type="checkbox" <{if $replenish_config.eq_type == 3 && in_array($e.equipment_id, $replenish_config.eq_value)}>checked<{/if}> value="<{$e.equipment_id}>"><{$e.name}></label>
+					<{/foreach}>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group form-group-sm">
+				<label class="col-sm-2 control-label col-form-label"></label>
+				<div class="col-sm-5">
+					<label class="checkbox-inline">
+						<input type="checkbox" <{if $replenish_config.is_valid == 1}>checked<{/if}> name="is_valid" value="1">启用
+					</label>
+				</div>
+			</div>
+			<input type="hidden" value="<{$replenish_config.id}>" name="id" />
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	<button type="button" class="btn btn-primary btn-add-save">保存</button>
+</div>

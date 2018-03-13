@@ -1,0 +1,111 @@
+<style type="text/css">
+    table{
+        font-size: 12px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">设备SharpRatio</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10"  id="time" >
+                        <input class="form-control" type="text" name="search_start_date"  placeholder="起始时间"  readonly="readonly" value="<{$start_date}>">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10"  id="time2" >
+                        <input class="form-control" type="text" name="search_end_date"  placeholder="结束时间"  readonly="readonly" value="<{$end_date}>">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-success" id="explore-btn">导出</button>
+                <input type="hidden" id="origin_url" value="/report/equipment/sharpratio_table">
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table"  data-pagination="true" data-side-pagination="server" data-page-size="50">
+                <thead>
+                <tr>
+                    <th data-field="name" data-align="center">设备场景</th>
+                    <th data-field="sale_money" data-align="center">销售额</th>
+                    <th data-field="qty" data-align="center">设备数量</th>
+                    <th data-field="sale_money_avg" data-align="center">金额占比</th>
+                    <th data-field="qty_avg" data-align="center">设备占比</th>
+                    <th data-field="sharpratio" data-align="center">SharpRatio</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    var end_date = '<{$end_date}>';
+    $(function(){
+        get_table();
+
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_date
+        });
+        $('#time2').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_date
+        });
+        $("#search-btn").on('click', function(){
+            get_table();
+        });
+
+        $("#explore-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "is_explore=1&";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            location.href = serverUrl +'?'+filterData ;
+        });
+    });
+
+    function get_table(){
+        var serverUrl = $('#origin_url').val();
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'?'+filterData;
+        }
+        $('#config-table').bootstrapTable('refresh', {url: url}).on('load-success.bs.table', function (e,data) {
+
+        });
+    }
+</script>

@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+	<div id="config-body1">
+		<div class="table-toolbar" style="margin:10px;">
+		    <button type="button" class="btn btn-info btn-sm" id="label_add" onclick="location.href = '/products/labels'">添加</button>
+		    <input type="hidden" id="curr_id" value="0">
+		    <!--<a href='javascript:void(0)' onclick="refresh_cache()" role="button" class="btn btn-info btn-sm">刷新配置缓存</a>-->
+		</div>
+		<div class="form-horizontal" style="margin:10px;" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_label" placeholder="标签">
+                </div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" size='10' name="search_product_name" placeholder="商品名称">
+				</div>
+                <button type="button" class="btn btn-default" id="search-btn">搜索</button>
+                <input type="hidden" id="origin_url" value="/products/labels_table">
+            </div>
+        </div>
+		<div id="config-body">
+		    <table id="config-table" data-toggle="table" data-url="/products/labels_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]">
+		        <thead>
+		            <tr>
+		                <th data-field="id" data-align="center">id</th>
+		                <th data-field="label" data-align="center">标签</th>
+		                <th data-field="product_id" data-align="center">商品ID</th>
+		                <th data-field="product_name" data-align="center">商品名称</th>
+		            </tr>
+		        </thead>
+		    </table>
+		</div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#config-table').bootstrapTable({
+        }).on('click-row.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+
+
+    });
+
+
+
+</script>

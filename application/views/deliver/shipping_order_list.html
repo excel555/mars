@@ -1,0 +1,845 @@
+<style type="text/css">
+    .box-search .tooltip-inner{max-width: 300px}
+    .box-search .tooltip-table td{text-align: left;padding:2px;}
+    .panel,.modal-body{font-size: 12px;}
+    .panel img{border-radius: 5px; }
+    .dropdown-menu {min-width: 80px; font-size: 12px}
+    .dropdown-submenu {
+        position: relative;
+    }
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -6px;
+        margin-left: -1px;
+        -webkit-border-radius: 0 6px 6px 6px;
+        -moz-border-radius: 0 6px 6px;
+        border-radius: 0 6px 6px 6px;
+    }
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+    }
+    .dropdown-submenu > a:after {
+        display: block;
+        content: " ";
+        float: right;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 5px 0 5px 5px;
+        border-left-color: #ccc;
+        margin-top: 5px;
+        margin-right: -10px;
+    }
+    .dropdown-submenu:hover > a:after {
+        border-left-color: #fff;
+    }
+    .dropdown-submenu.pull-left {
+        float: none;
+    }
+    .dropdown-submenu.pull-left > .dropdown-menu {
+        left: -100%;
+        margin-left: 10px;
+        -webkit-border-radius: 6px 0 6px 6px;
+        -moz-border-radius: 6px 0 6px 6px;
+        border-radius: 6px 0 6px 6px;
+    }
+
+    .panel-heading .form-group, .tool-bottom .btn, .tool-bottom input{
+        margin:5px 0;
+    }
+    
+    .btn2{
+    	font-size:11px;
+    	padding:0px 5px;
+    }
+</style>
+<div id="store-panel" class="panel panel-default">
+    <div class="panel-heading">
+        <label class="control-label">出库/下架单列表:</label>
+        <div class="form-inline box-search">
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" name="search_name" placeholder="设备名称1,设备名称2">
+            </div>
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" name="search_address" placeholder="投放地址">
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_replenish_location" id="search_replenish_location">
+                    <option data-type="-1" value="-1">设备配送仓</option>
+                    <{foreach $store_list as $key => $val}>
+                    <option data-type="<{$val.code}>" value="<{$val.code}>"><{$val.name}></option>
+                    <{/foreach}>
+                </select>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_replenish_warehouse" id="search_replenish_warehouse">
+                    <option data-type="-1" value="-1">选择补货仓</option>
+                    <{foreach $store_list as $key => $val}>
+                    <option data-type="<{$val.code}>" value="<{$val.code}>"><{$val.name}></option>
+                    <{/foreach}>
+                </select>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" name="search_alias" placeholder="设备管理员">
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_order_type" id="search_order_type">
+                    <option value="-1">出库/下架</option>
+                    <option value="1">出库</option>
+                    <option value="2">下架</option>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_is_paper_order" id="search_is_paper_order">
+                    <option value="-1">单据类型</option>
+                    <option value="1">纸质</option>
+                    <option value="0">非纸质</option>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_operation_id" id="search_operation_id">
+                    <option value="-1">配送状态</option>
+                    <option value="3">配送完成</option>
+                    <option value="2">配送中</option>
+                    <option value="1">已出库</option>
+                    <option value="0">未出库</option>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_send_type" id="search_send_type">
+                    <option value="">配送方式</option>
+                    <option value="car">汽车</option>
+                    <option value="motor">电车</option>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_send_batch" id="search_send_batch">
+                    <option value="-1">配送批次</option>
+                    <{foreach key=key item=val from=$send_batch_options}>
+                    <option value="<{$key}>"><{$val}></option>
+                    <{/foreach}>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <select class="form-control" name="search_add_price" id="search_add_price">
+                    <option value="-1">设备溢价状态</option>
+                    <option value="1">非溢价设备</option>
+                    <option value="1.1">溢价10%设备</option>
+                    <option value="1.15">溢价15%设备</option>
+                    <option value="1.2">溢价20%设备</option>
+                    <option value="1.3">溢价30%设备</option>
+                    <option value="1.4">溢价40%设备</option>
+                    <option value="1.5">溢价50%设备</option>
+                </select>
+            </div>
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" name="search_diliver_member" placeholder="配送员">
+                <!--<select class="form-control" name="search_diliver_member" id="search_diliver_member">-->
+                    <!--<option value="-1">配送员</option>-->
+                    <!--<{foreach $deliver_member_list as $key => $val}>-->
+                    <!--<option data-type="<{$val.id}>" value="<{$val.id}>"><{$val.name}></option>-->
+                    <!--<{/foreach}>-->
+                <!--</select>-->
+            </div>
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" style="width: 95px" id="send_date" name="search_send_date" placeholder="配送日期"> - 
+                <input type="text" class="form-control" style="width: 95px" id="send_date_end" name="search_send_date_end" placeholder="配送日期">
+            </div>
+            <div class="form-group form-group-sm">
+                
+            </div>
+            <div class="form-group form-group-sm">
+                <button id="search-btn" class="btn btn-default btn-sm btn-search">搜索</button>
+                <button class="btn btn-warning btn-sm btn-export-equipment-products">导出实际补货量</button>
+                <input type="hidden" id="origin_url" value="/deliver/shipping_order_list_table">
+            </div>
+            <input type="hidden" id="order_by" name="order_by" value=""/>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="shipping-list-body">
+            <table id="config-table" data-toggle="table" data-url="/deliver/shipping_order_list_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="50" data-side-pagination="server" data-page-list="[50,100,500]">
+                <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="shipping_no" data-align="center">订单号</th>
+                    <th data-field="order_type_name" data-align="center">出库/下架</th>
+                    <th data-field="total_amount" data-align="center">总金额</th>
+                    <th data-field="sum_qty" data-align="center">补货量</th>
+                    <th data-field="show_box" data-align="center">推荐盒子</th>
+                    <th data-field="is_paper_order_name" data-align="center">单据类型</th>
+                    <th data-field="operation_name" data-align="center" class="order_status">配送状态</th>
+                    <th data-field="send_date" data-align="center">配送日期</th>
+                    <th data-field="delivery_member_name" data-align="center">配送员</th>
+                    <th data-field="equipment_name_with_add_price" data-align="center">设备名称</th>
+                    <th data-field="code" data-align="center">设备编码</th>
+                    <th data-field="alias" data-align="center">设备管理员</th>
+                    <th data-field="replenish_location_name" data-align="center" class="storage">设备补给仓</th>
+                    <th data-field="view" data-align="center">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<br/><br/><br/>
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="row form-inline">
+        <div class="col-md-10 col-md-offset-2 form-control-static tool-bottom text-center ">
+        	<form id="export_form" name="export_form" method="post">
+            	<input type="hidden" id="curr_id" name="curr_id" value="">
+            </form>
+            <{if $platform_id eq 1}>
+            <label><input id="is_car" type="checkbox">是否全部汽车配送</label>
+            <span class="btn btn-success" id="deliver-tms">推送tms</span>
+	        <{elseif in_array($platform_id, [10, 5])}>
+	        <span class="btn btn-success" id="deliver-oms">推送oms</span>
+	        <span class="btn btn-warning" id="deliver-oms-cancel">oms取消</span>
+            <{else}>
+            <span class="btn btn-success" id="deliver-member-apply">分配配送员</span>
+            <{/if}>
+	        <{if !in_array($platform_id, [10, 5])}>
+            <span class="btn btn-success" id="deliver-change-date">修改配送时间</span>
+	        <{/if}>
+            <span class="btn btn-danger" id="deliver-member-finish">配送完成</span>
+            <span id="export_all" class="btn btn-info btn-edit">导出总单</span>
+            <span id="export_sorting" class="btn btn-info btn-edit">导出分拣单</span>
+            <{if $platform_id eq 1}>
+            <span id="export_deliver_member" class="btn btn-info btn-edit">导出配送信息</span>
+            <{/if}>
+            <span id="export_paper" class="btn btn-info btn-warning">导出分单</span>
+            <span id="deliver-order-edit" class="btn btn-info btn-edit">编辑</span>
+            <span id="deliver-order-edit-batch" class="btn btn-info btn-edit">批量添加</span>
+            <span id="deliver-order-delete" class="btn btn-info btn-edit">删除</span>
+        </div>
+    </div>
+</nav>
+<div class="modal fade"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+<script type="text/javascript">
+    var order_op = $("#config-table tr .order_status").index();
+    var storage_op = $("#config-table tr .storage").index();
+
+    var panel = $('.panel'), modal = $('.modal'), modalContent = $('.modal-content');
+    $("#deliver-member-apply").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() == "配送完成"){
+                cantId = cantId + thisId +' ';
+            }
+//            console.log($(this).parent().parent().find("td:eq(8)").text(),$(this).parent().parent().find("td:eq(14)").text());
+
+            if(is_same_cang==false){
+                is_same_cang = $(this).parent().parent().find("td:eq("+storage_op+")").text();
+            }else{
+                if(is_same_cang != $(this).parent().parent().find("td:eq("+storage_op+")").text()){
+                    is_same_cang = false;
+                }
+            }
+//            console.log($(this).parent().parent().find("td:eq(6)").text(),cantId);
+        })
+        if (ids == ''){
+            alert('请选择分配项！');
+            return;
+        }
+        if (cantId != ''){
+            alert('ID:'+cantId+'为已完成配送的配送单，不可分配配送员！');
+            return;
+        }
+        if (is_same_cang == false){
+            alert('请选择同一个配送仓的配送单！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        $.ajax({
+            url: '/deliver/apply_deliver_member_show/' + escape(ids),
+            dataType: 'html',
+            context: modalContent,
+            success: function (resp) {
+                modalContent.html(resp);
+                modal.modal('show');
+            }
+        });
+    });
+
+    $("#deliver-tms").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() != "未出库"){
+                cantId = cantId + thisId +' ';
+            }
+//            console.log($(this).parent().parent().find("td:eq(8)").text(),$(this).parent().parent().find("td:eq(14)").text());
+
+            if(is_same_cang==false){
+                is_same_cang = $(this).parent().parent().find("td:eq("+storage_op+")").text();
+            }else{
+                if(is_same_cang != $(this).parent().parent().find("td:eq("+storage_op+")").text()){
+                    is_same_cang = false;
+                }
+            }
+//            console.log($(this).parent().parent().find("td:eq(6)").text(),cantId);
+        })
+        if (ids == ''){
+            alert('请选择分配项！');
+            return;
+        }
+        if (cantId != ''){
+            alert('ID:'+cantId+'只有未出库的配送单才可推送tms！');
+            return;
+        }
+        if (is_same_cang == false){
+            alert('请选择同一个配送仓的配送单！');
+            return;
+        }
+        $('#curr_id').val(ids);
+
+        $.ajax({
+            url: '/deliver/do_tms_deliver/' + escape(ids),
+	        data:{is_car: $('#is_car').prop('checked') ? 1:0},
+            dataType: 'json',
+            success: function (resp) {
+                if(resp.status=='success'){
+                    MessageBox.success(resp.msg);
+                    var url = getSearchUrl();
+                    $('#config-table').bootstrapTable('refresh', {url: url});
+                }else{
+                    MessageBox.error(resp.msg);
+                }
+            }
+        });
+    });
+
+    $("#deliver-oms").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+	    var _t = $(this);
+
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() != "未出库"){
+                cantId = cantId + thisId +' ';
+            }
+//            console.log($(this).parent().parent().find("td:eq(8)").text(),$(this).parent().parent().find("td:eq(14)").text());
+
+            if(is_same_cang==false){
+                is_same_cang = $(this).parent().parent().find("td:eq("+storage_op+")").text();
+            }else{
+                if(is_same_cang != $(this).parent().parent().find("td:eq("+storage_op+")").text()){
+                    is_same_cang = false;
+                }
+            }
+//            console.log($(this).parent().parent().find("td:eq(6)").text(),cantId);
+        })
+        if (ids == ''){
+            alert('请选择分配项！');
+            return;
+        }
+        if (cantId != ''){
+            alert('ID:'+cantId+'只有未出库的配送单才可推送oms！');
+            return;
+        }
+        if (is_same_cang == false){
+            alert('请选择同一个配送仓的配送单！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        if(_t.data('loading') == 1){
+            return;
+        }
+        _t.data('loading', 1);
+
+        $.ajax({
+            url: '/deliver/do_oms_deliver/' + escape(ids),
+            dataType: 'json',
+	        error: function () {
+                _t.data('loading', 0);
+            },
+            success: function (resp) {
+                if(resp.status=='success'){
+                    MessageBox.success(resp.msg);
+                    var url = getSearchUrl();
+                    $('#config-table').bootstrapTable('refresh', {url: url});
+                }else{
+                    MessageBox.error(resp.msg);
+                }
+                _t.data('loading', 0);
+            }
+        });
+    });
+    $("#deliver-oms-cancel").on('click',function(){
+        var _this = $(this), rows = $("#config-table").bootstrapTable('getSelections');
+        if(rows.length != 1){
+            MessageBox.error('每次只能取消一个订单');
+            return;
+        }
+
+        if(!window.confirm('确定要取消oms订单吗？')){
+	        return;
+        }
+
+
+        if(_this.data('loading') == 1){
+            return;
+        }
+        _this.data('loading', 1);
+
+        $.ajax({
+            url: '/deliver/do_oms_deliver_cancel/',
+            dataType: 'json',
+	        type: 'POST',
+	        data: {shipping_no: rows[0]['shipping_no']},
+            error: function () {
+                _this.data('loading', 0);
+            },
+            success: function (resp) {
+                if(resp.status=='success'){
+                    MessageBox.success(resp.msg);
+                    var url = getSearchUrl();
+                    $('#config-table').bootstrapTable('refresh', {url: url});
+                }else{
+                    MessageBox.error(resp.msg);
+                }
+                _this.data('loading', 0);
+            }
+        });
+    });
+
+    $("#deliver-change-date").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+        <{if $platform_id eq 1}>
+            $("input[name='radioName']:checked").each(function(){
+                var thisId = $(this).parent().next().html();
+                ids = ids + thisId +'|';
+                if($(this).parent().parent().find("td:eq("+order_op+")").text() != "未出库"&&$(this).parent().parent().find("td:eq("+order_op+")").text() != "已推送"){
+                    cantId = cantId + thisId +' ';
+                }
+            })
+            if (ids == ''){
+                alert('请选择分配项！');
+                return;
+            }
+            if (cantId != ''){
+                alert('ID:'+cantId+'不是未出库、已推送配送单，不可更改时间！');
+                return;
+            }
+        <{else}>
+            $("input[name='radioName']:checked").each(function(){
+                var thisId = $(this).parent().next().html();
+                ids = ids + thisId +'|';
+                if($(this).parent().parent().find("td:eq("+order_op+")").text() == "配送完成"){
+                    cantId = cantId + thisId +' ';
+                }
+            })
+            if (ids == ''){
+                alert('请选择分配项！');
+                return;
+            }
+            if (cantId != ''){
+                alert('ID:'+cantId+'为已完成配送的配送单，不可更改时间！');
+                return;
+            }
+        <{/if}>
+        $('#curr_id').val(ids);
+        $.ajax({
+            url: '/deliver/change_deliver_date/' + escape(ids),
+            dataType: 'html',
+            context: modalContent,
+            success: function (resp) {
+                modalContent.html(resp);
+                modal.modal('show');
+            }
+        });
+    });
+
+    $("#deliver-order-edit").on('click',function(){
+        var ids = '';
+        if($("input[name='radioName']:checked").length >= 2){
+            alert('一次只能编辑一个订单！');
+            return;
+        }
+        ids = $("input[name='radioName']:checked:eq(0)").parent().next().html();
+        if (ids == ''){
+            alert('请选择操作项！');
+            return;
+        }
+
+        if($("input[name='radioName']:checked").parent().parent().find("td:eq("+order_op+")").text() != "未出库"){
+            alert('仅未出库的订单，可进行此项操作！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        window.open('/deliver/shipping_edit_order_products/'+ids);
+    });
+
+    $("#deliver-order-edit-batch").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false, wh = [];
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() != "未出库"){
+                cantId = cantId + thisId +' ';
+            }
+            var wh_name = $(this).parent().parent().find('.storage').text().trim();
+            if(wh_name !='' && $.inArray(wh_name, wh) == -1){
+                wh.push(wh_name);
+            }
+        })
+        if (ids == ''){
+            alert('请选择操作项！');
+            return;
+        }
+        if(wh.length > 1){
+            alert('请先选择某一个补货仓后，再批量添加商品！');
+            return;
+        }
+
+        if (cantId != ''){
+            alert('仅未出库的订单，可进行此项操作！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        window.open('/deliver/shipping_add_batch_order_products/'+escape(ids));
+    });
+
+
+    $("#deliver-order-delete").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() != "未出库"){
+                cantId = cantId + thisId +' ';
+            }
+        })
+        if (ids == ''){
+            alert('请选择操作项！');
+            return;
+        }
+        if (cantId != ''){
+            alert('仅未出库的订单，可进行此项操作！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        $.ajax({
+            url: '/deliver/shipping_delete_order/' + escape(ids),
+            dataType: 'json',
+            success: function (resp) {
+                if(resp.status=='success'){
+                    MessageBox.success(resp.msg);
+                    var url = getSearchUrl();
+                    $('#config-table').bootstrapTable('refresh', {url: url});
+                }else{
+                    MessageBox.error(resp.msg);
+                }
+            }
+        });
+    });
+
+    $("#deliver-member-finish").on('click',function(){
+        var ids = '',cantId = '',is_same_cang=false;
+
+        $("input[name='radioName']:checked").each(function(){
+            var thisId = $(this).parent().next().html();
+            ids = ids + thisId +'|';
+            if($(this).parent().parent().find("td:eq("+order_op+")").text() != "配送中"){
+                cantId = cantId + thisId +' ';
+            }
+        })
+        if (ids == ''){
+            alert('请选择分配项！');
+            return;
+        }
+        if (cantId != ''){
+            alert('ID:'+cantId+'非配送中订单，无法操作配送完成！');
+            return;
+        }
+        $('#curr_id').val(ids);
+        if(confirm("确定要完成这些未配送订单吗？")){
+            $.ajax({
+                url: '/deliver/finish_shipping_order/' + escape(ids),
+                dataType: 'json',
+                success: function (resp) {
+                    if(resp.status=='success'){
+                        MessageBox.success(resp.msg);
+                        var url = getSearchUrl();
+                        $('#config-table').bootstrapTable('refresh', {url: url});
+                    }else{
+                        MessageBox.error(resp.msg);
+                    }
+                }
+            });
+        }
+    });
+
+    modalContent.on('click', '.btn-search-product', function (e) {
+        var target = $(e.delegateTarget);
+        var ids = target.find('#ids').val();
+        var data = {ids: ids, warehouse: target.find('.store-obj-base').data('warehouse'), storeType: target.find('.store-obj-base').data('storetype')};
+
+        $.ajax({
+            url: '/store/product/search',
+            type: "POST",
+            data: data,
+            dataType: 'html',
+            success: function (resp) {
+                modalContent.find('.products').html(resp);
+            }
+
+        });
+    }).on('click', '.products th input', function (e) {
+        $(e.delegateTarget).find('.products td input').prop('checked', $(this).prop('checked'));
+    }).on('click', '.btn-save-product', function (e) {
+        var target = $(e.delegateTarget);
+        var t = $(this);
+        var cb = target.find('.products td input');
+        var ids = [];
+        cb.each(function () {
+            if ($(this).prop('checked')) {
+                ids.push($(this).val());
+            }
+        });
+        $.notifyClose();
+        if (!ids.length) {
+            $.notify('请选择产品');
+            return;
+        }
+
+        var storeID = getOneStore();
+        if(storeID === false){
+            $.notify('请选择一个门店');
+            return;
+        }
+
+        if (t.attr('loading') == 1) {
+            return;
+        }
+        t.attr('loading', 1);
+
+        $.ajax({
+            url: '/store/product/doSave',
+            type: "POST",
+            data: {ids: ids.join(','), 'store_id': storeID, warehouse: target.find('.store-obj-base').data('warehouse')},
+            dataType: 'json',
+            success: function (resp) {
+                if (resp.status != 'succ') {
+                    $.notify(resp.msg);
+                    t.attr('loading', 0);
+                    return;
+                }
+                $.notify(resp.msg, {type: 'success'});
+                modal.modal('hide');
+                searchBox.find('button.btn-search').trigger('click');
+            }
+
+        });
+    });
+
+    function getSearchUrl() {
+        var serverUrl = $('#origin_url').val();
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'?'+filterData;
+        }
+        return url;
+    }
+
+    $(function(){
+    	$('#send_date,#send_date_end').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            minView: "month",
+            format:'yyyy-mm-dd',      //格式化日期
+            timepicker:false    //关闭时间选项
+        });
+
+        <{if $search_name eq ''}>
+            $('#config-table').bootstrapTable({
+            }).on('click-row.bs.table', function (e, row, $element) {
+                //$("#curr_id").val(row.id);
+            });
+        <{else}>
+            var last_search_name = '<{$search_name}>';
+            var url = '/deliver/shipping_order_list_table?search_name='+last_search_name+'&';
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        <{/if}>
+
+        $("#search-btn").on('click', function(){
+            var url = getSearchUrl();
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        
+        $(".btn-export-equipment-products").on('click', function(){
+            var url = getSearchUrl();
+            if(url.indexOf('?') == -1){
+                url += '?';
+            }
+            url += 'export_type=1';
+            window.location.href = url;
+        });
+
+
+            $("#export_sorting").on('click', function () {
+                var ids = '';
+                $("input[name='radioName']:checked").each(function(){
+                    ids = ids + $(this).parent().next().html()+'|';
+                })
+                if (ids == ''){
+                    if (confirm('确认要导出当前所有出库单吗？')){
+                        $('#curr_id').val('');
+                        var filterData = "";
+                        $.each($("[name^='search_']"), function() {
+                            field = $(this).attr('name');
+                            data = $(this).val();
+                            if(data!=-1 && data!=""){
+                                filterData += field+"="+data+"&";
+                            }
+                        });
+                        if(filterData==""){
+                            var url = '/deliver/export_orders_all_deliver_xls';
+                        }else{
+                            var url = '/deliver/export_orders_all_deliver_xls' +'?'+filterData;
+                        }
+                        $('#export_form').attr('action',url);
+                        $('#export_form').submit();
+                    }
+                } else {
+                    $('#curr_id').val(ids);
+                    $('#export_form').attr('action','/deliver/export_orders_all_deliver_xls');
+                    $('#export_form').submit();
+                }
+
+                //location.href='/deliver/export_orders_all/'+ids;
+            });
+
+            $("#export_deliver_member").on('click', function () {
+                var ids = '';
+                $("input[name='radioName']:checked").each(function(){
+                    ids = ids + $(this).parent().next().html()+'|';
+                })
+                if (ids == ''){
+                    if (confirm('确认要导出当前所有出库单吗？')){
+                        $('#curr_id').val('');
+                        var filterData = "";
+                        $.each($("[name^='search_']"), function() {
+                            field = $(this).attr('name');
+                            data = $(this).val();
+                            if(data!=-1 && data!=""){
+                                filterData += field+"="+data+"&";
+                            }
+                        });
+                        if(filterData==""){
+                            var url = '/deliver/export_orders_all_deliver_info_xls';
+                        }else{
+                            var url = '/deliver/export_orders_all_deliver_info_xls' +'?'+filterData;
+                        }
+                        $('#export_form').attr('action',url);
+                        $('#export_form').submit();
+                    }
+                } else {
+                    $('#curr_id').val(ids);
+                    $('#export_form').attr('action','/deliver/export_orders_all_deliver_info_xls');
+                    $('#export_form').submit();
+                }
+
+                //location.href='/deliver/export_orders_all/'+ids;
+            });
+
+        $("#export_all").on('click', function () {
+            var ids = '';
+            $("input[name='radioName']:checked").each(function(){
+            	ids = ids + $(this).parent().next().html()+'|';
+            })
+            if (ids == ''){
+            	//列表结果集大于500
+            	if ($('.pagination-info')){
+            		var pagination_info = $('.pagination-info').html();
+            		var pagination_info_1 = pagination_info.split('共计')[1];
+            		var pagination_info_2 = pagination_info_1.split('行')[0];
+            		var record_count = parseInt($.trim(pagination_info_2));
+            		if (record_count > 500){
+            			alert('筛选结果数超过500，请再细分筛选条件减少待处理记录数！');
+            			return false;
+            		};
+            	}
+            	if (confirm('确认要导出当前所有出库单吗？')){
+            		$('#curr_id').val('');
+	            	var filterData = "";
+			        $.each($("[name^='search_']"), function() {
+			            field = $(this).attr('name');
+			            data = $(this).val();
+			            if(data!=-1 && data!=""){
+			                filterData += field+"="+data+"&";
+			            }
+			        });
+			        if(filterData==""){
+			            var url = '/deliver/export_orders_all_xls';
+			        }else{
+			            var url = '/deliver/export_orders_all_xls' +'?'+filterData;
+			        }
+		            $('#export_form').attr('action',url);
+		            $('#export_form').submit();
+            	}
+            } else {
+            	$('#curr_id').val(ids);
+	            $('#export_form').attr('action','/deliver/export_orders_all_xls');
+	            $('#export_form').submit();
+            }
+            
+            //location.href='/deliver/export_orders_all/'+ids;
+        });
+        
+        $("#export_paper").on('click', function () {
+            var ids = '',undolist='';
+            $("input[name='radioName']:checked").each(function(){
+            	ids = ids + $(this).parent().next().html()+'|';
+            })
+            if (ids == ''){
+            	if (confirm('确认要导出当前所有出库单吗？')){
+            		$('#curr_id').val('');
+	            	var filterData = "";
+			        $.each($("[name^='search_']"), function() {
+			            field = $(this).attr('name');
+			            data = $(this).val();
+			            if(data!=-1 && data!=""){
+			                filterData += field+"="+data+"&";
+			            }
+			        });
+			        if(filterData==""){
+			            var url = '/deliver/export_orders_paper_xls';
+			        }else{
+			            var url = '/deliver/export_orders_paper_xls' +'?'+filterData;
+			        }
+		            $('#export_form').attr('action',url);
+		            $('#export_form').submit();
+            	}
+            } else {
+            	$('#curr_id').val(ids);
+            	$('#export_form').attr('action','/deliver/export_orders_paper_xls');
+            	$('#export_form').submit();
+            }
+            
+            //location.href='/deliver/export_orders_paper/'+ids;
+        });
+    });
+</script>

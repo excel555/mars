@@ -1,0 +1,124 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">订单管理</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <{include 'order/search_box.html'}>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="search_code" placeholder="售货机编码">
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <input type="hidden" id="origin_url" value="/active/table">
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-toolbar">
+            <button type="button" class="btn btn-info btn-sm" onclick="location.href='/active/first_add'">新增</button>
+        </div>
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/active/table" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]">
+                <thead>
+                <tr>
+                    <th data-field="code" data-align="center">设备名称</th>
+                    <th data-field="box_no" data-align="center">设备id</th>
+                    <th data-field="province" data-align="center">投放区域</th>
+                    <th data-field="address" data-align="center">投放地址</th>
+                    <th data-field="discount" data-align="center">设置折扣</th>
+                    <th data-field="admin_name" data-align="center">管理员</th>
+                    <th data-field="operation" data-align="center">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<script type="text/javascript">
+   function change_discount(id, obj){
+       var discount = $(obj).val();
+       $.post("/active/first_ajax_save",{id:id,discount:discount},function(data){
+           if(data.status=='success'){
+               alert('成功');
+           }else{
+               alert(data.msg);
+               return false;
+           }
+       }, 'json');
+   }
+
+   function delete_discount(id, obj){
+       $.post("/active/first_ajax_delete",{id:id},function(data){
+           if(data.status=='success'){
+               alert('成功');
+               $(obj).parent().parent().remove();
+           }else{
+               alert(data.msg);
+               return false;
+           }
+       }, 'json');
+   }
+
+    $(function(){
+        $('#config-table').bootstrapTable({
+        }).on('click-row.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $('#time2').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month'
+        });
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+
+        $('#search_product_name').autocomplete({
+            source:function(query,process){
+                var matchCount = this.options.items;//返回结果集最大数量
+                $.get("/order/get_product",{"matchInfo":query['term'],"matchCount":matchCount},function(respData){
+                    respData = $.parseJSON(respData);//解析返回的数据
+
+                    return process(respData);
+                });
+            }
+        });
+
+
+    });
+</script>

@@ -1,0 +1,122 @@
+<style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+        label{max-width: none;}
+        .cb-control {padding-left: 20px;}
+    </style>
+<div class="panel panel-default">
+    
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="search_address" placeholder="请输入地址" >
+                </div>
+        
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <label class="cb-control">
+                    <input type="checkbox"  id="showname" name="showname" value="1" checked="true">是否显示名称
+                </label>
+                <label class="cb-control">
+                    <input type="checkbox"  id="showpoint" name="showpoint" value="1" checked="true">是否显示点位
+                </label>
+            </div>
+          
+        </div>
+        <div class="form-horizontal" id="result">
+
+        </div>
+    </div>
+
+    <div class="panel-body">
+       <div id="allmap" style="width:100%;height:680px"></div>  
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+
+
+//百度地图API功能
+    function loadJScript() {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://api.map.baidu.com/api?v=2.0&ak=kWUkKC7gkj1evEGcDAiO2hCYIUWdnPW2&callback=init";
+        document.body.appendChild(script);
+    }
+    function init() {
+        map = new BMap.Map("allmap");            // 创建Map实例
+        var point = new BMap.Point(121.4814075328,31.2367709624); // 创建点坐标
+        map.centerAndZoom(point,13);                 
+        map.enableScrollWheelZoom();                 //启用滚轮放大缩小
+
+        var equ_list = <{$list}>;
+        <{foreach $list as $val}>
+            var marker = new BMap.Marker(new BMap.Point(<{$val.baidu_xyz}>));
+            map.addOverlay(marker);            //增加点    
+
+            var label = new BMap.Label('<{$val.name}>',{offset:new BMap.Size(20,-10)});
+            marker.setLabel(label);
+        
+        <{/foreach}>
+        
+
+        var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+        var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
+        map.addControl(top_left_control);        
+        map.addControl(top_left_navigation);     
+        map.addControl(top_right_navigation);  
+
+    }  
+    window.onload = loadJScript;  //异步加载地图
+
+    $("#search-btn").on('click', function(){
+            var myGeo = new BMap.Geocoder();
+            myGeo.getPoint($("#search_address").val(), function(point){
+            if (point) {
+                map.centerAndZoom(point, 15);
+                var myIcon = new BMap.Icon("https://cdnjd.fruitday.com/citybox/cityboxpoint5.png", new BMap.Size(32,32));
+                var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+                map.addOverlay(marker2); 
+                marker2.setAnimation(BMAP_ANIMATION_BOUNCE);
+
+                $.post("/equipment/getTmsStoreInfo",{address: $("#search_address").val()},function(respData){
+                    if(respData.status== 'success'){
+                        $("#result").html("tms信息："+respData.prewhCode+"  "+respData.prewhName);
+                    } else {
+                        $("#result").html('tms信息获取失败');
+                        return;
+                    }
+                },'json');
+            }else{
+                alert("您选择地址没有解析到结果!");
+            }
+        }, "上海市");
+
+    });
+
+    $("#showname").on('click', function(){
+        var  name_check_status = $("#showname").prop('checked');
+        if(name_check_status){
+            $(".BMapLabel").show();
+        }else{
+            $(".BMapLabel").hide();
+        }
+    });
+
+    $("#showpoint").on('click', function(){
+        var  point_check_status = $("#showpoint").prop('checked');
+        if(point_check_status){            
+            $(".BMap_Marker").show();
+            $("[unselectable='on'] img").show();
+            $(".BMapLabel").show();
+        }else{
+            $(".BMap_Marker").hide();
+            $("[unselectable='on'] img").hide();
+            $(".BMapLabel").hide();
+        }
+    });
+
+</script>

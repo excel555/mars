@@ -1,0 +1,24 @@
+<script src="/assets/js/multiple-select.js"></script>
+<link href="/assets/css/multiple-select.css" rel="stylesheet" />
+<{if $p_class|@count neq 0}>
+<div class="col-sm-2" >
+    <select id="search_class_id"  name="search_class_id"  multiple="multiple">
+        <!--<option value="-1">全部类目</option>-->
+        <{foreach key=keyP item=itemP from=$p_class }>
+        <optgroup label="<{$itemP['name']}>"><{$itemP['name']}>
+            <{foreach key=key item=item from=$itemP['children']}>
+            <option value="<{$item['id']}>"><{$item['name']}></option>
+            <{/foreach}>
+        </optgroup>
+        <{/foreach}>
+    </select>
+</div>
+<{/if}>
+
+<script>
+    $('#search_class_id').multipleSelect({
+        width: '100%',
+        height: '34px',
+        multipleWidth: 55
+    });
+</script>

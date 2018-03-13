@@ -13,7 +13,6 @@ class Order_model extends MY_Model
 	{
 		parent::__construct ();
         $this->load->model("order_product_model");
-        $this->load->model('card_model');
         $this->load->model('equipment_model');
         $this->load->model('equipment_stock_model');
         $this->load->model('user_acount_model');
@@ -28,6 +27,12 @@ class Order_model extends MY_Model
         return ["id","uid","order_name","order_status","order_time","box_no","money","good_money","discounted_money","qty","last_update_time","refer","modou",'level_money'];
     }
 
+    function get_orders($eq){
+        $this->db->select('id,order_name,uid');
+        $this->db->where(array('box_no'=>$eq));
+        $this->db->order_by('id','DESC');
+        return $this->db->get($this->table_name())->result_array();
+    }
 	function list_orders($uid,$status,$page=1,$page_size=10){
         $field = rtrim(join(",",$this->return_field()),",");
         if($status == 0){
@@ -214,101 +219,7 @@ class Order_model extends MY_Model
      * @param $refer str 来源： alipay/wechat/fruitday
      * @return string order_name
      * */
-    public function create_order($data, $uid, $box_no, $refer='alipay')
-    {
-        //5楼盒子做测试
-        //if($box_no == '68805328909'){
-        return $this->create_order_v2($data, $uid, $box_no, $refer);//新版创建订单
-        //}
 
-        $eq_info = $this->equipment_model->get_info_by_equipment_id($box_no);
-        $platform_id = $eq_info['platform_id']?$eq_info['platform_id']:1;//平台id
-        $add_price   = $eq_info['add_price']?$eq_info['add_price']:1;//溢价
-        $eq_type     = $eq_info['type'];
-        //if($eq_type == 'scan-1' || $eq_type =='scan-2'){//新型设备
-        $this->equipment_stock_model->update_stock($data, $box_no);
-        //}
-
-        $result = $product_ids = array();
-        $order_name  = $this->get_order_name();//生成订单号
-        $tmp_product = $this->get_order_product($box_no, $data, $add_price);//获取订单商品 详情
-        if(!$tmp_product){
-            write_log('订单创建失败原因：商品id为0','crit');
-            return array();
-        }
-        $result['qty']        = $tmp_product['qty'];
-        $result['good_money'] = $tmp_product['good_money'];//订单商品价格
-        $data        = $tmp_product['data'];//商品列表
-        foreach($data as $k=>$v){
-            $data[$k]['order_name'] = $order_name;
-        }
-        //满额减活动
-        $this->load->model('active_discount_model');
-        $discount_tmp = $this->active_discount_model->get_order_after_active($uid, $box_no, $refer, $platform_id, $data);
-        $discount_money = $discount_tmp['discount_money'];
-        $discount_log   = $discount_tmp['discount_log'];
-//var_dump($discount_tmp);exit;
-        $this->db->trans_strict(FALSE);
-        $this->db->trans_begin();
-        $error_message = '';
-        $real_money = bcsub($result['good_money'] , $discount_money, 2);//实付价格,保留两位小数
-        //查看是否有符合的优惠券
-        $order_info = array(
-            'product_info'=>$data,
-            'uid'         =>$uid,
-            'money'       =>$real_money,//折扣后的金额
-            'on_sale'     => $discount_money>0?true:false,//是否已经享受过了 活动营销
-            'platform_id' =>$platform_id,
-            'source'      =>$refer
-        );
-        $cards = $this->card_model->get_which_card_to_use($order_info);
-        if($cards && !empty($cards)){//有享受的优惠券
-            $result['card_money'] = $cards['card_money'];
-            $result['use_card']   = $cards['card_number'];
-            $this->card_model->set_card_used($cards['card_number']);
-            $error_message .= $this->db->_error_message();
-            $real_money = bcsub($real_money , $cards['card_money'], 2);//实付价格,减去优惠券价格，保留两位小数
-        }else{
-            $result['card_money'] = 0;
-            $result['use_card']   = '';
-        }
-
-        $result['money'] = $real_money>0?$real_money:0;
-        $result['order_name'] = $order_name;
-        $result['order_status'] = self::ORDER_STATUS_DEFAULT;
-        $result['order_time'] = date('Y-m-d H:i:s');
-        $result['box_no'] = $box_no;
-        $result['discounted_money'] = ($discount_money>$result['good_money'])?$result['good_money']:$discount_money;
-        $result['uid'] = $uid;
-        $result['last_update_time'] =  date('Y-m-d H:i:s');;
-        $result['refer'] = $refer;
-        $result['platform_id'] = $platform_id; //创建订单 加入平台
-
-        $this->db->insert($this->table_name(), $result);//insert order表
-        $error_message .= $this->db->_error_message();
-        $gat_data = $data;
-        foreach($data as $dk=>$dv){
-            unset($data[$dk]['class_id']);
-            unset($data[$dk]['class_name']);
-        }
-        $this->db->insert_batch('order_product', $data);//insert order_product表
-        $error_message .= $this->db->_error_message();
-
-        if(!empty($discount_log)){//insert 优惠日志表
-            $discount_param['order_name'] = $order_name;
-            $discount_param['content'] = json_encode($discount_log);
-            $this->db->insert('order_discount_log', $discount_param);
-            $error_message .= $this->db->_error_message();
-        }
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            write_log('订单创建失败sql原因：'.$error_message,'crit');
-            return array();
-        } else {
-            $this->db->trans_commit();
-            return array('order_name' => $order_name, 'money' => $result['money'], 'detail' => $data, 'good_money' => $tmp_product['good_money'], 'gat_data'=>$gat_data);
-        }
-    }
 
     function get_platform_id($equipment_id){
         $this->load->model('equipment_model');
@@ -431,73 +342,22 @@ class Order_model extends MY_Model
      * @param $refer str 来源： alipay/wechat/fruitday
      * @return string order_name
      * */
-    public function create_order_v2($data, $uid, $box_no, $refer='alipay')
+    public function create_order($data, $uid, $box_no, $refer='alipay')
     {
         $eq_info = $this->equipment_model->get_info_by_equipment_id($box_no);
         $platform_id = $eq_info['platform_id']?$eq_info['platform_id']:1;//平台id
-        $add_price   = $eq_info['add_price']?$eq_info['add_price']:1;//溢价
-        $this->equipment_stock_model->update_stock($data, $box_no);
-
 
         $result = $product_ids = array();
         $order_name  = $this->get_order_name();//生成订单号
-        $tmp_product = $this->get_order_product($box_no, $data, $add_price);//获取订单商品 详情
+        $tmp_product = $this->get_order_product($box_no, $data, 1);//获取订单商品 详情
         if(!$tmp_product){
             write_log('订单创建失败原因：商品id为0','crit');
             return array();
         }
         $result['qty']        = $tmp_product['qty'];
         $result['good_money'] = $tmp_product['good_money'];//订单商品价格
-        $data        = $tmp_product['data'];//商品列表
-
-
-        //满额减活动
-        $this->load->model('active_discount_model');
-        $discount_tmp = $this->active_discount_model->get_order_after_active_v2($uid, $box_no, $refer, $platform_id, $data);
-        $discount_money = ($discount_tmp['discount_money']>0)?$discount_tmp['discount_money']:0;
-        $discount_log   = $discount_tmp['discount_log'];
-        $product_d_money= $discount_tmp['data'];//每件商品的优惠金额 数组
-        foreach($data as $k=>$v){
-            if(!$v['product_id']){
-                unset($data[$k]);
-                continue;
-            }
-            $data[$k]['order_name'] = $order_name;
-            $data[$k]['dis_money']  = floatval($product_d_money[$v['product_id']]);
-        }
-
-
-        $error_message = '';
-        $real_money = bcsub($result['good_money'] , $discount_money, 2);//实付价格,保留两位小数
-        //查看是否有符合的优惠券
-        $order_info = array(
-            'product_info'=>$data,
-            'uid'         =>$uid,
-            'money'       =>$real_money,//折扣后的金额
-            'on_sale'     =>$discount_money>0?true:false,//是否已经享受过了 活动营销
-            'platform_id' =>$platform_id,
-            'source'      =>$refer
-        );
-        $cards = $this->card_model->get_which_card_to_use($order_info);
-        if($cards && !empty($cards)){//有享受的优惠券
-            $result['card_money'] = $cards['card_money'];
-            $result['use_card']   = $cards['card_number'];
-            $this->card_model->set_card_used($cards['card_number']);
-            $error_message .= $this->db->_error_message();
-            $real_money = bcsub($real_money , $cards['card_money'], 2);//实付价格,减去优惠券价格，保留两位小数
-        }else{
-            $result['card_money'] = 0;
-            $result['use_card']   = '';
-        }
-
-        //账户折扣，会员等级折扣， 魔豆值使用，余额使用
-        $acount = $this->user_acount_model->get_user_discount($uid, $real_money, $order_name, $refer, $platform_id, $box_no);
-        $real_money = bcsub($real_money, $acount['total'], 2);
-        $result['level_money'] = $acount['level_money']>0?floatval($acount['level_money']):0;//周三会员优惠金额
-        $result['modou']       = $acount['modou']>0?intval($acount['modou']):0;//魔豆抵扣
-        $result['yue']         = $acount['yue']>0?floatval($acount['yue']):0;//余额使用
-
-        //会员等级折扣， 魔豆值使用
+        $data = $tmp_product['data'];
+        $real_money = $result['good_money'];
 
         //生成订单
         $result['money'] = $real_money>0?$real_money:0;
@@ -505,7 +365,7 @@ class Order_model extends MY_Model
         $result['order_status'] = self::ORDER_STATUS_DEFAULT;
         $result['order_time'] = date('Y-m-d H:i:s');
         $result['box_no'] = $box_no;
-        $result['discounted_money'] = ($discount_money>$result['good_money'])?$result['good_money']:$discount_money;
+        $result['discounted_money'] = 0;
         $result['uid'] = $uid;
         $result['last_update_time'] =  date('Y-m-d H:i:s');;
         $result['refer'] = $refer;
@@ -515,10 +375,10 @@ class Order_model extends MY_Model
         $this->db->trans_begin();
 
         $this->db->insert($this->table_name(), $result);//insert order表
-        $error_message .= $this->db->_error_message();
+
         $order_product = array();
         foreach($data as $dk=>$dv){
-            $order_product[$dk]['dis_money']    = $dv['dis_money']?$dv['dis_money']:0;
+            $order_product[$dk]['dis_money']    = 0;
             $order_product[$dk]['order_name']   = $order_name;
             $order_product[$dk]['product_id']   = $dv['product_id'];
             $order_product[$dk]['product_name'] = $dv['product_name'];
@@ -528,17 +388,11 @@ class Order_model extends MY_Model
         }
         //生成订单商品
         $this->db->insert_batch('order_product', $order_product);//insert order_product表
-        $error_message .= $this->db->_error_message();
 
-        if(!empty($discount_log)){//insert 优惠日志表
-            $discount_param['order_name'] = $order_name;
-            $discount_param['content'] = json_encode($discount_log);
-            $this->db->insert('order_discount_log', $discount_param);
-            $error_message .= $this->db->_error_message();
-        }
+
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
-            write_log('订单创建失败sql原因：'.$error_message,'crit');
+            write_log('订单创建失败sql原因：','crit');
             return array();
         } else {
             $this->db->trans_commit();

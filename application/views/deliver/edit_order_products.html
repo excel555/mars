@@ -1,0 +1,303 @@
+<style>.popover{max-width: 420px;}</style>
+<div class="panel panel-default">
+	<div class="panel-heading">编辑补货单详情</div>
+	<table class="table">
+		  <tr class="tr">
+		    <td width="22%" align="right" > 订单号：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['shipping_no']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 是否纸质订单：</td>
+		    <td width="75%" >
+		    	<{if $shipping_order['is_paper_order'] eq 1}>是<{else}>否<{/if}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 订单状态：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['status_name']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 配送状态：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['operation_name']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 总金额：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['total_amount']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 配送日期：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['send_date']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 配送地址：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['province']}><{$shipping_order['city']}><{$shipping_order['area']}><{$shipping_order['address']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > 收货人：</td>
+		    <td width="75%" >
+		    	<{$shipping_order['admin_name']}>:<{$shipping_order['admin_mobile']}>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		    <td width="22%" align="right" > <{if $shipping_order['order_type']==1}>补货产品：<{else}>下架产品：<{/if}></td>
+		    <td width="75%" >
+				<input type="button" class="btn btn-info" value="添加" onclick="searchProduct()" />
+				<input class="search_product form-control" id="search_name" type="text" style="width:180px;display:inline;" placeholder="请输入商品名称搜索" />
+				<p></p>
+		    	<table class="table table_product">
+		    		<tr class="tr">
+		    			<td>商品名</td>
+		    			<td>价格</td>
+					    <td>可用库存</td>
+					    <td>冻结库存</td>
+						<{if $shipping_order['order_type']==1}><td>预售量</td><{/if}>
+		    			<td>库存</td>
+		    			<td width="80px"><{if $shipping_order['order_type']==1}>补货量<{else}>下架量<{/if}></td>
+		    			<{if $shipping_order['order_type']==1}><td>实际补货量</td><{/if}>
+		    			<td>总价</td>
+						<td>操作</td>
+		    		</tr>
+		    		<{foreach $shipping_order['products'] as $val}>
+		    			<tr class="tr">
+		    				<td><{$val['product_name']}></td>
+		    				<td class="price"><{$val['price']}></td>
+		    				<td><{$val['wh_stock']['stock_usable']|default: 0}></td>
+						    <td><{if $val['wh_stock']['stock_lock'] > 0}><span data-toggle="popover" data-replenish-warehouse="<{$val['wh_stock']['replenish_warehouse']}>" data-product-id="<{$val['product_id']}>" data-warehouse-id="<{$val['wh_stock']['warehouse_id']}>" class="btn btn-info btn-xs btn-stock-lock" data-lock-purchase="<{$val['wh_stock']['stock_lock_purchase']}>"><{$val['wh_stock']['stock_lock']}></span><{else}>0<{/if}></td>
+							<{if $shipping_order['order_type']==1}><td><{$val['pre_qty']}></td><{/if}>
+		    				<td><{$val['stock']}></td>
+		    				<td class="add_qty" data-id="<{$val['id']}>" data-name="add_qty" data-value="<{$val['add_qty']}>"><{$val['add_qty']}> <img src="/assets/image/edit01.png" style="width:12px;height:12px;"></td>
+							<{if $shipping_order['order_type']==1}><td><{$val['real_num']}></td><{/if}>
+		    				<td class="total_money"><{$val['total_money']}></td>
+		    				<td><button type="button" data-id="<{$val['id']}>" class="btn btn2 btn-info btn-sm delete">删除</button></td>
+		    			</tr>
+		    		<{/foreach}>
+		    	</table>
+		    </td>
+		  </tr>
+		  
+		  <tr class="tr">
+		  	<td colspan="2" style="text-align:center;">
+				<!--<a href='javascript:void(0)' onclick="refresh_cache()" role="button" class="btn btn-info btn-sm">刷新配置缓存</a>--><input type="button" value="关闭" onclick="window.close();"  />
+		  	</td>
+		  </tr>
+
+	</table>
+</div>
+<script type="text/javascript">
+	function myReload(){
+        window.location.reload();
+    }
+
+    function searchProduct(){
+        if ($('#search_name').val() != ''){
+            $.post("/products/ajax_search_product",{search_name:$('#search_name').val(),equipment_id:<{$equipment_pri_id}>},function(respData){
+                if(respData.status=='success'){
+                    var product_info = respData.product_info[0];
+                    var after_tr = $('.table_product tr:last');
+                    var canDo = true;
+
+                    if($('.table_product .product-save').length>0){
+                        MessageBox.error('请先提交之前添加商品');
+                    	return;
+                    }
+
+                    $(".table_product tr").each(function(){
+                        if($(this).find('td:eq(0)').html() == product_info['product_name']){
+                            canDo = false;
+                        }
+                    });
+
+                    if(!canDo){
+                        MessageBox.error('该商品已经存在');
+						return;
+                	}
+//                    var i = $('.insert_tr:last').attr('key') ? $('.insert_tr:last').attr('key') : 0;
+//                    var insert_i = parseInt(i) + 1;
+                    product_info['wh_stock'] = product_info['wh_stock'] ? product_info['wh_stock'] : {};
+					<{if $shipping_order['order_type']==1}>
+                    	var insert_html = '<tr class="tr"><td><input type="hidden" class="product_id" value="'+product_info['id']+'">'+product_info['product_name']+'</td>';
+						insert_html +='<td class="price">'+product_info['price']+'</td>';
+                        insert_html +='<td>'+(product_info['wh_stock']['stock_usable'] || 0)+'</td>';
+                        insert_html +='<td>'+(product_info['wh_stock']['stock_lock'] ? '<span  data-lock-purchase="'+product_info['wh_stock'].stock_lock_purchase+'" data-toggle="popover" data-replenish-warehouse="'+product_info['wh_stock']['replenish_warehouse']+'" data-product-id="'+product_info['wh_stock']['product_id']+'" data-warehouse-id="'+product_info['wh_stock']['warehouse_id']+'" class="btn btn-info btn-xs btn-stock-lock">' + product_info['wh_stock']['stock_lock'] + '</span>' : 0)+'</td>';
+						insert_html +='<td>'+product_info['pre_num']+'</td>';
+						insert_html +='<td>'+product_info['stock_num']+'</td>';
+						insert_html +='<td class="add_qty" data-id="0" data-name="add_qty" data-value="0"><input type="text" value="'+product_info['add_num']+'"></td>';
+                    	insert_html +='<td>0</td>';
+                    	insert_html +='<td class="total_money">'+product_info['price']+'</td>';
+                    	insert_html +='<td><button type="button" data-id="0" class="btn btn2 btn-info btn-sm product-save">保存</button></td></tr>';
+					<{else}>
+						var insert_html = '<tr class="tr"><td>'+product_info['product_name']+'</td>';
+						insert_html +='<td class="price">'+product_info['price']+'</td>';
+                        insert_html +='<td>'+(product_info['wh_stock']['stock_usable'] || 0)+'</td>';
+                        insert_html +='<td>'+(product_info['wh_stock']['stock_lock'] || 0)+'</td>';
+						insert_html +='<td>'+product_info['stock_num']+'</td>';
+						insert_html +='<td class="add_qty" data-id="0" data-name="add_qty" data-value="0"><input type="text" value="'+product_info['add_num']+'"></td>';
+						insert_html +='<td class="total_money">'+product_info['price']+'</td>';
+						insert_html +='<td><button type="button" data-id="0" class="btn btn2 btn-info btn-sm product-save">保存</button></td></tr>';
+					<{/if}>
+                    $(insert_html).insertAfter(after_tr);
+                    $('.product-save').click(function(){
+                    	var data = {order_id:<{$shipping_order['id']}>,product_id:product_info['id'],product_name:product_info['product_name'],price:product_info['price'],pre_qty:product_info['pre_num'],stock:product_info['stock_num'],add_num:$(this).parent().parent().find('.add_qty input').val(), equipment_id:'<{$equipment_pri_id}>'};
+                        $.ajax({
+                            type: 'post',
+                            url: '/deliver/shipping_order_product_add',
+                            dataType: 'json',
+                            data: data,
+                            success: function (resp) {
+                                if(resp.status!='success'){
+                                    MessageBox.error(resp.msg);
+                                    return false;
+                                }else{
+                                    MessageBox.success(resp.msg);
+                                    setTimeout('myReload()',1000);
+                                }
+                            }
+
+                        });
+                    });
+                } else {
+                    location.reload();
+                }
+            },'json');
+        }
+
+    }
+
+    $(function(){
+		$(".table td .add_qty").on('click',function(){
+            var t = $(this);
+            var value = t.data('value'), name = t.data('name'), id=t.data('id');
+            var input = $("<input value='" + value + "' type='text' style='width: 100%'>");
+            var price = t.parent().find('.price');
+            var total_money = t.parent().find('.total_money');
+            input.on('blur', function () {
+                var data = {name: name, value: $(this).val(), id: id, equipment_id:'<{$equipment_pri_id}>'};
+                var d = "<div>"+data.value+" <img src=\"/assets/image/edit01.png\" style=\"width:12px;height:12px;\"></div>";
+                if(isNaN(parseInt($(this).val()))){
+                    MessageBox.error('补货量只能是数字.');
+                    return false;
+                }
+                if(value == $(this).val()){
+                    t.html(d);
+                    return false;
+                }
+
+                $.ajax({
+                    type: 'post',
+                    url: '/deliver/shipping_order_edit',
+                    dataType: 'json',
+                    data: data,
+                    success: function (resp) {
+                        if(resp.status!='success'){
+                            MessageBox.error(resp.msg);
+                            return false;
+                        }else{
+                            MessageBox.success(resp.msg);
+                            t.data('value', data.value);
+                            t.html(d);
+                            total_money.html(resp.data.total_money);
+						}
+                    }
+
+                });
+            });
+            t.html(input);
+            input.focus();
+		});
+        $(".table td .add_qty").on('click', 'input', function(){
+            return false;
+        });
+
+        $(".table td .delete").on('click',function(){
+			if(confirm("确定要删除吗？")){
+			    var data = {id:$(this).data('id')};
+                var del_dom = $(this).parent().parent();
+                $.ajax({
+                    type: 'post',
+                    url: '/deliver/shipping_order_product_delete',
+                    dataType: 'json',
+                    data: data,
+                    success: function (resp) {
+                        if(resp.status!='success'){
+                            MessageBox.error(resp.msg);
+                            return false;
+                        }else{
+                            MessageBox.success(resp.msg);
+                            del_dom.remove();
+                        }
+                    }
+
+                });
+			}
+		});
+
+        $('.table').on('mousedown', '.btn-stock-lock', function(){
+            var _this = $(this);
+            var data = _this.data();
+            if(_this.data('loading') == 1 || _this.data('has-popover') == 1){
+                return false;
+            }
+            _this.data('loading', 1);
+            $.ajax({
+                url: '/warehouse/stock_lock_info/',
+                type: "POST",
+                data: {replenish_warehouse: data['replenishWarehouse'], product_id: data['productId'], warehouse_id: data['warehouseId']},
+                dataType: 'json',
+                success: function (resp) {
+                    _this.data('loading', 0);
+                    if (resp.status != 'y') {
+                        alert(resp.msg);
+                        return;
+                    }
+                    var _html = '';
+                    for(var i in resp.data){
+                        _html += '<div style="display: inline-block; margin-right: 10px"><a target="_blank" href="/deliver/shipping_view_order_products/'+resp.data[i]['id']+'" >'+resp.data[i]['name']+'</a>: <span style="color: red">'+resp.data[i]['add_qty']+'</span></div>'
+                    }
+                    if(_this.data('lockPurchase') > 0){
+                        _html = '<div style="display: inline-block; margin-right: 10px; color: red">采购冻结: ' + _this.data('lockPurchase') + '</div>' +_html;
+                    }
+                    if(_this.data('has-popover') != 1){
+                        _this.popover({
+                            title: '冻结库存明细',
+                            placement: 'top',
+                            html: true,
+                            content: '<div style="max-height: 200px; font-size: 11px;overflow-y:auto">' +_html + '</div>'
+                        });
+                        _this.popover('show');
+                        _this.data('has-popover', 1);
+                    }
+                }
+
+            });
+            return false
+        });
+        $('body').on('click', function(e){
+            var target = $(e.target);
+            var popo = $('[data-toggle="popover"]').not(target);
+            var show_popo = popo.next();
+            if(show_popo.length > 0 && target.parents('.popover.in').length === 0){
+                show_popo.prev().popover('hide');
+            }
+        });
+    });
+</script>

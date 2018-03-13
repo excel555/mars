@@ -1,0 +1,135 @@
+<style>
+    .pagination-detail { padding-left: 10px }
+
+    .pagination { padding-right: 10px }
+    .editable-input input{width: 100% !important;}
+    table {
+        font-size: 12px;
+        vertical-align: middle;
+    }
+    .list-group{ margin-bottom: 0}
+    #pro_code_suggest { font-size: 12px }
+    #pro_code_suggest .badge{ background-color: #f0ad4e; }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">箱子上下架记录log</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <input class="form-control" type="text" id="" name="search_case_number" style="width:120px;" placeholder="箱号">
+                </div>
+                <div class="col-sm-1">
+                    <select class="form-control" name="search_warehouse_id" id="search_warehouse_id" style="width:120px;">
+                        <option value="">选择仓库</option>
+                        <{foreach $warehouses as $val}>
+                        <option value="<{$val['id']}>"><{$val['name']}></option>
+                        <{/foreach}>
+                    </select>
+                </div>
+                <div class="col-sm-1">
+
+                    <select class="form-control" name="search_shelves_status" id="search_shelves_status" style="width:120px;">
+                        <option value="">上/下架</option>
+                        <{foreach $shelves_status as $k=>$val}>
+                        <option value="<{$k}>"><{$val}></option>
+                        <{/foreach}>
+                    </select>
+                </div>
+
+
+
+                <div class="col-sm-1">
+                    <input type="text" class="form-control" id="send_date" name="search_start_date" placeholder="开始日期">
+                </div>
+                <div class="col-sm-1">
+                    <input type="text" class="form-control" id="send_date2" name="search_end_date" placeholder="结束日期">
+                </div>
+                <div class="col-sm-1">
+
+                    <button type="button" class="btn  btn-info" id="search-btn">查找</button>
+                    <input type="hidden" id="origin_url" value="/cases/shelves_log_table">
+                </div>
+
+
+            </div>
+            <div id="shipping-list-body">
+                <table id="config-table" data-toggle="table" data-url="/cases/shelves_log_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="50" data-side-pagination="server" data-page-list="[50,100,500]">
+                    <thead>
+                    <tr>
+                        <!--<th data-field="state" data-checkbox="true"></th>-->
+                        <th data-field="id" data-align="center">ID</th>
+                        <th data-field="case_number" data-align="center">箱号</th>
+                        <th data-field="shelves_status" data-align="center">上/下架</th>
+                        <th data-field="shipping_no" data-align="center">单号</th>
+                        <th data-field="warehouse_id" data-align="center">仓库</th>
+                        <th data-field="generate_date" data-align="center">上/下架时间</th>
+                        <th data-field="admin_id" data-align="center">上/下架操作者</th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <link href="/assets/bootstrap/css/bootstrap-editable.css" rel="stylesheet"/>
+    <script src="/assets/bootstrap/js/bootstrap-editable.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap-table-editable.js" type='text/javascript'></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $('#send_date').datetimepicker({
+                language: 'zh', //汉化
+                autoclose: 1,
+                minView: "month",
+                format:'yyyy-mm-dd',      //格式化日期
+                timepicker:false    //关闭时间选项
+            });
+
+            $('#send_date2').datetimepicker({
+                language: 'zh', //汉化
+                autoclose: 1,
+                minView: "month",
+                format:'yyyy-mm-dd',      //格式化日期
+                timepicker:false    //关闭时间选项
+            });
+            function search(serverUrl) {
+                var filterData = "";
+                $.each($("[name^='search_']"), function() {
+                    field = $(this).attr('name');
+                    data  = $(this).val();
+                    if(data!=-1 && data!=""){
+                        filterData += "&"+field+"="+data;
+                    }
+                });
+                filterData  = filterData.substr(1);
+                if(filterData==""){
+                    var url = serverUrl;
+                }else{
+                    var url = serverUrl +'?'+filterData;
+                }
+                return url;
+            }
+
+//搜索
+            $("#search-btn").on('click', function(){
+                var serverUrl  = $('#origin_url').val();
+                var url = search(serverUrl);
+
+                $('#config-table').bootstrapTable('refresh', {url: url});
+            });
+        });
+    </script>

@@ -53,6 +53,7 @@ class CI_Model {
 	 *
 	 * @return	void
 	 */
+    public $platform_id = 1;
 	public function __construct()
 	{
 		log_message('info', 'Model Class Initialized');

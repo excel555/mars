@@ -1,0 +1,57 @@
+<div class="dapei <{if $detail['active_type'] neq 4}>hide<{/if}> zhekou_div">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">活动奖励：</label>
+        <div class="col-sm-6">
+            <table class="table table-striped table-bordered ">
+                <{if $detail['config']['data']|@count neq 0}>
+                <{foreach key=key item=item from=$detail['config']['data']}>
+                <tr>
+                    <td width="15%">商品id</td>
+                    <td width="20%"><input type="text" class="form-control" name="dapei_product[]" placeholder="商品id" value="<{$item['dapei_product']}>" onchange="dapei_p(this)"></td>
+                    <td width="15%">数量</td>
+                    <td width="20%"><input type="text" class="form-control" name="dapei_num[]" placeholder="数量" value="<{$item['dapei_num']}>"></td>
+                    <td width="30%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-plus " onclick="ruleAdd(this)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-minus" onclick="ruleDel(this)"></i>
+                    </td>
+                </tr>
+                <{/foreach}>
+                <{else}>
+                <tr>
+                    <td width="15%">商品id</td>
+                    <td width="20%"><input type="text" class="form-control" name="dapei_product[]" placeholder="商品id" onchange="dapei_p(this)"></td>
+                    <td width="15%">数量</td>
+                    <td width="20%"><input type="text" class="form-control" name="dapei_num[]" placeholder="数量"></td>
+                    <td width="30%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-plus " onclick="ruleAdd(this)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-minus" onclick="ruleDel(this)"></i>
+                    </td>
+                </tr>
+                <{/if}>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">搭配价：</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="dapei_price" placeholder="搭配价" value="<{$detail['config']['dapei_price']|default:'0'}>">
+        </div>
+        <label class="control-label">/份</label>
+    </div>
+    <!--<div class="form-group">-->
+        <!--<label class="col-sm-2 control-label">多份时重复享受：</label>-->
+        <!--<div class="col-sm-2">-->
+            <!--<label>-->
+                <!--<input type="radio" name="dapei_again" value="0" <{if $detail['config']['dapei_again'] eq 0 }>checked="checked" <{/if}> > 否 &nbsp;&nbsp;&nbsp;&nbsp;-->
+            <!--</label>-->
+            <!--<label>-->
+                <!--<input type="radio" name="dapei_again" value="1" <{if $detail['config']['dapei_again'] eq 1 }>checked="checked" <{/if}> >  是-->
+            <!--</label>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<script type="application/javascript">
+
+</script>

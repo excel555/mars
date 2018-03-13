@@ -1,0 +1,279 @@
+<style type="text/css">
+    .ui-autocomplete{
+        border: 1px solid #aaa;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+    }
+    table{
+        font-size: 12px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">商品数据</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="search_product_name" id="search_product_name" placeholder="商品名称">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="search_eq_name" placeholder="设备名称">
+                </div>
+                <div class="col-sm-3"  >
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" id="time" >
+                        <input class="form-control" type="text" name="search_start_time"  placeholder="开始时间"  readonly="readonly" value="<{$start_time}>">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3" >
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" id="time2" >
+                        <input class="form-control" type="text" name="search_end_time"  placeholder="结束时间"  readonly="readonly" value="<{$end_time}>">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <{include 'products/product_class.html'}>
+            </div>
+            <div class="form-group">
+                <{if $admin|@count neq 0 }>
+                <div class="col-sm-2" >
+                    <select class="form-control" name="search_admin">
+                        <option value="-1">设备管理员</option>
+                        <{foreach key=key item=item from=$admin}>
+                        <option value="<{$item['id']}>"><{$item['alias']}></option>
+                        <{/foreach}>
+                    </select>
+                </div>
+                <{/if}>
+                <div class="col-sm-1" >
+                    <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                </div>
+                <div class="col-sm-1" >
+                    <button type="button" class="btn btn-success" id="explore-btn">导出</button>
+                </div>
+                <input type="hidden" id="origin_url" value="/products/bi_table">
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/products/bi_table" data-page-size="50" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]">
+                <thead>
+                <tr>
+                    <!--<th data-field="eq_name" data-align="center">设备名称</th>-->
+                    <!--<th data-field="product_name" data-align="center">商品名称</th>-->
+                    <!--<th data-field="stock" data-align="center">(此刻)设备在售库存</th>-->
+                    <!--<th data-field="pre_qty" data-align="center">(此刻)设备预存量</th>-->
+                    <!--<th data-field="stock_cang" data-align="center">(全部)仓库库存</th>-->
+                    <!--<th data-field="sale_num" data-align="center">时段总销售件数 </th>-->
+                    <!--<th data-field="day1" data-align="center">day1销售件数</th>-->
+                    <!--<th data-field="day2" data-align="center">day2销售件数</th>-->
+                    <!--<th data-field="day3" data-align="center">day3销售件数</th>-->
+                    <!--<th data-field="day4" data-align="center">day4销售件数</th>-->
+                    <!--<th data-field="day5" data-align="center">day5销售件数</th>-->
+                    <!--<th data-field="day6" data-align="center">day6销售件数</th>-->
+                    <!--<th data-field="day7" data-align="center">day7销售件数</th>-->
+
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="download_label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 50%">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<input type="hidden" id="order_total" value="0">
+
+<script type="text/javascript">
+    var end_time = '<{$end_time}>';
+
+    $(function(){
+        get_data();
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_time,
+        });
+        $('#time2').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd',
+            minView: 'month',
+            endDate: end_time,
+        });
+        $("#search-btn").on('click', function(){
+            get_data();
+        });
+        $("#explore-btn").on('click', function(){
+
+            $.get("/products/download_html/"+$('#order_total').val(),{ },function(respData){
+                if(respData.status=='success'){
+                    $("#download_label").find('.modal-content').html(respData.html);
+                    $('#download_label').modal('show')
+                }
+            },'json');
+
+        });
+
+    });
+
+
+    $('#search_product_name').autocomplete({
+        source: function (query, process) {
+            var matchCount = this.options.items;//返回结果集最大数量
+            $.get("/order/get_product", {"matchInfo": query['term'], "matchCount": matchCount}, function (respData) {
+                respData = $.parseJSON(respData);//解析返回的数据
+
+                return process(respData);
+            });
+        }
+    });
+
+    function download_order(obj, serverUrl){
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'&'+filterData;
+        }
+        $(obj).css('color', '#aaa');
+        location.href=url;
+    }
+
+    function get_data(){
+        var serverUrl = $('#origin_url').val();
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'?'+filterData;
+        }
+        var myColumns = getColumns(filterData);
+        $('#config-table').bootstrapTable(
+                "refreshOptions",
+                {
+                    url : url, // 获取数据的地址
+                    columns : myColumns,
+                }
+        ).on('load-success.bs.table', function (e,data) {
+                    $('#order_total').val(data.total);
+                });
+    }
+
+
+    function getColumns(filterData) {
+        var myColumns = [
+            {
+                title : '设备名称',
+                field : 'eq_name',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '商品名称',
+                field : 'product_name',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '商品id',
+                field : 'product_id',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '(此刻)设备在售库存',
+                field : 'stock',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '(此刻)设备预存量',
+                field : 'pre_qty',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '(全部)仓库库存',
+                field : 'stock_cang',
+                align : 'center',
+                valign : 'middle',
+            },
+            {
+                title : '时段总销售件数',
+                field : 'sale_num',
+                align : 'center',
+                valign : 'middle',
+            },
+        ];
+        // 加载动态表格
+        $.ajax({
+            url :"/products/bi_table_filed?" + filterData,
+            type : 'post',
+            dataType : "json",
+            async : false,
+            success : function(returnValue) {
+                // 未查询到相应的列，展示默认列
+                if (returnValue.retCode == "0") {
+                    //没查到列的时候把之前的列再给它
+//                    myColumns = $table.bootstrapTable('getOptions').columns[0];
+                } else {
+                    // 异步获取要动态生成的列
+
+                    $.each(returnValue, function(i, item) {
+                        myColumns.push({
+                            "field" : item.field,
+                            "title" : item.title,
+                            "hide" : true,
+                            "align" : 'center',
+                            "valign" : 'middle'
+                        });
+                    });
+                }
+                console.log(myColumns);
+                return myColumns;
+            }
+        });
+        return myColumns;
+
+    }
+
+
+</script>

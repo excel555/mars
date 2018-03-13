@@ -1,0 +1,137 @@
+<style>
+    #product_ul{
+        margin-top: 35px;
+        z-index: 999;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> 录入商品标签</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <label><input type="radio" name="device" value="1" checked />一代机器</label>
+                    <label><input type="radio" name="device" value="2"/>二代机器</label>
+                    <input type="button" name="read" class="btn btn-success read-btn" value="读取标签">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="hidden" id="origin_url" value="/products/read_label_table">
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" >
+                        <input name="product_id" placeholder="输入需要绑定的商品名称搜索" class="search_product form-control" type="text" id="product_id"  style="width:300px;" size="30"/>
+                    </div>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" >
+                        <input type="button" name="Submit" class="btn btn-success btn-bind" value="确认绑定">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" >
+                        <a href="/assets/bind_help.html" target="_blank">操作文档</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/products/read_label_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-size="50" data-page-list="[50,250,1000]" data-sortable="true" data-silent-sort="ture">
+                <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="label" data-align="center">标签</th>
+                    <th data-field="product_name" data-align="center">商品名称</th>
+                    <th data-field="product_id" data-align="center">商品ID</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="application/javascript">
+    $(document).ready(function(){
+        //读取标签
+        var v = $('input:radio[name="device"]:checked').val();
+        $(".read-btn").click(function () {
+            var serverUrl = $('#origin_url').val();
+
+            var v = $('input:radio[name="device"]:checked').val();
+            var filterData = "v="+v;
+            var url = serverUrl +'?'+filterData;
+
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+
+        $(".btn-bind").click(function () {
+            var product_id = $('#product_id').val();
+            if(product_id == ""){
+                MessageBox.error('商品id不能为空');
+                return;
+            }
+
+            var allTableData = $('#config-table').bootstrapTable('getData');//获取表格的所有内容行
+            console.log(allTableData);
+            var arr = new Array();
+            for (i = 0; i < allTableData.length; i++) {
+                if(allTableData[i]['label'] != 'xxx'){
+                    allTableData[i]['product_id'] = product_id;
+                    allTableData[i]['new_product_id'] = product_id;
+                    arr.push(allTableData[i]);
+                }
+            }
+
+            if (arr.length <= 0 ) {
+                MessageBox.error('标签不能为空');
+                return;
+            }
+            var r=confirm("确认提交商品绑定标签？")
+            if (r==true) {
+                console.log(arr);
+                $.ajax({
+                    type: "post",
+                    url: "/sys/bind_lable_product",
+                    data: { label_product: JSON.stringify(arr) },
+                    success: function (data, status) {
+                        data = JSON.parse(data);
+                        if(data.status == "fail"){
+                            alert(data.msg);
+                        }else if(data.status == 'succ'){
+                            result = data.result;
+                            console.log(data);
+                            for( i=0;i<allTableData.length;i++){
+                                if(result[allTableData[i]['label']]){
+                                    $('#config-table').bootstrapTable('updateRow', {
+                                        index: i,
+                                        row: {
+                                            product_id: result[allTableData[i]['label']]+',新id:'+product_id
+                                        }
+                                    });
+                                }
+                            }
+                        }else{
+                            alert("绑定失败"+data);
+                        }
+                    },
+                    error: function () {
+                        alert("绑定失败");
+                    },
+                    complete: function () {
+                    }
+                });
+            }
+
+        });
+    });
+
+
+
+</script>

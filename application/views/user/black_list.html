@@ -1,0 +1,158 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> 手机号黑名单</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+
+            </div>
+            <!--<{include 'bi/search_box.html'}>-->
+
+        </div>
+        <div class="form-group">
+            <div class="col-sm-1">
+                <input type="text" class="form-control" name="mobile"  id="search_mobile">
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-info btn-sm" id="user_search">搜索</button>
+            </div>
+        </div>
+        <div class="table-toolbar">
+            <button type="button" class="btn btn-info btn-sm" id="user_show">添加手机号</button>
+            <button type="button" class="btn btn-info btn-sm" id="user_del">删除手机号</button>
+        </div>
+
+    </div>
+
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/user/user_black_list_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]" data-sortable="true" data-silent-sort="ture">
+                <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="mobile" data-align="center">用户手机号</th>
+                    <th data-field="create_time" data-align="center">添加时间</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="download_label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 50%">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script type="text/javascript">
+    function download_user(obj, serverUrl){
+        var filterData = "";
+        $.each($("[name^='search_']"), function() {
+            field = $(this).attr('name');
+            data = $(this).val();
+            if(data!=-1 && data!=""){
+                filterData += field+"="+data+"&";
+            }
+        });
+        if(filterData==""){
+            var url = serverUrl;
+        }else{
+            var url = serverUrl +'&'+filterData;
+        }
+        $(obj).css('color', '#aaa');
+        location.href=url;
+    }
+
+    $(function(){
+        $('#begin_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day',
+            minuteStep:1
+        });
+        $('#to_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day',
+            minuteStep:1
+        });
+
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        }).on('load-success.bs.table', function (e,data) {
+            $('.user_total').text(data.total);
+            $('.today').text(data.a);
+            $('.yesterday').text(data.b);
+        });;
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        //删除
+        $("#user_del").click(function(){
+            var radioName = $("input[name='radioName']:checked");
+            if(radioName.length != 1){
+                MessageBox.error('请选择要删除的手机号');
+                return;
+            }
+           var mobile = radioName.parent().next().html();
+            $.ajax({
+                type: "post",
+                url: "/user/del_black_mobile",
+                data: {
+                    mobile: mobile
+                },
+                success: function (resp) {
+                   radioName.parent().parent().remove();
+                   MessageBox.success('删除成功');
+                }
+
+            });
+        })
+       //搜索
+        $("#user_search").click(function(){
+            var mobile = $("#search_mobile").val().trim();
+            if(!isFinite(mobile)){
+                MessageBox.error('不可有数字以外的字符');
+                return;
+            }
+            var url = "/user/user_black_list_table?mobile="+mobile;
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        })
+        $("#user_show").click(function(){
+            var mobile = prompt("请输入手机号", "");
+            if(!isFinite(mobile)){
+                MessageBox.error('不可有数字以外的字符');
+                return;
+            }
+            if (mobile)//如果返回的有内容
+            {
+                $.ajax({
+                    type: "post",
+                    url: "/user/insert_black_mobile",
+                    data: {
+                        mobile: mobile
+                    },
+                    success: function (data, status) {
+                        location.reload();
+                    },
+                    error: function () {
+
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            }
+
+        });
+
+
+    });
+</script>

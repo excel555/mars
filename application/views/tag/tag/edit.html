@@ -1,0 +1,329 @@
+<style type="text/css">
+    td.name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    table{
+        font-size: 13px;
+    }
+    td.code{
+        line-height: 20px;
+        height:64px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient: vertical;
+    }
+    td.code_w{
+        max-width: 300px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">标签编辑</h3>
+    </div>
+    <div class="panel-body">
+        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="/tag/tag/save_tag" onsubmit="return submit_model(this);">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">归属标签：</label>
+                <label class="col-sm-2 control-label" style="text-align:left"><{$type[$info['type']]}></label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">标签项：</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="name" onchange="update_tag()" placeholder="标签项" value="<{$info['name']}>">
+                </div>
+            </div>
+            <{foreach key=key item=item from=$info['value']}>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">标签值：</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="value[]" placeholder="标签值" value="<{$item['value']}>" onchange="add_value(this)">
+                    <input type="hidden" value="<{$item['id']}>" name="value_id">
+                </div>
+                <label class="col-sm-1 control-label" style="text-align:left;color: green" onclick="delete_value(this,<{$item['id']}>,<{$info['type']}>)">删除</label>
+                <div class="col-sm-7 control-label" style="text-align:left">
+                    <{if $item['relation']}>
+                    <{foreach key=keyR item=itemR from=$item['relation']}>
+                    <button type="button" class="btn btn-success" onclick="delete_relation(this,<{$itemR['id']}>)"><{$itemR['name']}>&nbsp;&nbsp;x</button>
+                    <{/foreach}>
+                    <{/if}>
+                    &nbsp; &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-default" onclick="show_model(this)">添加关联</button>
+                </div>
+            </div>
+            <{/foreach}>
+            <div class="form-group status">
+                <label class="col-sm-2 control-label">状态：</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="radio" name="status" value="1" <{if $info['status'] eq 1}> checked="checked" <{/if}> onclick="update_tag()">  启用
+                        </label>
+                        <label>
+                            <input type="radio" name="status" value="2" <{if $info['status'] eq 2}> checked="checked" <{/if}> onclick="update_tag()">  停用
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-3">
+                    <input class="btn btn-success" type="button" value="新增标签值">
+                </div>
+                <div class="col-sm-offset-2 col-sm-4">
+                    <input type="hidden" value="<{$info['id']}>" name="id">
+                    <input class="btn btn-default" type="submit" value="关闭" onclick="javascript:window.close();">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">添加关联</h4>
+            </div>
+            <div class="modal-body">
+                <form id="relation_form" style="height:130px;overflow:auto;" method="post" class="form-horizontal" action="/tag/tag/save_relation">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">归属标签：</label>
+                        <label class="col-sm-10 control-label biaoqian_type" style="text-align:left">&nbsp;</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标签项：</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="biaoqian"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标签值：</label>
+                        <div class="col-sm-10">
+                            <div class="checkbox checkbox_html">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="value_id" value="0">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="set_tag_relation">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="form-group biaoqian_model hide">
+    <label class="col-sm-2 control-label">标签值：</label>
+    <div class="col-sm-2">
+        <input type="text" class="form-control" name="value[]" placeholder="标签值" value="" onchange="add_value(this)">
+        <input type="hidden" value="0" name="value_id">
+    </div>
+    <label class="col-sm-1 control-label hide" style="text-align:left;color: green">删除</label>
+    <label class="col-sm-7 control-label hide" style="text-align:left"><span style="color: green" onclick="show_model(this)">添加关联</span></label>
+</div>
+
+<script type="text/javascript">
+    function ruleAdd(obj){
+        var html = $(obj).parent().parent().clone();
+        $(html).find("input[name='value[]']").val('');
+        $(obj).parent().parent().after(html);
+    }
+    function ruleDel(obj){
+        if($(obj).parent().parent().siblings().length<=4){
+            return false;
+        }
+        $(obj).parent().parent().remove();
+    }
+
+    function show_model(obj){
+        var id = $('input[name="id"]').val();
+        var value_id = $(obj).parent().parent().find('input[name="value_id"]').val();
+        $.post("/tag/tag/show_relation",{id:id},function(data){
+            if(data['status'] == 'success'){
+                $('#relation_form').find('input[name="value_id"]').val(value_id);//设置隐藏的关联id
+                if(typeof data['list'] == 'object'){
+                    if(data.list.length==0){
+                        MessageBox.error('启用的'+data['type_name']+'标签项为空');
+                        return false;
+                    }
+                    var html = '';
+                    $.each(data['list'],function(i,v){
+                        if(i==0){
+                            html += '<option selected="selected" value="'+v['id']+'">'+v['name']+'</option>';
+                        }else{
+                            html += '<option value="'+v['id']+'">'+v['name']+'</option>';
+                        }
+                    });
+                    $('select[name="biaoqian"]').html(html);
+                    var checkbox_html = '';
+                    $.each(data['value_list'],function(i,v){
+                        checkbox_html += '<label> <input type="checkbox" name="biaoqian_value" value="'+i+'">'+v+'&nbsp;</label>';
+                    });
+                    $('.checkbox_html').html(checkbox_html);
+                    $('.biaoqian_type').text(data['type_name']);
+                }
+                $('#myModal').modal('show');
+            }
+        },'json');
+    }
+
+    function submit_model(obj){
+        var dataPara = getFormJson(obj);
+        if(dataPara['name'] == ''){
+            alert('标签项不能为空');
+            return false;
+        }
+        if($(obj).attr('lock') == 1){
+            return false;
+        }
+        $(obj).attr('lock', 1);
+        ajaxSubmit(obj, function(data){
+            $(obj).attr('lock', 0);
+            if(data.status=='success'){
+                alert('新增成功');
+                table_refer();
+            }else{
+                alert(data.msg);
+                return false;
+            }
+        });
+        return false;
+    }
+
+    //将form转为AJAX提交
+    function ajaxSubmit(frm, fn) {
+        var dataPara = getFormJson(frm);
+        $.ajax({
+            url: frm.attr('action'),
+            type: frm.attr('method'),
+            data: dataPara,
+            dataType:'json',
+            success: fn
+        });
+    }
+
+    //将form中的值转换为键值对。
+    function getFormJson(frm) {
+        var o = {};
+        var a = $(frm).serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push($.trim(this.value) || '');
+            } else {
+                o[this.name] = $.trim(this.value) || '';
+            }
+        });
+        o['id'] = $('input[name="id"]').val();
+        return o;
+    }
+
+
+    //新增标签值
+    function add_value(obj){
+        var value = $(obj).val();
+        var id = $('input[name="id"]').val();
+        var value_id = $(obj).next().val();
+        $.post("/tag/tag/add_value", {id: id, value:value, value_id:value_id}, function (data) {
+            if (data.status == 'success') {
+                MessageBox.success('编辑成功');
+                $(obj).parent().siblings().removeClass('hide');
+                if(data.value_id){
+                    $(obj).next().val(data.value_id);
+                }
+            }
+        }, 'json');
+    }
+    //修改标签项
+    function update_tag(){
+        var name = $('input[name="name"]').val();
+        var status = $('input[name="status"]:checked').val();
+        var id   = $('input[name="id"]').val();
+        $.post("/tag/tag/update_status", {id: id, name:name, status:status}, function (data) {
+            if (data.status == 'success') {
+                MessageBox.success('修改成功');
+            }
+        }, 'json');
+    }
+
+    //删除关系
+    function delete_relation(obj, id){
+        $.post("/tag/tag/delete_relation", {id: id}, function (data) {
+            if (data.status == 'success') {
+                MessageBox.success('删除成功');
+                $(obj).remove();
+            }else{
+                MessageBox.error('删除失败');
+            }
+        }, 'json');
+    }
+
+    function delete_value(obj, id, type){
+        $.post("/tag/tag/delete_value", {id: id, type:type}, function (data) {
+            if (data.status == 'success') {
+                MessageBox.success('删除成功');
+                $(obj).parent().remove();
+            }else{
+                MessageBox.error('删除失败');
+            }
+        }, 'json');
+    }
+
+    $(function(){
+        $('.btn-success').click(function(){
+            var html = $('.biaoqian_model').clone().removeClass('biaoqian_model').removeClass('hide');
+            $('.status').before(html);
+        });
+        //
+        $('select[name="biaoqian"]').change(function(){
+            var id = $(this).val();
+            $('.checkbox_html').html('');
+            $.post("/tag/tag/tag_detail", {id: id}, function (data) {
+                if (data.status == 'success') {
+                    var checkbox_html = '';
+                    $.each(data['list'],function(i,v){
+                        checkbox_html += '<label> <input type="checkbox" name="biaoqian_value" value="'+i+'">'+v+'&nbsp;</label>';
+                    });
+                    $('.checkbox_html').html(checkbox_html);
+                }
+            }, 'json');
+        });
+
+        //提交关联
+        $('#set_tag_relation').click(function(){
+            var obj = $('#relation_form');
+            var _this = $(this);
+            var dataPara = getFormJson(obj);
+            if(typeof dataPara['biaoqian_value'] == 'undefined'){
+                MessageBox.error('标签值必选');
+                return false;
+            }
+            if($(_this).attr('lock') == 1){
+                return false;
+            }
+            ajaxSubmit(obj, function(data){
+                $(_this).attr('lock', 0);
+                if(data.status=='success'){
+                    MessageBox.success('关联成功');
+                    location.reload();
+                }else{
+                    MessageBox.error(data.msg);
+                    return false;
+                }
+            });
+
+
+        });
+
+    });
+
+</script>

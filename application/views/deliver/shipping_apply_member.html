@@ -1,0 +1,155 @@
+<style>
+    .modal-dialog{width: 900px}
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">分配配送员</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="form-group">
+            <div class="col-sm-10">
+                <!--<input type="text" placeholder="选择配送员" id="name" autocomplete="off">-->
+                <select name="name" id="sel_name">
+                    <{if $replenish_locations neq ''}>
+                        <option value="-1">--请选择--</option>
+                        <{foreach $replenish_locations as $val}>
+                            <option  value="<{$val.id}>" data-value-id="<{$val.id}>" data-value-mobile="<{$val.mobile}>" data-value-name="<{$val.name}>"><{$val.name}></option>
+                        <{/foreach}>
+                    <{else}>
+                    <option value="-1">--所选配送仓配送员未配置--</option>
+                    <{/if}>
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <div class="products last_search">最近使用：
+        <{if $last_search neq ''}>
+            <{foreach $last_search as $val}>
+                <{if $val neq ''}>
+                <button data-value-id="<{$val.id}>" data-value-mobile="<{$val.mobile}>" data-value-name="<{$val.name}>"><{$val.name}></button>
+                <{/if}>
+            <{/foreach}>
+        <{/if}></div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    <button type="button" class="btn btn-primary btn-save-sel-member">确认</button>
+    <input type="hidden" id="selected_mobile">
+    <input type="hidden" id="selected_id">
+    <input type="hidden" id="selected_name">
+    <input type="hidden" value="<{$ids}>" id="shipping_order_ids">
+
+</div>
+<script src="/assets/js/bootstrap-typeahead.js"></script>
+<script>
+    $(function () {
+//        var last_search = getCookie('last_search');
+
+//        $("#name").typeahead({
+//            source:function(query,process){
+//                $.post('/deliver/ajax_get_deliver_member_ap', {query:query}, function (data) {
+//                    var array = [];
+//                    $.each(data,function(index,ele){
+//                        array.push('{"id":"'+ ele.id+'", "name":"'+ ele.name+'", "mobile":"'+ ele.mobile+'"}')
+//                    })
+//                    process(array);
+//                },'json');
+//            },
+//            highlighter: function (obj) {
+//                var item = JSON.parse(obj);
+//                var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
+//                return item.name.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+//                    return '<strong>' + match + '</strong>'
+//                });
+//            },
+//            updater:function(obj){
+//                var item = JSON.parse(obj);
+//                $("#selected_mobile").val(item.mobile);
+//                $("#selected_id").val(item.id);
+//                $("#selected_name").val(item.name);
+//                var last_search = getCookie('last_search');
+//                last_search=last_search+',{"id":"'+ item.id+'", "name":"'+ item.name+'", "mobile":"'+ item.mobile+'"}'
+//                setCookie('last_search',last_search,365);
+////                console.log(getCookie('last_search'));
+//                return item.name;
+//            }
+//        });
+
+        $(".btn-save-sel-member").click(function(){
+            var mobile = $("#selected_mobile").val();
+            var ids = $("#shipping_order_ids").val();
+            var dm_id = $("#selected_id").val();
+            var name = $("#selected_name").val();
+            if(mobile!=''&&ids!=''){
+                $.post('/deliver/add_permission_2_shipping_order', {ids:ids,mobile:mobile,dm_id:dm_id,name:name}, function (data) {
+                    if(data.status== 'success'){
+                        MessageBox.success(data.msg);
+                        var serverUrl = $('#origin_url').val();
+                        var filterData = "";
+                        $.each($("[name^='search_']"), function() {
+                            field = $(this).attr('name');
+                            data = $(this).val();
+                            if(data!=-1 && data!=""){
+                                filterData += field+"="+data+"&";
+                            }
+                        });
+                        if(filterData==""){
+                            var url = serverUrl;
+                        }else{
+                            var url = serverUrl +'?'+filterData;
+                        }
+                        $('#config-table').bootstrapTable('refresh', {url: url});
+                        modal.modal('hide');
+                    } else {
+                        MessageBox.error(data.msg);
+                        return;
+                    }
+                },'json');
+            }else{
+                MessageBox.error('请选择配送员');
+            }
+        });
+
+        $(".last_search button").on('click',function () {
+//            console.log($(this).attr('data-value-id'),$(this).attr('data-value-mobile'),$(this).attr('data-value-name'));
+
+            var sel_id = $(this).attr('data-value-id'),can_choose = false;
+//            console.log(sel_id);
+
+//            $("#sel_name").attr("value",$(this).attr('data-value-id'));
+//            $("#sel_name").val($(this).attr('data-value-id'));
+//            $("#sel_name").get(0).value=$(this).attr('data-value-id');
+
+            $("#sel_name option").each(function(){
+                if($(this).attr("value")==sel_id){
+                    can_choose=true;
+                }
+            });
+
+            if(can_choose){
+                $("#selected_mobile").val($(this).attr('data-value-mobile'));
+                $("#selected_id").val($(this).attr('data-value-id'));
+                $("#selected_name").val($(this).attr('data-value-name'));
+                $("#sel_name").val($(this).attr('data-value-id'));
+            }else{
+                MessageBox.error('您选择的配送员与所选配送单不符');
+            }
+//
+//            $("#sel_name option").each(function(){
+//                if($(this).attr("value")==sel_id){
+//                    console.log(1111);
+//                    $(this).attr("selected",true);
+//                }
+//            });
+        });
+
+        $("#sel_name").change(function(){
+            $("#selected_mobile").val($(this).find(":selected").attr('data-value-mobile'));
+            $("#selected_id").val($(this).find(":selected").attr('data-value-id'));
+            $("#selected_name").val($(this).find(":selected").attr('data-value-name'));
+        });
+    });
+</script>

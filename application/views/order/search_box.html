@@ -1,0 +1,61 @@
+<script src="/assets/js/multiple-select.js"></script>
+<link href="/assets/css/multiple-select.css" rel="stylesheet" />
+<div class="form-group">
+    <{if $admin|@count neq 0 }>
+    <div class="col-sm-2" >
+        <select class="form-control" name="search_admin">
+            <option value="-1">设备管理员</option>
+            <{foreach key=key item=item from=$admin}>
+            <option value="<{$item['id']}>"><{$item['alias']}></option>
+            <{/foreach}>
+        </select>
+    </div>
+    <{/if}>
+    <div class="col-sm-2">
+        <select  id="select_province" class="form-control" name="search_province">
+            <option value="-1">省份</option>
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <select  id="select_city" class="form-control" name="search_city">
+            <option value="-1">市区</option>
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <select  id="select_area" class="form-control" name="search_area">
+            <option value="-1">地区</option>
+        </select>
+    </div>
+
+    <div class="col-sm-2">
+        <input  type="text" class="form-control" name="search_address" placeholder="投放地址">
+    </div>
+    <{if $p_class|@count neq 0}>
+    <div class="col-sm-2" >
+        <select id="search_class_id"  name="search_class_id"  multiple="multiple">
+            <!--<option value="-1">全部类目</option>-->
+            <{foreach key=keyP item=itemP from=$p_class }>
+            <optgroup label="<{$itemP['name']}>"><{$itemP['name']}>
+                <{foreach key=key item=item from=$itemP['children']}>
+                <option value="<{$item['id']}>"><{$item['name']}></option>
+                <{/foreach}>
+            </optgroup>
+            <{/foreach}>
+        </select>
+    </div>
+    <{/if}>
+    <{if $is_show_name}>
+    <div class="col-sm-2">
+        <input type="text" class="form-control" size='8' name="search_name" placeholder="设备名称">
+    </div>
+    <{/if}>
+
+</div>
+<script>
+    $('#search_class_id').multipleSelect({
+        width: '100%',
+        height: '34px',
+//        multiple: true,
+        multipleWidth: 55
+    });
+</script>

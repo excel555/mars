@@ -1,0 +1,281 @@
+<style>
+	.order_img{
+		background-image: url('http://apps.bdimg.com/libs/jqueryui/1.10.4/css/images/ui-icons_888888_256x240.png');
+		background-position: -128px -48px;
+		width: 13px;
+		height: 13px;
+		display: inline-block;
+		overflow: hidden;
+		background-repeat: no-repeat;
+	}
+	.hide-th{
+		display:none;
+	}
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">设备信息管理</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                	<select class="form-control" name="search_status">
+                        <option value="">请选择设备状态</option>
+                        <option value="0">停用</option>
+                        <option value="1">启用</option>
+                        <!--<option value="99">报废</option>-->
+                	</select>
+                </div>
+                <div class="col-sm-2">
+                	<input style="width:100%;display:inline;" type="text" class="form-control" name="search_equipment_id" placeholder="设备ID">
+                </div>
+                <div class="col-sm-2">
+                	<input style="width:100%;display:inline;" type="text" class="form-control" name="search_name" placeholder="设备名称">
+                </div>
+                <!--<div class="col-sm-2">-->
+                    <!--<select class="form-control" name="search_heart_status">-->
+                        <!--<option value="-1">心跳状态</option>-->
+                        <!--<option value="1">正常</option>-->
+                        <!--<option value="2">异常</option>-->
+                        <!--&lt;!&ndash;<option value="3">无记录</option>&ndash;&gt;-->
+                    <!--</select>-->
+                <!--</div>-->
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                    <input type="hidden" id="origin_url" value="/equipment/table">
+                    <input type="hidden" id="export_url" value="/equipment/equipment_export">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-toolbar">
+            <button style="float:left;margin:10px 10px;" type="button" class="btn btn-success btn-sm" id="equipment_add">添加设备</button>
+            <button style="float:right;margin:10px 10px;" type="button" class="btn btn-danger btn-sm" id="equipment_stop">停用</button>
+            <button style="margin:10px 10px;float:right;" type="button" class="btn btn-success btn-sm" id="equipment_start">启用</button>
+            <input type="hidden" id="curr_id" value="0">
+            <input type="hidden" id="device_id" value="0">
+        </div>
+        <div id="config-body">
+        <table id="config-table" data-toggle="table" data-url="/equipment/table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="100" data-side-pagination="server" data-page-list="[5,10,15,20,50,100]">
+            <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-class="hide-th" data-align="center">#</th>
+                    <th data-field="equipment_id" data-align="center">设备id</th>
+                    <th data-field="name" data-align="center">设备名称</th>
+                    <th data-field="type" data-align="center">设备类型</th>
+                    <th data-field="status_name" data-align="center">状态</th>
+                    <th data-field="code" data-align="center">设备编码</th>
+                    <th data-field="province_city_area" data-align="center">地址</th>
+                    <th data-field="heart_status" data-align="center">心跳状态</th>
+                    <th data-field="created_time" data-align="center" >创建时间</th>
+                    <th data-field="stock_all" data-align="center" >总库存量</th>
+                    <th data-field="count_order_people" data-align="center" >累计购买用户数</th>
+                    <th data-field="report_link" data-align="center" >操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ckRadio(){
+        var curr_id = $("input[type=radio]:checked").parent().next().html();
+        if(typeof(curr_id) == "undefined"){
+            $("#curr_id").val(0);
+        }else{
+            $("#curr_id").val(curr_id);
+        }
+    }
+
+    $(function(){
+    	$('.shift-info').each(function(){
+			$(this).editableSelect({
+		        effects: 'slide',
+		        onSelect: function (element) {
+		            $(this).next('input').val(element.val());
+		        }
+		    }).prop('placeholder','请输入或选择点位场景');
+		});
+    	
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+            $("#device_id").val(row.equipment_id);
+        });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        
+        //导出设备
+        $("#equipment_exportall").on('click', function(){
+            var serverUrl = $('#export_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            window.open(url);
+        });
+        
+
+        //编辑
+        $("#equipment_edit").on('click', function () {
+            ckRadio();
+            var curr_id = $("#curr_id").val();
+            if (curr_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+            //查看是否报废设备
+            var equipment_status = $("input[type=radio]:checked").parent().next().next().next().next().next().html();
+            if (equipment_status == '报废'){
+            	alert('不能编辑报废设备！');
+            	return false;
+            } else {
+            	window.location.href = "/equipment/edit/" + curr_id;
+            }
+        });
+
+        //心跳
+        $("#equipment_heart").on('click', function () {
+            var device_id = $("#device_id").val();
+            if (device_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/equipment/ajax_eq_heart",
+                data: {
+                    device_id:device_id
+                },
+                success: function (data, status) {
+                    var str ='没有找到心跳记录';
+                    if(data){
+                        var str = '设备最后一次心跳发生在 '+data;
+                    }
+                    MessageBox.warning(str);
+                },
+                error: function () {
+
+                },
+                complete: function () {
+
+                }
+
+            });
+        });
+
+
+        //编辑
+        $("#equipment_stock").on('click', function () {
+            ckRadio();
+            var curr_id = $("#curr_id").val();
+            if (curr_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+        	window.location.href = "/equipment/stock/" + curr_id;
+            
+        });
+
+        //盘点
+        $('#equipment_pandian').on('click', function () {
+            ckRadio();
+            var curr_id = $("#curr_id").val();
+            if (curr_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+            window.location.href = "/equipment/pandian/" + curr_id;
+        });
+        
+        $('#equipment_ordertime').on('click', function () {
+            if (confirm('确认要同步设备的运营时间吗？')){
+            	window.location.href = "/equipment/ordertime";
+            }
+            
+        });
+        
+        //编辑
+        $("#equipment_start").on('click', function () {
+            ckRadio();
+            var curr_id = $("#curr_id").val();
+            if (curr_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+            //查看是否报废设备
+            var equipment_status = $("input[type=radio]:checked").parent().next().next().next().next().next().html();
+            if (equipment_status == '报废'){
+            	alert('不能编辑报废设备！');
+            	return false;
+            } else {
+	            if (confirm("确认要启用设备吗？")){
+	            	window.location.href = "/equipment/start/" + curr_id;
+	            }
+	        }
+            
+        });
+        
+        //编辑
+        $("#equipment_stop").on('click', function () {
+            ckRadio();
+            var curr_id = $("#curr_id").val();
+            if (curr_id == 0) {
+                MessageBox.error('请选择编辑项');
+                return;
+            }
+            //查看是否报废设备
+            var equipment_status = $("input[type=radio]:checked").parent().next().next().next().next().next().html();
+            if (equipment_status == '报废'){
+            	alert('不能编辑报废设备！');
+            	return false;
+            } else {
+	            if (confirm("确认要停用设备吗？")){
+	            	window.location.href = "/equipment/stop/" + curr_id;
+	            }
+	        }
+            
+        });
+
+
+		//添加设备
+        $("#equipment_add").on('click', function () {
+            window.location.href = "/equipment/add";
+        });
+
+    });
+
+    
+</script>

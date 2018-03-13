@@ -1,0 +1,68 @@
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<div class="panel panel-default">
+    <div class="panel-heading">新增/编辑 告警对象组</div>
+    <table class="table">
+        <form action="/warn_system/save_group" id="myform" name="myform" method="post" >
+            <input name="id" value="<{$warn.id}>" type="hidden">
+            <tr class="tr">
+                <td width="22%" align="right" > 告警对象组名称：</td>
+                <td width="75%" ><input name="name" type="text" id="name" size="40" value="<{$warn.name}>" placeholder="告警对象组名称" /></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 设备类型：</td>
+                <td width="75%" >
+                    <select class="form-control" name="device_type" id="device_type" style="width:140px;">
+                        <option value="rfid" <{if $warn.device_type eq 'rfid'}>selected<{/if}>>RFID设备</option>
+                        <option value="scan"  <{if $warn.device_type eq 'scan'}>selected<{/if}>>扫条形码设备</option>
+                        <option value="vision"  <{if $warn.device_type eq 'vision'}>selected<{/if}>>视觉设备</option>
+                    </select>
+                </td>
+            </tr>
+            <td width="22%" align="right" > 选择用户：
+                <br/>
+                <br/>
+                <br/>
+                <label><input type="checkbox" value="" id="box_check_all"> 全选</label>
+            </td>
+            <td width="75%" >
+                <div class="store-box" style="min-height:250px;overflow-y:auto;max-height:200px;border-radius:5px;border:1px solid #aaa;padding:10px;">
+                    <{foreach key=key item=item from=$user_list}>
+                    <label style="margin-right:10px;font-weight: normal">
+                        <input type="checkbox" <{if $item['checked'] eq 1}>checked="true"<{/if}> name="user[]"  value="<{$item['id']}>"> <{$item['name']}>
+                    </label>
+                    <{/foreach}>
+                </div>
+            </td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right" > 是否启用：</td>
+                <td width="75%" >
+                    <select class="form-control" name="status" id="status" style="width:140px;">
+                        <option value="1" <{if $warn.status eq '1'}>selected<{/if}>>启用</option>
+                        <option value="0"  <{if $warn.status eq '0'}>selected<{/if}>>停用</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <td align="right" >&nbsp;</td>
+                <td ><input type="button" onclick="submitForm()" name="Submit" class="lostfocus" onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";' onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+                            value="保存">
+                    <input type="button" value="返回" onclick="history.back();" />
+            </tr>
+        </form>
+    </table>
+</div>
+<script type="text/javascript">
+    function submitForm(){
+        $('#myform').submit();
+    }
+    $('#box_check_all').click(function(){
+        var flag = $(this).prop('checked');
+        $('.store-box').find('input[type="checkbox"]').prop('checked', flag)
+    });
+</script>
+

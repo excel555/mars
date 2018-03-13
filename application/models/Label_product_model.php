@@ -19,7 +19,7 @@ class Label_product_model extends MY_Model
     function get_product_by_labels($labels){
         $field = rtrim(join(",",$this->return_field()),",");
 
-        $this->db->select($field.",product.product_name");
+        $this->db->select($field.",product.product_name,product.price");
         $this->db->where_in('label',$labels);
         $this->db->from($this->table_name());
         $this->db->join('product', 'product.id = label_product.product_id', 'left');

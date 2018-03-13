@@ -1,0 +1,207 @@
+<{if $tips eq ''}>
+<{else}>
+<div class="alert alert-danger" role="alert"><{$tips}></div>
+<{/if}>
+<style>
+    .col-sm-3 {
+        padding-left: 0px;
+    }
+
+    .Validform_checktip {
+        margin-left: 15px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">编辑设备</div>
+    <form action="/equipment/edit_save" id="myform" name="myform" method="post">
+        <table class="table">
+            <input type='hidden' name='id' value="<{$id}>">
+            <tr class="tr">
+                <td width="22%" align="right"> ID：</td>
+                <td width="75%"><input name="id" type="text" id="id" size="30" value="<{$info.id}>" disabled></td>
+            </tr>
+            <tr class="tr">
+                <td width="22%" align="right"> 盒子方设备ID：</td>
+                <td width="75%"><input name="equipment_id" type="text" id="equipment_id" size="30"
+                                       value="<{$info.equipment_id}>" disabled></td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 设备名称：</td>
+                <td width="75%">
+                    <div class="col-sm-3">
+                        <input name="name" type="text" id="name" size="30" value="<{$info.name}>"
+                               placeholder="盒子别名，XXX公司" datatype="*" nullmsg="请输入盒子别名！">
+                    </div>
+                    <div class="Validform_checktip"></div>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 设备编码：</td>
+                <td width="75%">
+                    <div class="col-sm-3">
+                        <input name="code" type="text" id="code" size="30" value="<{$info.code}>"
+                               placeholder="盒子编码，如A000001" datatype="*" nullmsg="请输入盒子编码！">
+                    </div>
+                    <div class="Validform_checktip"></div>
+                </td>
+            </tr>
+
+
+            <tr class="tr">
+                <td width="22%" align="right"> 设备类型：</td>
+                <td width="75%">
+                    <select class="form-control" name="type" id="type" style="width:100px;">
+                        <option value="rfid"
+                        <{if $info.type eq 'rfid'}>selected<{/if}>>RFID</option>
+                        <option value="scan"
+                        <{if $info.type eq 'scan'}>selected<{/if}>>扫码</option>
+                        <option value="vision"
+                        <{if $info.type eq 'vision'}>selected<{/if}>>视觉</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 省市区：</td>
+                <td width="75%">
+                    <select style="width:25%;display:inline;" id="select_province" class="form-control" name="province">
+                        <option value="-1">===请选择省份===</option>
+                    </select>
+                    <select style="width:25%;display:inline;" id="select_city" class="form-control" name="city">
+                        <option value="-1">===请选择市区===</option>
+                    </select>
+                    <select style="width:25%;display:inline;" id="select_area" class="form-control" name="area">
+                        <option value="-1">===请选择地区===</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 地址：</td>
+                <td width="75%"><input name="address" type="text" id="address" size="30" value="<{$info.address}>"/>
+                </td>
+            </tr>
+
+
+            <tr class="tr">
+                <td width="22%" align="right"> 状态：</td>
+                <td width="75%">
+                    <select class="form-control" name="status" style="width:100px;">
+                        <option value="rfid"
+                        <{if $info.status eq 0}>selected<{/if}>>停用</option>
+                        <option value="scan"
+                        <{if $info.status eq 1}>selected<{/if}>>启用</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td width="22%" align="right"> 二维码：</td>
+                <td width="75%"><{if $info.qr}><{else}><input type="button" value="生成二维码" onclick="qrCode('common')"/><{/if}><br>
+                    <img width="300" id="qr_common" src="<{$info.qr}>"/>
+                    <input type="hidden" name="qr" value="<{$info.qr}>" id="inp_img">
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <td align="right">&nbsp;</td>
+                <td><input type="button" onclick="submitForm()" name="Submit" class="lostfocus"
+                           onFocus='this.className="getfocus";' onMouseOver='this.className="getfocus";'
+                           onBlur='this.className="lostfocus";' onMouseOut='this.className="lostfocus";'
+                           value="更新">
+                    <input type="button" value="返回" onclick="history.back();"/>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    $("#myform").Validform(
+        {tiptype: 2}
+    );
+    function submitForm() {
+        if ($('#select_province').val() == -1 || $('#select_city').val() == -1 || $('#select_area').val() == -1 || $('#address').val() == '') {
+            alert('省市区地址必填！');
+            return;
+        }
+        $('#myform').submit();
+    }
+    function qrCode(){
+        $.post("/equipment/qr_code",{equipment_id: '<{$info.equipment_id}>'},function(respData){
+            if(respData.status== 'success'){
+                $('#qr_common').attr('src',respData.qrcode);
+                $('#inp_img').val(respData.qrcode);
+            } else {
+                alert(respData.msg);
+                return;
+            }
+        },'json');
+
+    }
+    $(function(){
+        var old_province = '<{$info.province}>';
+        var old_city = '<{$info.city}>';
+        var old_area = '<{$info.area}>';
+        if (old_province > 0){
+            //获取省份
+            $.post("/regions/search",{pid:0},function(respData){
+                if(respData.status=='success'){
+                    if (respData.region_list){
+                        var province_list = '<option value="-1">===请选择省份===</option>';
+                        $(respData.region_list).each(function(i,val){
+                            if (val.AREAIDS == old_province){
+                                province_list = province_list + '<option selected="selected" value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                            } else {
+                                province_list = province_list + '<option value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                            }
+                        });
+                        $('#select_province').html(province_list);
+                        if (old_province > 0){
+                            $.post("/regions/search",{pid:old_province},function(respData){
+                                if(respData.status=='success'){
+                                    if (respData.region_list){
+                                        var city_list = '<option value="-1">===请选择市区===</option>';
+                                        $(respData.region_list).each(function(i,val){
+                                            if (val.AREAIDS == old_city){
+                                                city_list = city_list + '<option selected value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                                            } else {
+                                                city_list = city_list + '<option value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                                            }
+
+                                        });
+                                        $('#select_city').html(city_list);
+                                        if (old_area > 0 ){
+                                            $.post("/regions/search",{pid:old_city},function(respData){
+                                                if(respData.status=='success'){
+                                                    if (respData.region_list){
+                                                        var area_list = '<option value="-1">===请选择地区===</option>';
+                                                        $(respData.region_list).each(function(i,val){
+                                                            if (val.AREAIDS == old_area){
+                                                                area_list = area_list + '<option selected value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                                                            } else {
+                                                                area_list = area_list + '<option value="'+val.AREAIDS+'">'+val.AREANAME+'</option>';
+                                                            }
+
+                                                        });
+                                                        $('#select_area').html(area_list);
+                                                        if ($('#select_province').val() == '-1'){
+                                                            $('#select_province').val(old_province);
+                                                        }
+                                                    }
+                                                }
+                                            },'json');
+                                        }
+                                    }
+                                }
+                            },'json');
+                        }
+                    }
+                }
+            },'json');
+        }
+    });
+
+
+</script>
+

@@ -1,0 +1,80 @@
+<style>
+    .not-bind{
+        background: red;
+        color:red;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> 老系统标签查询</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+
+                    <textarea rows="10" cols="120" name="search_label" placeholder="标签，逗号分隔"></textarea>
+                    <input type="hidden" id="origin_url" value="/sys/old_label_goods_list_table">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-toolbar">
+            <div class="table-toolbar">
+                <button type="button" class="btn btn-info btn-sm" id="check_bind">查询老系统标签绑定情况</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-unique-id="id" data-toggle="table" data-url="/sys/old_label_goods_list_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-size="500" data-page-list="[500,1000]" data-sortable="true" data-silent-sort="ture">
+                <thead>
+                <tr>
+                    <th data-field="rfid" data-align="center">标签</th>
+                    <th data-field="productid" data-align="center">老系统商品ID</th>
+                    <th data-field="productname" data-align="center">老系统商品</th>
+                    <th data-field="productprice" data-align="center">老系统价格</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#begin_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1
+        });
+        $('#to_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1
+        });
+
+        $('#config-table').bootstrapTable({
+        }).on('click-row.bs.table', function (e, row, $element) {
+            console.log(e)
+            console.log(row)
+            $("#curr_id").val(row.id);
+            $("#curr_old_name").val(row.label);
+        });
+
+        $("#check_bind").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+    });
+</script>

@@ -1,0 +1,256 @@
+<style>
+	.hide-th{
+		display:none;
+	}
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">待分配设备&nbsp;<button type="button" class="btn btn-warning" id="old_box" onclick="location.href = '/equipment/oldbox';">未分配旧设备</button></h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+            	<div class="col-sm-2">
+                	<input type="text" class="form-control" name="search_name" placeholder="企业名称">
+                </div>
+                <div class="col-sm-2">
+                	<input type="text" class="form-control" name="search_address" placeholder="企业地址">
+                </div>
+            </div>
+            <div class="form-group">
+            	<div class="col-sm-3">
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input1" id="time" >
+                        <input class="form-control" type="text" name="search_protocol_start_time" value="" placeholder="开始时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-12" data-link-field="dtp_input2" id="time2" >
+                        <input class="form-control" type="text" name="search_protocol_end_time" value="" placeholder="截止时间"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                	<select class="form-control" name="search_db_duty">
+                        <option value="-1">BD负责人</option>
+                    <{foreach $bd_admin_info as $val}>
+						<option value="<{$val->id}>"><{$val->alias}></option>
+					<{/foreach}>
+                	</select>
+                </div>
+                <div class="col-sm-2">
+                	<select class="form-control" name="search_admin_status">
+                        <option value="-1">管理员状态</option>
+                        <option value="0">未分配</option>
+                        <option value="1">已分配</option>
+                	</select>
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">查找</button>
+                <input type="hidden" id="origin_url" value="/equipment/newbox_table">
+            </div>
+            
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-toolbar">
+        	<!--<button type="button" class="btn btn-info btn-sm" id="equipment_add">添加设备</button>-->
+        	<!--<button type="button" class="btn btn-success btn-sm" id="equipment_export">同步设备</button>-->
+            <!--<button type="button" class="btn btn-info btn-sm" id="equipment_edit">编辑</button>
+            <button type="button" class="btn btn-danger btn-sm" id="equipment_stock">查看库存</button>
+            <button type="button" class="btn btn-warning btn-sm" id="equipment_pandian">发起盘点</button>
+            <button type="button" class="btn btn-warning btn-sm" id="equipment_heart">查看心跳</button>
+            <button type="button" class="btn btn-success btn-sm" id="equipment_exportall">导出设备</button>
+		    <button type="button" class="btn btn-info btn-sm" id="equipment_ordertime">同步运营时间</button>
+            <button style="float:right;margin:0 10px;" type="button" class="btn btn-danger btn-sm" id="equipment_stop">停用</button>
+            <button style="float:right;" type="button" class="btn btn-success btn-sm" id="equipment_start">启用</button>-->
+            <input type="hidden" id="curr_id" value="0">
+            <input type="hidden" id="device_id" value="0">
+            <!--<a href='javascript:void(0)' onclick="refresh_cache()" role="button" class="btn btn-info btn-sm">刷新配置缓存</a>-->
+        </div>
+        <div id="config-body">
+        <table id="config-table" data-toggle="table" data-url="/equipment/newbox_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-page-size="100" data-side-pagination="server" data-page-list="[5,10,15,20,50,100]">
+            <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-class="hide-th" data-align="center">#</th>
+                    <th data-field="equipment_id" data-align="center">设备id</th>
+                    <th data-field="name" data-align="center">企业名称</th>
+                    <th data-field="address" data-align="center">企业地址</th>
+                    <th data-field="contacts_phone" data-align="center">企业联系方式</th>
+                    <th data-field="scene" data-align="center">企业场景</th>
+                    <th data-field="equipment_name" data-align="center">设备名称</th>
+                    <th data-field="first_deliver" data-align="center">首次补货情况</th>
+                    <th data-field="schedule_time" data-align="center">装机时间</th>
+                    <th data-field="bd_alias" data-align="center">BD负责人</th>
+                    <th data-field="admin_status_name" data-align="center">管理员状态</th>
+                    <th data-field="operation" data-align="center" >操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ckRadio(){
+        var curr_id = $("input[type=radio]:checked").parent().next().html();
+        if(typeof(curr_id) == "undefined"){
+            $("#curr_id").val(0);
+        }else{
+            $("#curr_id").val(curr_id);
+        }
+    }
+
+    $(function(){
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+            $("#device_id").val(row.equipment_id);
+        }).on('load-success.bs.table',function(data){
+	       $('.shift-info').each(function(){
+            	$(this).editableSelect({
+			        effects: 'slide',
+			        onSelect: function (element) {
+			            $(this).next('input').val(element.val());
+			        }
+			    }).prop('placeholder','请输入或选择管理员');
+            });
+	    });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        
+        $('#time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day'
+        });
+        $('#time2').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1,
+            format: 'yyyy-mm-dd hh:00:00',
+            minView: 'day'
+        });
+        
+        
+        
+
+    });
+    
+    
+    function assign(obj){
+    	var clue_equipment_id = $(obj).attr('id');
+    	var equipment_id = $(obj).attr('equipment_id');
+    	var admin_id = $(obj).prev('input').val();
+    	if (admin_id != ''){
+    		$.ajax({
+	            type: "post",
+	            url: "/equipment/assign_admin",
+	            dataType: 'json',
+	            data: {
+	                clue_equipment_id:clue_equipment_id,
+	                equipment_id:equipment_id,
+	                admin_id:admin_id
+	            },
+	            success: function (data, status) {
+	            	if (data.status == true){
+	            		MessageBox.success(data.msg);
+	            		$(obj).parent().html("<a onclick=\"showadmin('"+equipment_id+"')\">查看管理员</a>");
+	            	} else {
+	            		MessageBox.warning(data.msg);
+	            	}
+	                
+	            },
+	            error: function () {
+	
+	            },
+	            complete: function () {
+	
+	            }
+	
+	        });
+    	} else {
+    		alert('请选择管理员！');
+    		return false;
+    	}
+    }
+    
+    function firstdeliver(obj){
+    	var clue_id = $(obj).attr('clue_id');
+    	var first_deliver = $(obj).prev('input').val();
+		$.ajax({
+            type: "post",
+            url: "/equipment/edit_firstdeliver",
+            dataType: 'json',
+            data: {
+                clue_id:clue_id,
+                first_deliver:first_deliver
+            },
+            success: function (data, status) {
+            	if (data.status == true){
+            		MessageBox.success(data.msg);
+            		$(":button[clue_id='"+clue_id+"']").each(function(){
+            			$(this).prev('input').val(first_deliver);
+            		})
+            	} else {
+            		MessageBox.warning(data.msg);
+            	}
+                
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+
+        });
+    }
+    
+    function showadmin(equipment_id){
+		$.ajax({
+            type: "post",
+            url: "/equipment/show_admin",
+            dataType: 'json',
+            data: {
+                equipment_id:equipment_id
+            },
+            success: function (data, status) {
+            	if (data.status == true){
+            		MessageBox.success(data.msg);
+            	} else {
+            		MessageBox.warning(data.msg);
+            	}
+                
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+
+        });
+    }
+    
+</script>

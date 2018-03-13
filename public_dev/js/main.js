@@ -722,3 +722,2008 @@ if (typeof define === 'function') {
  * @license MIT
  */
 !function(){"use strict";function t(t){if(t)c[0]=c[16]=c[1]=c[2]=c[3]=c[4]=c[5]=c[6]=c[7]=c[8]=c[9]=c[10]=c[11]=c[12]=c[13]=c[14]=c[15]=0,this.blocks=c,this.buffer8=i;else if(n){var r=new ArrayBuffer(68);this.buffer8=new Uint8Array(r),this.blocks=new Uint32Array(r)}else this.blocks=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];this.h0=this.h1=this.h2=this.h3=this.start=this.bytes=0,this.finalized=this.hashed=!1,this.first=!0}var r="object"==typeof window?window:{},e=!r.JS_MD5_NO_NODE_JS&&"object"==typeof process&&process.versions&&process.versions.node;e&&(r=global);var i,h=!r.JS_MD5_NO_COMMON_JS&&"object"==typeof module&&module.exports,s="function"==typeof define&&define.amd,n=!r.JS_MD5_NO_ARRAY_BUFFER&&"undefined"!=typeof ArrayBuffer,f="0123456789abcdef".split(""),o=[128,32768,8388608,-2147483648],a=[0,8,16,24],u=["hex","array","digest","buffer","arrayBuffer"],c=[];if(n){var p=new ArrayBuffer(68);i=new Uint8Array(p),c=new Uint32Array(p)}var d=function(r){return function(e){return new t(!0).update(e)[r]()}},y=function(){var r=d("hex");e&&(r=l(r)),r.create=function(){return new t},r.update=function(t){return r.create().update(t)};for(var i=0;i<u.length;++i){var h=u[i];r[h]=d(h)}return r},l=function(t){var r=require("crypto"),e=require("buffer").Buffer,i=function(i){if("string"==typeof i)return r.createHash("md5").update(i,"utf8").digest("hex");if(i.constructor===ArrayBuffer)i=new Uint8Array(i);else if(void 0===i.length)return t(i);return r.createHash("md5").update(new e(i)).digest("hex")};return i};t.prototype.update=function(t){if(!this.finalized){var e="string"!=typeof t;e&&t.constructor==r.ArrayBuffer&&(t=new Uint8Array(t));for(var i,h,s=0,f=t.length||0,o=this.blocks,u=this.buffer8;f>s;){if(this.hashed&&(this.hashed=!1,o[0]=o[16],o[16]=o[1]=o[2]=o[3]=o[4]=o[5]=o[6]=o[7]=o[8]=o[9]=o[10]=o[11]=o[12]=o[13]=o[14]=o[15]=0),e)if(n)for(h=this.start;f>s&&64>h;++s)u[h++]=t[s];else for(h=this.start;f>s&&64>h;++s)o[h>>2]|=t[s]<<a[3&h++];else if(n)for(h=this.start;f>s&&64>h;++s)i=t.charCodeAt(s),128>i?u[h++]=i:2048>i?(u[h++]=192|i>>6,u[h++]=128|63&i):55296>i||i>=57344?(u[h++]=224|i>>12,u[h++]=128|i>>6&63,u[h++]=128|63&i):(i=65536+((1023&i)<<10|1023&t.charCodeAt(++s)),u[h++]=240|i>>18,u[h++]=128|i>>12&63,u[h++]=128|i>>6&63,u[h++]=128|63&i);else for(h=this.start;f>s&&64>h;++s)i=t.charCodeAt(s),128>i?o[h>>2]|=i<<a[3&h++]:2048>i?(o[h>>2]|=(192|i>>6)<<a[3&h++],o[h>>2]|=(128|63&i)<<a[3&h++]):55296>i||i>=57344?(o[h>>2]|=(224|i>>12)<<a[3&h++],o[h>>2]|=(128|i>>6&63)<<a[3&h++],o[h>>2]|=(128|63&i)<<a[3&h++]):(i=65536+((1023&i)<<10|1023&t.charCodeAt(++s)),o[h>>2]|=(240|i>>18)<<a[3&h++],o[h>>2]|=(128|i>>12&63)<<a[3&h++],o[h>>2]|=(128|i>>6&63)<<a[3&h++],o[h>>2]|=(128|63&i)<<a[3&h++]);this.lastByteIndex=h,this.bytes+=h-this.start,h>=64?(this.start=h-64,this.hash(),this.hashed=!0):this.start=h}return this}},t.prototype.finalize=function(){if(!this.finalized){this.finalized=!0;var t=this.blocks,r=this.lastByteIndex;t[r>>2]|=o[3&r],r>=56&&(this.hashed||this.hash(),t[0]=t[16],t[16]=t[1]=t[2]=t[3]=t[4]=t[5]=t[6]=t[7]=t[8]=t[9]=t[10]=t[11]=t[12]=t[13]=t[14]=t[15]=0),t[14]=this.bytes<<3,this.hash()}},t.prototype.hash=function(){var t,r,e,i,h,s,n=this.blocks;this.first?(t=n[0]-680876937,t=(t<<7|t>>>25)-271733879<<0,i=(-1732584194^2004318071&t)+n[1]-117830708,i=(i<<12|i>>>20)+t<<0,e=(-271733879^i&(-271733879^t))+n[2]-1126478375,e=(e<<17|e>>>15)+i<<0,r=(t^e&(i^t))+n[3]-1316259209,r=(r<<22|r>>>10)+e<<0):(t=this.h0,r=this.h1,e=this.h2,i=this.h3,t+=(i^r&(e^i))+n[0]-680876936,t=(t<<7|t>>>25)+r<<0,i+=(e^t&(r^e))+n[1]-389564586,i=(i<<12|i>>>20)+t<<0,e+=(r^i&(t^r))+n[2]+606105819,e=(e<<17|e>>>15)+i<<0,r+=(t^e&(i^t))+n[3]-1044525330,r=(r<<22|r>>>10)+e<<0),t+=(i^r&(e^i))+n[4]-176418897,t=(t<<7|t>>>25)+r<<0,i+=(e^t&(r^e))+n[5]+1200080426,i=(i<<12|i>>>20)+t<<0,e+=(r^i&(t^r))+n[6]-1473231341,e=(e<<17|e>>>15)+i<<0,r+=(t^e&(i^t))+n[7]-45705983,r=(r<<22|r>>>10)+e<<0,t+=(i^r&(e^i))+n[8]+1770035416,t=(t<<7|t>>>25)+r<<0,i+=(e^t&(r^e))+n[9]-1958414417,i=(i<<12|i>>>20)+t<<0,e+=(r^i&(t^r))+n[10]-42063,e=(e<<17|e>>>15)+i<<0,r+=(t^e&(i^t))+n[11]-1990404162,r=(r<<22|r>>>10)+e<<0,t+=(i^r&(e^i))+n[12]+1804603682,t=(t<<7|t>>>25)+r<<0,i+=(e^t&(r^e))+n[13]-40341101,i=(i<<12|i>>>20)+t<<0,e+=(r^i&(t^r))+n[14]-1502002290,e=(e<<17|e>>>15)+i<<0,r+=(t^e&(i^t))+n[15]+1236535329,r=(r<<22|r>>>10)+e<<0,t+=(e^i&(r^e))+n[1]-165796510,t=(t<<5|t>>>27)+r<<0,i+=(r^e&(t^r))+n[6]-1069501632,i=(i<<9|i>>>23)+t<<0,e+=(t^r&(i^t))+n[11]+643717713,e=(e<<14|e>>>18)+i<<0,r+=(i^t&(e^i))+n[0]-373897302,r=(r<<20|r>>>12)+e<<0,t+=(e^i&(r^e))+n[5]-701558691,t=(t<<5|t>>>27)+r<<0,i+=(r^e&(t^r))+n[10]+38016083,i=(i<<9|i>>>23)+t<<0,e+=(t^r&(i^t))+n[15]-660478335,e=(e<<14|e>>>18)+i<<0,r+=(i^t&(e^i))+n[4]-405537848,r=(r<<20|r>>>12)+e<<0,t+=(e^i&(r^e))+n[9]+568446438,t=(t<<5|t>>>27)+r<<0,i+=(r^e&(t^r))+n[14]-1019803690,i=(i<<9|i>>>23)+t<<0,e+=(t^r&(i^t))+n[3]-187363961,e=(e<<14|e>>>18)+i<<0,r+=(i^t&(e^i))+n[8]+1163531501,r=(r<<20|r>>>12)+e<<0,t+=(e^i&(r^e))+n[13]-1444681467,t=(t<<5|t>>>27)+r<<0,i+=(r^e&(t^r))+n[2]-51403784,i=(i<<9|i>>>23)+t<<0,e+=(t^r&(i^t))+n[7]+1735328473,e=(e<<14|e>>>18)+i<<0,r+=(i^t&(e^i))+n[12]-1926607734,r=(r<<20|r>>>12)+e<<0,h=r^e,t+=(h^i)+n[5]-378558,t=(t<<4|t>>>28)+r<<0,i+=(h^t)+n[8]-2022574463,i=(i<<11|i>>>21)+t<<0,s=i^t,e+=(s^r)+n[11]+1839030562,e=(e<<16|e>>>16)+i<<0,r+=(s^e)+n[14]-35309556,r=(r<<23|r>>>9)+e<<0,h=r^e,t+=(h^i)+n[1]-1530992060,t=(t<<4|t>>>28)+r<<0,i+=(h^t)+n[4]+1272893353,i=(i<<11|i>>>21)+t<<0,s=i^t,e+=(s^r)+n[7]-155497632,e=(e<<16|e>>>16)+i<<0,r+=(s^e)+n[10]-1094730640,r=(r<<23|r>>>9)+e<<0,h=r^e,t+=(h^i)+n[13]+681279174,t=(t<<4|t>>>28)+r<<0,i+=(h^t)+n[0]-358537222,i=(i<<11|i>>>21)+t<<0,s=i^t,e+=(s^r)+n[3]-722521979,e=(e<<16|e>>>16)+i<<0,r+=(s^e)+n[6]+76029189,r=(r<<23|r>>>9)+e<<0,h=r^e,t+=(h^i)+n[9]-640364487,t=(t<<4|t>>>28)+r<<0,i+=(h^t)+n[12]-421815835,i=(i<<11|i>>>21)+t<<0,s=i^t,e+=(s^r)+n[15]+530742520,e=(e<<16|e>>>16)+i<<0,r+=(s^e)+n[2]-995338651,r=(r<<23|r>>>9)+e<<0,t+=(e^(r|~i))+n[0]-198630844,t=(t<<6|t>>>26)+r<<0,i+=(r^(t|~e))+n[7]+1126891415,i=(i<<10|i>>>22)+t<<0,e+=(t^(i|~r))+n[14]-1416354905,e=(e<<15|e>>>17)+i<<0,r+=(i^(e|~t))+n[5]-57434055,r=(r<<21|r>>>11)+e<<0,t+=(e^(r|~i))+n[12]+1700485571,t=(t<<6|t>>>26)+r<<0,i+=(r^(t|~e))+n[3]-1894986606,i=(i<<10|i>>>22)+t<<0,e+=(t^(i|~r))+n[10]-1051523,e=(e<<15|e>>>17)+i<<0,r+=(i^(e|~t))+n[1]-2054922799,r=(r<<21|r>>>11)+e<<0,t+=(e^(r|~i))+n[8]+1873313359,t=(t<<6|t>>>26)+r<<0,i+=(r^(t|~e))+n[15]-30611744,i=(i<<10|i>>>22)+t<<0,e+=(t^(i|~r))+n[6]-1560198380,e=(e<<15|e>>>17)+i<<0,r+=(i^(e|~t))+n[13]+1309151649,r=(r<<21|r>>>11)+e<<0,t+=(e^(r|~i))+n[4]-145523070,t=(t<<6|t>>>26)+r<<0,i+=(r^(t|~e))+n[11]-1120210379,i=(i<<10|i>>>22)+t<<0,e+=(t^(i|~r))+n[2]+718787259,e=(e<<15|e>>>17)+i<<0,r+=(i^(e|~t))+n[9]-343485551,r=(r<<21|r>>>11)+e<<0,this.first?(this.h0=t+1732584193<<0,this.h1=r-271733879<<0,this.h2=e-1732584194<<0,this.h3=i+271733878<<0,this.first=!1):(this.h0=this.h0+t<<0,this.h1=this.h1+r<<0,this.h2=this.h2+e<<0,this.h3=this.h3+i<<0)},t.prototype.hex=function(){this.finalize();var t=this.h0,r=this.h1,e=this.h2,i=this.h3;return f[t>>4&15]+f[15&t]+f[t>>12&15]+f[t>>8&15]+f[t>>20&15]+f[t>>16&15]+f[t>>28&15]+f[t>>24&15]+f[r>>4&15]+f[15&r]+f[r>>12&15]+f[r>>8&15]+f[r>>20&15]+f[r>>16&15]+f[r>>28&15]+f[r>>24&15]+f[e>>4&15]+f[15&e]+f[e>>12&15]+f[e>>8&15]+f[e>>20&15]+f[e>>16&15]+f[e>>28&15]+f[e>>24&15]+f[i>>4&15]+f[15&i]+f[i>>12&15]+f[i>>8&15]+f[i>>20&15]+f[i>>16&15]+f[i>>28&15]+f[i>>24&15]},t.prototype.toString=t.prototype.hex,t.prototype.digest=function(){this.finalize();var t=this.h0,r=this.h1,e=this.h2,i=this.h3;return[255&t,t>>8&255,t>>16&255,t>>24&255,255&r,r>>8&255,r>>16&255,r>>24&255,255&e,e>>8&255,e>>16&255,e>>24&255,255&i,i>>8&255,i>>16&255,i>>24&255]},t.prototype.array=t.prototype.digest,t.prototype.arrayBuffer=function(){this.finalize();var t=new ArrayBuffer(16),r=new Uint32Array(t);return r[0]=this.h0,r[1]=this.h1,r[2]=this.h2,r[3]=this.h3,t},t.prototype.buffer=t.prototype.arrayBuffer;var b=y();h?module.exports=b:(r.md5=b,s&&define(function(){return b}))}();
+
+/**
+ * 配置信息
+ * 把配置信息分为基础配置、提示信息
+ */
+(function() {
+    var config = {
+        HOST_API: location.protocol + '//' + location.host + '/index.php/api',
+        alipayAuthUrl: "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=auth_user&redirect_uri=REDIRECT_URI", //授权跳转地址
+        wechatAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&connect_redirect=1#wechat_redirect", //微信授权跳转地址
+        alipayAppId: "2017052207307682", //2017052207307682 2017032806445211
+        wechatAppId: "wx3450e6a290582989", //
+        platformKey: "ce6u8wD8Wf7fWufRp",
+        page:1,
+        pageSize:10,
+        ratioOfMainPic: 3 / 2, //商品图片的宽高比
+        ratioOfAdPic: 2 / 1, //广告图片的宽高比
+        smsDuration: 60 //发短信计时间隔，秒
+    };
+    config.DEF_IMG_URL = location.protocol + '//' + location.host + "/public/img/shop.jpg"
+    //接口配置
+    config.API_GLOBAL_AD = config.HOST_API + '/global/get';
+
+    //auto login
+    config.API_ALIPAY_ACCOUNT_AUTOLOGIN = config.HOST_API + '/dalang/auth_alipay_login';
+    config.API_WECHAT_ACCOUNT_AUTOLOGIN = config.HOST_API + '/dalang/auth_wechat_login';
+    config.API_GET_CONFIG = config.HOST_API + '/dalang/get_config_by_device_id';
+
+
+    //bind
+    config.API_SIGN = config.HOST_API + '/dalang/goto_sign';
+
+    //orders
+    config.API_ORDERS = config.HOST_API + '/dalang/list_order';
+    config.API_ORDER_DETAIL = config.HOST_API + '/dalang/get_detail';
+    config.API_ORDER_REFUND = config.HOST_API + '/dalang/refund';
+    config.API_ORDER_PAY = config.HOST_API + '/dalang/pay_by_manual';
+
+    config.API_OPEN_DOOR = config.HOST_API + '/device/open_door';
+    config.API_FD_BOX_STATUS = config.HOST_API + '/dalang/box_status';
+    config.API_DEVICE_ORDER_AMOUNT = config.HOST_API + '/dalang/order_ad';
+
+    config.ORDER_STATUS = { //订单状态
+        '-1': '已取消',
+        '0': '未支付',
+        '2': '支付中',
+        '1': '已支付',
+        '3': '退款申请中',
+        '4': '退款成功',
+        '5': '退款申请驳回'
+    };
+
+    //不需要开通免密的登录
+    config.NO_MIANMI = new Array(
+        "coupon.html",
+        "clear.html",
+        "warn_msg"
+    )
+
+
+    window.config = config;
+})();;
+
+/**
+ * 封装异步请求
+ * 包含通用的四大类请求
+ * paging
+ * detail
+ * submit
+ * custom
+ */
+(function() {
+    var NODATA = '<div class="nodata">暂无数据。</div>',
+        NOMOREDATA = '<div class="nodata">没有更多数据。</div>',
+        SYSTEMERROR = '<div class="nodata">服务器异常。</div>',
+        DATAERROR = '<div class="nodata">数据错误。</div>',
+        csrftoken,
+        loadingDom = $('#rby-loading');
+
+    function general_sign(data,token){
+        console.log(data);
+        var query = '';
+
+        var arr = new Array();
+        for(var i in data){
+            arr.push(i);
+        }
+        var data_sort = arr.sort();
+        for(i=0;i<data_sort.length;i++){
+            query += data_sort[i]+'='+data[data_sort[i]]+'&';
+        }
+        var platform = config.platformKey;
+        var tmp = md5(query+platform);
+        return md5(tmp.substring(0,tmp.length-1)+"q");
+    }
+    /**
+     * 接口基类
+     */
+    function Api(options) {
+        this.options = options || {};
+        this.timeout = 15000; //请求超时时间
+        this.cache = true; //是否缓存
+        this.defaultListTmpl = 'rby-list-tmpl';
+        this.defaultListEle = '#rby-list';
+        this.defaultDetailTmpl = 'rby-detail-tmpl';
+        this.defaultDetailEle = '#rby-detail';
+        this.isLoading = false; //是否正在请求
+        this.hasNext = true; //是否有下一页
+        this.queue = {}; //请求队列
+        this.tempPage = {}; //分页dom
+        this.onEnd = function() {}; //当请求都完成
+    }
+
+    Api.prototype._init = function() {
+        var spinnings = this.spinnings;
+
+        return this;
+    }
+
+    /**
+     * 分页查询，获取列表类型数据，自动绑定分页，当数据为空时提示无数据，当接口异常或解析错误提示服务器异常
+     *
+     * @param options-请求参数
+     * *****
+     * url 请求URL
+     * data 请求数据 {} $(form)
+     * type 请求类型 GET POST
+     * renderFor 渲染模板
+     * renderEle 渲染容器
+     * showLoading 是否显示loading提示 true false
+     * *****
+     * pagingDom 分页容器
+     * pagingMode 分页形式 'number'、'next'、'' 默认 number
+     * key 分页数据的关键字 默认'body' '-1'时整个返回值为分页数据
+     * *****
+     * @param callback-请求成功后执行的回调方法
+     * @param callbackError-请求失败后执行的回调方法
+     */
+    Api.prototype.paging = function(options, callback, callbackError) {
+        var that = this,
+            isFirst = options.data.page == 1, //是否第一次请求
+            opt = { //默认配置
+                renderFor: this.defaultListTmpl,
+                renderEle: this.defaultListEle,
+                pagingDom: '.pagination',
+                pagingMode: 'next',
+                timeKey: 'createAt',
+                key: 'body',
+                showLoading: true,
+                logtype: 'paging'
+            };
+
+        extend(options, opt);
+
+        if (options.pagingMode == 'number') {
+            $(options.renderEle).html('正在加载中...');
+            $(options.pagingDom).hide();
+        } else if (options.pagingMode == 'next') {
+            var np = findByKey(that.tempPage, options.url);
+            var next = $('#np-' + np),
+                nextStr = '<div id="np-' + np + '" class="nextpage">正在加载中...</div>';
+
+            if (next.length == 0) {
+                $(options.renderEle).after(nextStr);
+                next = $('#np-' + np);
+            }
+            next.html('正在加载中...').addClass('disabled');
+
+            if (isFirst) {
+                //查第一页数据一定清空当前容器
+                $(options.renderEle).html('');
+            }
+        }
+
+        that.ajaxSend(options, function(response, textStatus, jqXHR) {
+            var body = response;
+            //var body = response[options.key];
+
+            if (options.key == '-1') {
+                //设置key=-1，所有返回值为分页数据
+                body = response;
+            }
+
+            if (!that.isSusPagingData(body)) {
+                $(options.renderEle).html(DATAERROR);
+                return;
+            }
+
+            if (options.pagingMode == 'number') {
+                if (!body || body.length == 0) {
+                    //数据没有结果显示无数据提示
+                    if (isFirst) {
+                        $(options.renderEle).html(NODATA);
+                    }
+                } else {
+                    that.render(options.renderEle, options.renderFor, body);
+                }
+
+                initPagination(response.pageInfo, options.pagingDom);
+            } else if (options.pagingMode == 'next') {
+                if (body.length == 0) {
+                    //数据没有结果显示无数据提示
+                    if (isFirst) {
+                        next.hide();
+                        $(options.renderEle).html(NODATA);
+                    }
+                } else {
+                    that.hasNext = body.length == options.data.page_size;
+                    next.show();
+                    that.render(options.renderEle, options.renderFor, body, !isFirst);
+                    if (!that.hasNext) {
+                        //没有下一页显示无更多数据提示
+                        next.html(NOMOREDATA);
+                    } else {
+                        next.html('正在加载更多').removeClass('disabled');
+                        // options.nextButton && next.html(options.nextButton.text || '加载更多');
+                    }
+                }
+            }
+
+            if (typeof callback == 'function') {
+                callback(response);
+            }
+        }, function(textStatus, data) {
+            $(options.renderEle).html(SYSTEMERROR);
+            next.hide();
+            if (typeof callbackError == 'function') {
+                callbackError(textStatus, data);
+            }
+        });
+        //异步 分页导航 模板渲染 绑定分页事件 = 分页
+    };
+
+    /**
+     * 详情查询
+     *
+     * @param options-请求参数
+     * *****
+     * url 请求URL
+     * data 请求数据 {} $(form)
+     * type 请求类型 GET POST
+     * renderFor 渲染模板
+     * renderEle 渲染容器
+     * showLoading 是否显示loading提示 true false
+     * *****
+     * @param callback-请求成功后执行的回调方法
+     * @param callbackError-请求失败后执行的回调方法
+     */
+    Api.prototype.detail = function(options, callback, callbackError) {
+        var that = this,
+            opt = { //默认配置
+                renderFor: this.defaultDetailTmpl,
+                renderEle: this.defaultDetailEle,
+                key: '',
+                showLoading: true,
+                logtype: 'detail'
+            };
+
+        extend(options, opt);
+
+        if (options.showLoading) {
+            $(options.renderEle).html('<div class="loading">加载中...</div>');
+        }
+
+        that.ajaxSend(options, function(response, textStatus, jqXHR) {
+            if (response.error) {
+                $(options.renderEle).html(response.error);
+                return;
+            }
+            var data = response || {};
+            if (data) {
+                render(options.renderEle, options.renderFor, data);
+            }
+            if (typeof callback == 'function') {
+                callback(response);
+            }
+        }, callbackError);
+    };
+
+    /**
+     * 表单提交
+     *
+     * @param options-请求参数
+     * *****
+     * url 请求URL
+     * data 请求数据 {} $(form)
+     * type 请求类型 GET POST
+     * showLoading 是否显示loading提示 true false
+     * *****
+     * @param callback-请求成功后执行的回调方法
+     * @param callbackError-请求失败后执行的回调方法
+     */
+    Api.prototype.submit = function(options, callback, callbackError) {
+        var formData,
+            that = this,
+            isForm = !!options.data.length,
+            btnSubmit,
+            opt = {
+                type: 'POST',
+                showLoading: true,
+                logtype: 'submit'
+            };
+
+        extend(options, opt);
+
+        if (isForm) {
+            formData = options.data.serializeArray();
+            btnSubmit = options.data.find('[type="submit"]');
+            btnSubmit.attr('disabled', true);
+        } else {
+            formData = options.data;
+        }
+        options.data = formData;
+
+        that.ajaxSend(options, function(response, textStatus, jqXHR) {
+            if (isForm) {
+                btnSubmit.removeAttr('disabled');
+            }
+            if (typeof callback == 'function') {
+                callback(response);
+            }
+        }, function(jqXHR, textStatus, errorThrown) {
+            if (isForm) {
+                btnSubmit.removeAttr('disabled');
+            }
+            if (typeof callbackError == 'function') {
+                callbackError(jqXHR, textStatus, errorThrown);
+            }
+        });
+    };
+
+    /**
+     * 自定义查询
+     *
+     * @param options-封装请求url，请求数据，请求类型
+     * @param callback-请求成功后执行的回调方法
+     * @param callbackError-请求失败后执行的回调方法
+     */
+    Api.prototype.custom = function(options, callback, callbackError) {
+        var that = this,
+            opt = {
+                logtype: 'custom'
+            };
+
+        extend(options, opt);
+
+        that.ajaxSend(options, callback, callbackError);
+    };
+
+    /**
+     * jquery.ajax
+     */
+    Api.prototype.ajaxSend = function(options, callback, callbackError) {
+        var that = this;
+        that.isLoading = true;
+        that.queue[options.url] = true;
+        //Tools.alert("token: " + token);
+        if (options.showLoading) {
+            // $(options.renderEle).hide();
+            loadingDom.show();
+        }
+
+        //TODO 一般这里需要添加不同的请求参数
+        options = options || {};
+
+        if (typeof options.contentType == undefined) {
+            options.contentType = 'application/json'
+        }
+        if (typeof options.processData == undefined) {
+            options.processData = true;
+        }
+        $.ajax({
+            url: options.url,
+            data: options.data,
+            type: options.type || 'GET',
+            beforeSend: function(request) {
+                request.setRequestHeader("token", Cookie.get("token"));
+                request.setRequestHeader("platform", 'wap');
+                request.setRequestHeader("sign", general_sign(options.data));
+            },
+            dataType: 'json',
+            timeout: that.timeout,
+            cache: that.cache,
+            contentType: options.contentType,
+            processData: options.processData,
+            success: function(response, textStatus, jqXHR) {
+                Tools.alert("success data:" + JSON.stringify(response).substring(0, 200));
+                that.isLoading = false;
+                delete(that.queue[options.url]);
+
+                if (typeof callback == 'function') {
+                    callback(response);
+                }
+                if (isEmpety(that.queue) && typeof that.onEnd == 'function') {
+                    that.onEnd.call(this);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Tools.alert("error data: " + JSON.stringify(jqXHR.response));
+                that.isLoading = false;
+                delete(that.queue[options.url]);
+
+                var obj;
+                if(jqXHR.responseText){
+                    obj = JSON.parse(jqXHR.responseText);
+                }
+                if (jqXHR.status == 401 || jqXHR.status == '401') {
+                    //若接口提示未登录，自动登录
+                    common.login();
+                    return;
+                }
+
+
+                logged(options.logtype, textStatus, options.url);
+                if (typeof callbackError == 'function') {
+                    //callbackError(textStatus, {});
+                    callbackError(obj, {});
+                }
+
+                if (isEmpety(that.queue) && typeof that.onEnd == 'function') {
+                    that.onEnd.call(this);
+                }
+            },
+            complete: function(xhr, status) {
+                setTimeout(function() {
+                    loadingDom.hide();
+                }, 100)
+                $(options.renderEle).show();
+            }
+        });
+    }
+
+    /**
+     * 数据渲染到模板
+     * @param renderEle-渲染容器
+     * @param renderFor-渲染模版
+     * @param data-数据
+     * @param isAppend-是否追加
+     */
+    function render(renderEle, renderFor, data, isAppend) {
+        if ($('#' + renderFor).length > 0 && data) {
+            if (typeof data.length != 'undefined') {
+                data = {
+                    'list': data
+                };
+            }
+            var result = tmpl(renderFor, data);
+            if (isAppend) {
+                $(renderEle).append(result);
+            } else {
+                $(renderEle).html(result);
+            }
+        }
+    }
+
+    /**
+     * 使用模板
+     * @param renderFor 模板名称
+     * @data 数据
+     */
+    function tmpl(renderFor, data) {
+        return template.render(renderFor, data);
+    }
+
+    /**
+     * 记录接口的错误日志
+     * @param type-接口请求类型
+     * @param message-错误内容
+     * @param url-错误地址
+     */
+    function logged(type, message, url) {
+        log('[' + type + '] ' + message + ':' + url, 2);
+    }
+
+    /**
+     * 判断对象是否为空
+     * @param  {[type]}
+     * @return {Boolean}
+     */
+    function isEmpety(obj) {
+        var flag = true;
+        for (var i in obj) {
+            flag = false;
+            break;
+        }
+
+        return flag;
+    }
+
+    /**
+     * 验证key是否存在obj中
+     * @param  obj 要验证的对象
+     * @param  key 要验证的关键字
+     */
+    function findByKey(obj, key) {
+        var arr = [],
+            tar;
+        for (var i in obj) {
+            arr.push(obj[i]);
+            if (key == i) {
+                tar = obj[i];
+            }
+        }
+
+        if (arr.length == 0) return obj[key] = 1;
+        if (tar) return tar;
+        arr = arr.sort();
+        return obj[key] = arr[arr.length - 1] + 1;
+    }
+
+    /**
+     * 初始化数字分页
+     * @param  data 分页数据
+     * current 当前页
+     * size 每页条数
+     * count 总记录数
+     * @param  dom 分页的容器
+     */
+    function initPagination(data, dom) {
+        if (!data) return; //数据错误不初始化
+
+        var d = {
+            current_page: data.current,
+            per_page: data.size,
+            total: data.count
+        };
+
+        d.current_page = parseInt(d.current_page);
+        d.total = parseInt(d.total);
+        d.per_page = parseInt(d.per_page);
+        d.total = Math.ceil(d.total / d.per_page);
+
+        d.prev_page = d.current_page == 1 ? 1 : d.current_page - 1;
+        d.next_page = d.current_page == d.total ? d.current_page : d.current_page + 1;
+        var start = d.current_page - 2,
+            end = d.current_page + 2;
+
+        if (d.total <= 5) {
+            start = 1;
+            end = d.total;
+        } else {
+            if (start < 1) {
+                start = 1;
+                end = start + 4;
+            }
+            if (end > d.total) {
+                end = d.total;
+                start = d.total - 4;
+            }
+        }
+
+        var result = '';
+
+        result += '<dl><dt' + (d.prev_page == 1 ? ' class="disabled"' : '') + '><a href="#' + d.prev_page + '"><img src="images/arrow_left.gif"></a></dt><dd>';
+        for (var i = start; i <= end; i++) {
+            result += '<a href="#' + i + '"' + (d.current_page == i ? ' class="active"' : '') + '>' + i + '</a>';
+        }
+        result += '</dd><dt class="ari' + (d.next_page >= d.total ? ' disabled' : '') + '"><a href="#' + d.next_page + '"><img src="images/arrow_left.gif"></a></dt></dl>';
+
+        $(dom).html(result).show();
+    }
+
+    /**
+     * 扩展参数
+     * @param  options 被扩展参数
+     * @param  opt 扩展参数
+     */
+    function extend(options, opt) {
+        options = options || {};
+        for (var i in opt) {
+            options[i] = typeof options[i] == 'undefined' ? opt[i] : options[i];
+        }
+    }
+
+    /**
+     * 是否正确的分页数据
+     * @param  data 分页数据
+     * @return {Boolean}
+     */
+    function isSusPagingData(data) {
+        return typeof data == 'object' && typeof data.length != undefined;
+    }
+
+    //抛出公用方法，保持模板调用入口唯一
+    Api.prototype.render = render;
+    Api.prototype.logged = logged;
+    Api.prototype.isSusPagingData = isSusPagingData;
+
+    window.Ajax = new Api();
+})();; //debug
+var log = function(m) {
+    if (typeof console != 'undefined') {
+        console.log(m);
+    }
+};
+
+/**
+ * 本地cookie读写
+ */
+(function() {
+    var Cookie = {
+        get: function(sname) {
+            var sre = "(?:;)?" + sname + "=([^;]*);?";
+            var ore = new RegExp(sre);
+            if (ore.test(document.cookie)) {
+                try {
+                    return unescape(RegExp["$1"]); // decodeURIComponent(RegExp["$1"]);
+                } catch (e) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        },
+
+        /**
+         * 设置Cookie
+         * @param {[String]}
+         * @param {[String]}
+         * @param {[Number]} 天数
+         * @param {[Number]} 小时数
+         * @param {[Number]} 分钟数
+         * @param {[Number]} 秒数
+         */
+        _set: function(c_name, value, days, hours, minutes, seconds) {
+            var expires = null;
+            if (typeof days == 'number' && typeof hours == 'number' && typeof minutes == 'number' && typeof seconds == 'number') {
+                if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+                    expires = null;
+                } else {
+                    expires = this.getExpDate(days, hours, minutes, seconds);
+                }
+            } else {
+                expires = days || this.getExpDate(7, 0, 0, 0);
+            }
+            document.cookie = c_name + "=" + escape(value) + ((expires == null) ? "" : ";expires=" + expires) + "; path=/";
+        },
+
+        /**
+         * 设置Cookie
+         * @param {[type]} name
+         * @param {[type]} value
+         * @param {[type]} 天数，默认7天、0不设置、-1移除
+         */
+        set: function(c_name, value, days) {
+            if(null == days){
+                this._set(c_name, value, 7, 0, 0, 0);
+            }else{
+                this._set(c_name, value, days, 0, 0, 0);
+            }
+        },
+
+        remove: function(key) {
+            this.set(key, '', -1);
+        },
+        //获取过期时间，d天数、h小时、m分钟、s秒
+        getExpDate: function(d, h, m, s) {
+            var r = new Date;
+            if (typeof d == "number" && typeof h == "number" && typeof m == "number" && typeof s == 'number')
+                return r.setDate(r.getDate() + parseInt(d)), r.setHours(r
+                        .getHours() + parseInt(h)), r.setMinutes(r.getMinutes() + parseInt(m)), r.setSeconds(r.getSeconds() + parseInt(s)),
+                    r.toGMTString()
+        }
+    };
+    window.Cookie = Cookie;
+})();;
+/**
+ * 自定义验证，用于简单的规格验证
+ */
+(function() {
+    String.prototype.isSpaces = function() {
+        for (var i = 0; i < this.length; i += 1) {
+            var ch = this.charAt(i);
+            if (ch != ' ' && ch != "\n" && ch != "\t" && ch != "\r") {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    String.prototype.isValidMail = function() {
+        return (new RegExp(
+            /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/)
+            .test(this));
+    };
+
+    String.prototype.isPhone = function() {
+        return (new RegExp(/^1\d{10}?$/).test(this));
+    };
+
+    String.prototype.isEmpty = function() {
+        return (/^\s*$/.test(this));
+    };
+
+    String.prototype.isValidPwd = function() {
+        return (new RegExp(/^([_]|[a-zA-Z0-9@]){6,16}$/).test(this));
+    };
+
+    String.prototype.isPostCode = function() {
+        return (new RegExp(/^\d{6}?$/).test(this));
+    };
+})();;
+/**
+ * 自定义弹出页，依赖jquery
+ */
+(function(window) {
+    var tempPage = 0; //打开页面的计数，
+    var SecondPage = function(options) {
+        var that = this;
+
+        if (typeof options == 'object') {
+            for (var i in options) {
+                that[i] = options[i];
+            }
+        } else if (typeof options == 'string') {
+            that.targetPage = $(options);
+        }
+        that.coverDom = that.coverDom || $('#sidebar-bg');
+
+        //默认点击遮罩层关闭
+        that.coverDom.click(function(e) {
+            e.preventDefault();
+            that.closeSidebar();
+        })
+    }
+
+    SecondPage.prototype = {
+        targetPage: undefined, //当前页面DOM
+        coverDom: undefined, //遮罩层
+        beforeOpen: function() {}, //打开之前
+        afterClose: function() {}, //关闭之后
+        openSidebar: function(fn) {
+            var container = $(window),
+                w = container.width(),
+                h = container.height(),
+                clientH = this.targetPage.height(),
+                that = this;
+            that.coverDom.show();
+            that.targetPage.show()
+                .css({
+                    'width': w
+                    // 'height': h
+                });
+            setTimeout(function() {
+                that.targetPage.addClass('open');
+            }, 100)
+            tempPage++;
+            if (!$('body').hasClass('move')) {
+                $('body').addClass('move')
+                    .css({
+                        'width': document.documentElement.clientWidth,
+                        'height': document.documentElement.clientHeight,
+                        'overflow': 'hidden'
+                    });
+            }
+            fn && fn();
+            that.beforeOpen && that.beforeOpen();
+        },
+
+        closeSidebar: function(fn) {
+            var that = this;
+            this.targetPage.removeClass('open');
+            tempPage--;
+            setTimeout(function() {
+                that.coverDom.hide();
+                that.targetPage.hide();
+                hasOpend = false;
+                if (tempPage <= 0) {
+                    $('body').removeClass('move')
+                        .css({
+                            'width': 'auto',
+                            'height': 'auto',
+                            'overflow': 'inherit'
+                        });
+                }
+                fn && fn();
+                that.afterClose && that.afterClose();
+            }, 220);
+        }
+    }
+
+    window.SecondPage = SecondPage;
+})(window);;
+/**
+ * 本地存储扩展
+ */
+(function() {
+    var Storage = {
+        AUTH: 'FLV-AUTH',
+        ACCOUNT: 'FLV-ACCOUNT',
+        REMEMBER: 'FLV-REMEMBER',
+        LOGIN_HISTORY: 'LH',
+        AREA: 'FLV-AREA',
+        get: function(key, isSession) {
+            if (!this.isLocalStorage()) {
+                return;
+            }
+            var value = this.getStorage(isSession).getItem(key);
+            if (value) {
+                return JSON.parse(value);
+            } else {
+                return undefined;
+            }
+        },
+        set: function(key, value, isSession) {
+            if (!this.isLocalStorage()) {
+                return;
+            }
+            value = JSON.stringify(value);
+            this.getStorage(isSession).setItem(key, value);
+        },
+        remove: function(key, isSession) {
+            if (!this.isLocalStorage()) {
+                return;
+            }
+            this.getStorage(isSession).removeItem(key);
+        },
+        getStorage: function(isSession) {
+            return isSession ? sessionStorage : localStorage;
+        },
+        isLocalStorage: function() {
+            try {
+                if (!window.localStorage) {
+                    log('不支持本地存储');
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                log('本地存储已关闭');
+                return false;
+            }
+        }
+    };
+
+    window.Storage = Storage;
+})();;
+/**
+ * 扩展模板帮助方法
+ * 依赖artTemplate，tools
+ */
+(function(template) {
+    if (!template) return;
+
+    template.openTag = "<!--[";
+    template.closeTag = "]-->";
+
+    // 模板帮助方法，绝对化图片地址
+    template.helper('$absImg', function(content, defaultValue) {
+        return Tools.absImg(content, defaultValue);
+    });
+
+    // 模板帮助方法，转换时间戳成字符串
+    template.helper('$formatDate', function(content, type, defaultValue) {
+        return Tools.formatDate(content, type, defaultValue || '--');
+    });
+
+    //模板帮助方法，编码url参数
+    template.helper('$encodeUrl', function(content) {
+        return encodeURIComponent(content);
+    });
+
+    //模板帮助方法，格式化货币
+    template.helper('$formatCurrency', function(content, defaultValue, unit) {
+        return Tools.formatCurrency(content, defaultValue, unit);
+    });
+
+    //模板帮助方法，\r\n替换换行
+    template.helper('$convertRN', function(content) {
+        if (!content) {
+            return '--';
+        }
+        return content.replace(/\r\n/gi, '<br/>');
+    });
+
+    //模板帮助方法，根据序列值添加样式名
+    template.helper('$addClassByIdx', function(i, v, className) {
+        if (i == v) {
+            return className || '';
+        }
+    });
+
+    //模板帮助方法，截取内容长度添加省略号
+    template.helper('$ellipsis', function(content, length) {
+        var v = content.replace(/[^\x00-\xff]/g, '__').length;
+        if (v / 2 > length) {
+            return content.substring(0, length) + '...';
+        }
+        return content;
+    });
+
+    //模板帮助方法， 从时间字符串中截取日期，限定字符串yyyy-MM-dd...
+    template.helper('$getDateFromStr', function(content) {
+        if (!content || content.length == 0) {
+            return;
+        }
+
+        var len = content.length > 10 ? 10 : content.length;
+        return content.substring(0, len);
+    });
+
+    //模板帮助方法，转换价格
+    template.helper('$rbyFormatCurrency', function(content) {
+        return Tools.rbyFormatCurrency(content);
+    });
+
+    //模板帮助方法，根据条件添加样式
+    template.helper('$addClassByCondition', function(condition, className, className2) {
+        if (condition) {
+            return className || '';
+        } else {
+            return className2 || '';
+        }
+    });
+
+    //模板帮助方法，获取订单状态值
+    template.helper('$getOrderStatus', function(content, type) {
+        return config.ORDER_STATUS[content] || '--';
+    });
+
+    //模板帮助方法，
+    template.helper('$addClassForGoods', function(data, className, className2) {
+        if (!data || isNaN(data.limitNum) || isNaN(data.store) || isNaN(data.quantity)) return '';
+        data.limitNum = parseInt(data.limitNum);
+        data.store = parseInt(data.store);
+        data.quantity = parseInt(data.quantity);
+        if (data.quantity >= Math.min(data.limitNum, data.store)) {
+            return className || '';
+        } else {
+            return className2 || '';
+        }
+    });
+
+    // 模板帮助方法，格式化倒计时
+    template.helper('$getCountDown', function(data, other) {
+        if (typeof data == 'object') {
+            return Tools.getRunTime(data.serverTime, data.endTime);
+        } else {
+            return Tools.getRunTime(data, other);
+        }
+    });
+
+    // 模板帮助方法，转换微信头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
+    template.helper('$absWechatIcon', function(content) {
+        if (!content || content.indexOf('http://') != 0) return '../content/images/common/headicon.png';
+        //http://wx.qlogo.cn/mmopen/xxx/0
+        var arr = content.split('/');
+        arr[arr.length - 1] = '96';
+        return arr.join('/');
+    });
+})(window.template);
+/**
+ * 工具类，包括自定义提示框、格式化日期、格式化货币、获取查询字符串、格式化表单等
+ **/
+(function() {
+    var that = this,
+        preventDefault, panel, panelBg, delay, count = 0,
+        toastPanel, temp;
+
+    //自定义提示框，依赖jquery
+    var TipPanel = function(el, options) {
+        var that = this;
+
+        that.panel = el || $('#rby-panel');
+        that.panelBg = panelBg || $('#rby-panel-bg');
+        that.panelTitle = that.panel.find('.panel-title');
+        that.panelTips = that.panel.find('.panel-tips');
+        that.btnOk = that.panel.find('.btn-primary');
+        that.btnCancel = that.panel.find('.btn-default');
+        that.panelText = that.panel.find('.panel-text');
+        that.panelTick = that.panel.find('.panel-tick');
+        that.panelImg = that.panel.find('.panel-img');
+
+        that.options = {
+            type: 'error',
+            tick: 0,
+            okText: '确定',
+            cancelText: '取消',
+            showTitle: false,
+            showTips: false
+        };
+
+        //关闭
+        that.panel.on('click', '.btn-primary', function(e) {
+            e.preventDefault();
+            that.hide(true);
+        });
+
+        //取消
+        that.panel.on('click', '.btn-default', function(e) {
+            e.preventDefault();
+            that.hide();
+        });
+        //提示
+        that.panel.on('click', '.panel-tips', function(e) {
+            e.preventDefault();
+            that.hide(true);
+        });
+
+    };
+
+    TipPanel.prototype = {
+        delay: undefined,
+        count: 0,
+        setOptions: function(options) {
+            var that = this;
+
+            for (i in options) that.options[i] = options[i];
+
+            if (that.options.showTitle) {
+                that.panelTitle.show();
+            } else {
+                that.panelTitle.hide();
+            }
+            if (that.options.showTips) {
+                that.panelTips.show();
+                that.btnOk.hide();
+            } else {
+                that.panelTips.hide();
+            }
+            if (that.options.okText) {
+                that.btnOk.text(that.options.okText);
+            }
+            if (that.options.cancelText) {
+                that.btnCancel.text(that.options.cancelText);
+            }
+            if (that.options.tipsText) {
+                that.panelTips.html(that.options.tipsText);
+            }
+            if (that.options.titleText) {
+                that.panelTitle.text(that.options.titleText);
+            }
+            if(that.options.panelImg){
+                that.panelImg.attr('src',that.options.panelImg);
+            }
+            if (that.options.type == 'confirm') {
+                that.btnOk.show();
+                that.btnCancel.show();
+            } else if (that.options.cancelText){
+                that.btnCancel.show();
+            }else{
+                that.btnCancel.hide();
+            }
+            that.panelText.html(that.options.message);
+            that.panel.css('margin-top', -(that.panel.height() / 2)).show();
+            that.panelBg.show();
+
+            if (that.options.tick > 1000) {
+                that.panelTick.text(that.options.tick / 1000);
+                that.delay = setInterval(function() {
+                    if (that.count < that.options.tick - 1000) {
+                        that.count = count + 1000;
+                        that.panelTick.text((that.options.tick - count) / 1000);
+                    } else {
+                        that._end();
+                        that.count = 0;
+                        clearInterval(that.delay);
+                    }
+                }, 1000);
+            } else if (that.options.tick <= 1000 && that.options.tick > 0) {
+                that.delay = setTimeout(function() {
+                    that._end();
+                }, that.options.tick);
+            }
+        },
+        _end: function() {
+            var that = this;
+
+            that.panel.hide();
+            that.panelBg.hide();
+
+            if (typeof that.options.tipsCallback == 'function') {
+                that.options.tipsCallback();
+                that.options.tipsCallback = undefined;
+            } else if (typeof that.options.yesCallback == 'function') {
+                that.options.yesCallback();
+                that.options.yesCallback = undefined;
+            }
+            if (typeof that.options.noCallback == 'function') {
+                that.options.noCallback();
+            }
+        },
+        show: function() {
+
+        },
+        hide: function(yesClick) {
+            var that = this;
+
+            if (that.delay) {
+                clearTimeout(that.delay);
+            }
+            if (!that.panel) {
+                return;
+            }
+            that.panel.hide();
+            that.panelBg.hide();
+
+            if (yesClick) {
+                typeof that.options.yesCallback == 'function' && that.options.yesCallback();
+                typeof that.options.tipsCallback == 'function' && that.options.tipsCallback();
+            } else {
+                typeof that.options.noCallback == 'function' && that.options.noCallback();
+            }
+            that.options.yesCallback = undefined;
+            that.options.noCallback = undefined;
+            that.options.tipsCallback = undefined;
+        }
+    }
+
+    //按指定格式格式化日期
+    function format(date, pattern) {
+        var that = date;
+        var o = {
+            "M+": that.getMonth() + 1,
+            "d+": that.getDate(),
+            "h+": that.getHours(),
+            "m+": that.getMinutes(),
+            "s+": that.getSeconds(),
+            "q+": Math.floor((that.getMonth() + 3) / 3),
+            "S": that.getMilliseconds()
+        };
+        if (/(y+)/.test(pattern)) {
+            pattern = pattern.replace(RegExp.$1, (that.getFullYear() + "")
+                .substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(pattern)) {
+                pattern = pattern.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            }
+        }
+        return pattern;
+    };
+
+    var Tools = {
+        //绝对化图片地址
+        absImg: function(content, defaultValue) {
+            if (!content) {
+                // 测试时使用相对
+                return defaultValue || config.DEF_IMG_URL;
+            }
+            if (content && content.indexOf('http') == 0) {
+                return content;
+            }
+            return config.HOST_IMAGE + content;
+        },
+        //时间戳格式化
+        formatDate: function(content, type, defaultValue) {
+            var pattern = type || "yyyy-MM-dd hh:mm";
+            if (isNaN(content) || content == null) {
+                return defaultValue || content;
+            } else if (typeof(content) == 'object') {
+                var y = dd.getFullYear(),
+                    m = dd.getMonth() + 1,
+                    d = dd.getDate();
+                if (m < 10) {
+                    m = '0' + m;
+                }
+                var yearMonthDay = y + "-" + m + "-" + d;
+                var parts = yearMonthDay.match(/(\d+)/g);
+                var date = new Date(parts[0], parts[1] - 1, parts[2]);
+                return format(date, pattern);
+            } else {
+                if (content.length == 10)
+                    content = content + '000';
+                var date = new Date(parseInt(content));
+                return format(date, pattern);
+            }
+        },
+        // 货币格式化，2050.5=>2,050.5
+        formatCurrency: function(content, defaultValue, unit) {
+            if (!content) {
+                return defaultValue || '--';
+            }
+
+            content = content + ''; //转字符串
+
+            var prefix, subfix, idx = content.indexOf('.');
+            if (idx > 0) {
+                prefix = content.substring(0, idx);
+                subfix = content.substring(idx, content.length);
+            } else {
+                prefix = content;
+                subfix = '';
+            }
+
+            var mod = prefix.toString().length % 3;
+            var sup = '';
+            if (mod == 1) {
+                sup = '00';
+            } else if (mod == 2) {
+                sup = '0';
+            }
+
+            prefix = sup + prefix;
+            prefix = prefix.replace(/(\d{3})/g, '$1,');
+            prefix = prefix.substring(0, prefix.length - 1);
+            if (sup.length > 0) {
+                prefix = prefix.replace(sup, '');
+            }
+            if (subfix) {
+                if (subfix.length == 2) {
+                    subfix += '0';
+                } else if (subfix.length == 1) {
+                    subfix += '00';
+                }
+                subfix = subfix.substring(0, 3);
+            }
+            return prefix + subfix;
+        },
+        strToDate: function(str) { //字符串转日期，yyyy-MM-dd hh:mm:ss
+            var tempStrs = str.split(" ");
+            var dateStrs = tempStrs[0].split("-");
+            var year = parseInt(dateStrs[0], 10);
+            var month = parseInt(dateStrs[1], 10) - 1;
+            var day = parseInt(dateStrs[2], 10);
+
+            var timeStrs = tempStrs[1].split(":");
+            var hour = parseInt(timeStrs[0], 10);
+            var minute = parseInt(timeStrs[1], 10) - 1;
+            var second = parseInt(timeStrs[2], 10);
+            var date = new Date(year, month, day, hour, minute, second);
+            return date;
+        },
+        // 倒计时  9527
+        getRunTime2: function(systemTime, endTime) {
+            if (!systemTime || isNaN(systemTime) || !endTime || isNaN(endTime)) {
+                return '数据错误';
+            }
+            var showTime = parseInt(endTime) - parseInt(systemTime);
+            if (showTime <= 0) {
+                return '已结束';
+            }
+            var nD = Math.floor(showTime / (60 * 60 * 24));
+            var nH = Math.floor(showTime / (60 * 60)) % 24;
+            var nM = Math.floor(showTime / 60) % 60;
+            var nS = Math.floor(showTime) % 60;
+
+            return nD + '天' + Tools.checkTime(nH) + '小时' + Tools.checkTime(nM) + '分钟' + Tools.checkTime(nS) + '秒';
+        },
+        getRunTime: function(systemTime, endTime) {
+            if (!systemTime || isNaN(systemTime) || !endTime || isNaN(endTime)) {
+                return '数据错误';
+            }
+            var showTime = parseInt(endTime) - parseInt(systemTime);
+            if (showTime <= 0) {
+                return '已结束';
+                // showTime = 0;
+            }
+            var nD = Math.floor(showTime / (60 * 60 * 24));
+            var nH = Math.floor(showTime / (60 * 60)) % 24;
+            var nM = Math.floor(showTime / 60) % 60;
+            var nS = Math.floor(showTime) % 60;
+
+            return '剩余 <span><em>' + Tools.checkTime(nD) + '</em>天<em>' + Tools.checkTime(nH) + '</em>时<em>' + Tools.checkTime(nM) + '</em>分<em>' + Tools.checkTime(nS) + '</em>秒</span> 结束';
+        },
+        checkTime: function(i) { //时分秒为个位，用0补齐
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        },
+
+        //获取URL参数
+        getQueryValue: function(key) {
+            var q = location.search,
+                keyValuePairs = new Array();
+
+            if (q.length > 1) {
+                var idx = q.indexOf('?');
+                q = q.substring(idx + 1, q.length);
+            } else {
+                q = null;
+            }
+
+            if (q) {
+                for (var i = 0; i < q.split("&").length; i++) {
+                    keyValuePairs[i] = q.split("&")[i];
+                }
+            }
+
+            for (var j = 0; j < keyValuePairs.length; j++) {
+                if (keyValuePairs[j].split("=")[0] == key) {
+                    // 这里需要解码，url传递中文时location.href获取的是编码后的值
+                    // 但FireFox下的url编码有问题
+                    return decodeURI(keyValuePairs[j].split("=")[1]);
+
+                }
+            }
+            return '';
+        },
+        // 获取窗口尺寸，包括滚动条
+        getWindow: function() {
+            return {
+                width: window.innerWidth,
+                height: window.innerHeight
+            };
+        },
+        // 获取文档尺寸，不包括滚动条但是高度是文档的高度
+        getDocument: function() {
+            var doc = document.documentElement || document.body;
+            return {
+                width: doc.clientWidth,
+                height: doc.clientHeight
+            };
+        },
+        // 获取屏幕尺寸
+        getScreen: function() {
+            return {
+                width: screen.width,
+                height: screen.height
+            };
+        },
+        // 显示、禁用滚动条
+        showOrHideScrollBar: function(isShow) {
+            preventDefault = preventDefault || function(e) {
+                    e.preventDefault();
+                };
+            (document.documentElement || document.body).style.overflow = isShow ? 'auto' : 'hidden';
+            // 手机浏览器中滚动条禁用取消默认touchmove事件
+            if (isShow) {
+                // 注意这里remove的事件必须和add的是同一个
+                document.removeEventListener('touchmove', preventDefault, false);
+            } else {
+                document.addEventListener('touchmove', preventDefault, false);
+            }
+        },
+        // 显示对话框
+        showDialog: function() {},
+        // 显示着遮罩层
+        showOverlay: function() {},
+        // 显示确认框
+        showConfirm: function(msg, yesCallback, noCallback) {
+            var opt = {};
+            if (typeof msg == 'object') {
+                opt = msg;
+            } else {
+                opt.message = msg;
+                opt.yesCallback = yesCallback;
+                opt.noCallback = noCallback;
+            }
+            opt.type = 'confirm';
+            opt.showTitle = true;
+            opt.showTip = false;
+            opt.titleText = '提示';
+
+            panel = panel || new TipPanel();
+            panel.setOptions(opt);
+        },
+        // 显示提示
+        showAlert: function(msg, tick, callback) {
+            var opt = {};
+            if (typeof msg == 'object') {
+                opt = msg;
+            } else {
+                opt = {
+                    showTips:true,
+                    tipsText:"我知道了",
+                    showTitle:true,
+                    message: msg,
+                    titleText:"提示",
+                    cancelText:false,
+                    panelImg:'img/tip.png',
+                    tipsCallback:callback,
+                    tick :tick
+                }
+            }
+            // opt.type = 'alert';
+            panel = panel || new TipPanel();
+            panel.setOptions(opt);
+        },
+        // 显示加载框
+        showLoading: function() {
+            $('#rby-loading').show();
+        },
+        hideLoading: function() {
+            $('#rby-loading').hide();
+        },
+        hidePanel: function(yesClick) {
+            panel && panel.hide(yesClick);
+        },
+        showToast: function(msg, tick) {
+            toastPanel = toastPanel || $('#rby-toast');
+            tick = tick || 1000;
+
+            if (delay) {
+                clearTimeout(delay);
+            }
+
+            toastPanel.find('span').text(msg);
+            toastPanel.show();
+            delay = setTimeout(function() {
+                toastPanel.hide();
+            }, tick);
+        },
+        isIPad: function() {
+            return (/iPad/gi).test(navigator.appVersion);
+        },
+        isIos: function() {
+            return (/iphone|iPad/gi).test(navigator.appVersion);
+        },
+        isAndroid: function() {
+            return (/android/gi).test(navigator.appVersion);
+        },
+        isWeChatBrowser: function() {
+            var e = navigator.userAgent.toLowerCase();
+            return "micromessenger" == e.match(/MicroMessenger/i) ? !0 : !1
+        },
+        isRbyAppBrowser: function() {
+            var e = navigator.userAgent.toLowerCase();
+            return "rbyapp" == e.match(/rbyapp/i) ? !0 : !1
+        },
+        isAlipayBrowser: function() {
+            var e = navigator.userAgent.toLowerCase();
+            return "alipay" == e.match(/Alipay/i) ? !0 : !1
+        },
+        isFDBrowser: function() {
+            var e = navigator.userAgent.toLowerCase();
+            return "fd" == e.match(/FD/i) ? !0 : !1
+        },
+        returnUserAgent:function () {
+            if(this.isAlipayBrowser()) {
+                return "alipay";
+            } else if(this.isWeChatBrowser()){
+                return "wechat";
+            } else if(this.isFDBrowser()) {
+                return "fruitday-app";
+            }else if(this.isGatApp()){
+                return 'gat';
+            }else if(this.isCmbApp()){
+                return 'cmb';
+            }else{
+                return "fruitday-web";
+            }
+        },
+        isFruitdayAppBrowser: function() {
+            var e = navigator.userAgent;
+            return ("FD_iPhone" == e.match(/FD_iPhone/i) || "FD_Android" == e.match(/FD_Android/i)) ? !0 : !1
+        },
+        isFruitdayAndroidBrowser: function() {
+            var e = navigator.userAgent;
+            return ("FD_Android" == e.match(/FD_Android/i)) ? !0 : !1
+        },
+        isFruitdayiOSBrowser: function() {
+            var e = navigator.userAgent;
+            return ("FD_iPhone" == e.match(/FD_iPhone/i)) ? !0 : !1
+        },
+        isGatApp: function() {
+            var e = navigator.userAgent;
+            return ("GatApp" == e.match(/GatApp/i)) ? !0 : !1
+        },
+        isCmbApp: function() {
+            var e = navigator.userAgent;
+            return ("MPBank" == e.match(/MPBank/i)) ? !0 : !1
+        },
+        // 将form中的值转换为键值对
+        formJson: function(form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        },
+        alert: function(e) {
+            if(Cookie.get("DevDebug") == 1){
+                alert(e);
+            }else{
+                console.log(e);
+            }
+        },
+        _GET: function() {
+            var e = location.search,
+                o = {};
+            if ("" === e || void 0 === e) return o;
+            e = e.substr(1).split("&");
+            for (var n in e) {
+                var t = e[n].split("=");
+                o[t[0]] = t[1]
+            }
+            return o.from && delete o.code, o
+        },
+        removeParamFromUrl: function(e) {
+            var o = Tools._GET();
+            for (var n in e) delete o[e[n]];
+            return location.pathname + Tools.buildUrlParamString(o)
+        },
+        buildUrlParamString: function(e) {
+            var o = "";
+            for (var n in e) o += n + "=" + e[n] + "&";
+            o = o.slice(0, o.length - 1);
+            var t = "" === o || void 0 === o;
+            return t ? "" : "?" + o
+        },
+        //格式化价格，显示两位小数，当两位小数都为0是省略
+        rbyFormatCurrency: function(content) {
+            if (!content || isNaN(content)) return content;
+
+            var v = parseFloat(content),
+                result = v.toFixed(2);
+            if (result.indexOf('.00') >= 0) {
+                result = parseFloat(content).toFixed(0);
+            }
+            return result;
+        }
+    };
+
+    window.Tools = Tools;
+})();
+
+/**
+ * TODO 根据具体业务逻辑修改 test watch
+ */
+(function () {
+
+    var common = {};
+
+    //获取登录的id
+    common.getId = function () {
+        var auth = Cookie.get(Storage.AUTH);
+        return auth;
+    };
+
+    //获取微信号
+    common.getOpenId = function () {
+        return Cookie.get(Storage.OPENID);
+    };
+
+    //自动登录
+    common.login = function () {
+
+        if(!Tools.isAlipayBrowser()){
+            location.href = "../public/err_scan.html";
+            return;
+        }
+        var appId = config.alipayAppId,
+            code = Tools.getQueryValue('auth_code');
+        if (common.isLogining) return;//过滤多次的登录请求
+        var url = config.API_ALIPAY_ACCOUNT_AUTOLOGIN;
+        common.isLogining = true;
+        Tools.alert("code: " + code);
+        if (void 0 === code || "" == code) {
+            //尤其注意：由于授权操作安全等级较高，所以在发起授权请求时，微信会对授权链接做正则强匹配校验，如果链接的参数顺序不对，授权页面将无法正常访问
+            //?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&connect_redirect=1#wechat_redirect
+            var n = location.origin + Tools.removeParamFromUrl(["from", "code", "share_id", "isappinstalled", "state", "m", "c", "a","from_wxpay"]);
+
+            var t = config.alipayAuthUrl;
+
+                t = t.replace('APPID', appId).replace('REDIRECT_URI', encodeURIComponent(n));
+
+            //document.write(t);
+            Tools.alert("url: " + t);
+            location.href = t;
+        } else {
+            var f_url = Tools.removeParamFromUrl(["auth_code"]);
+            Tools.alert("url : " + f_url);
+            var no_mianmi = 0;
+            for(var c = 0;c <config.NO_MIANMI.length;c++){
+                Tools.alert("no  : " + config.NO_MIANMI[c]);
+                if(f_url.indexOf(config.NO_MIANMI[c]) > 0){
+                    no_mianmi = 1;
+                    break;
+                }
+            }
+            Tools.alert("MIANMI : " + no_mianmi);
+            Cookie.set('hasLoad', '', -1);//若有登录，需清空弹出窗口的记录标志
+            Cookie.remove("BoxToken", -1);
+            Ajax.custom({
+                url: url,
+                type: 'POST',
+                showLoading: true,
+                data: {
+                    auth_code: code,
+                    device_id: Cookie.get("deviceId"),
+                    mianmi:no_mianmi
+                }
+            }, function (response) {
+                console.log(response);
+                common.isLogining = false;
+                var o = response.user;
+                Cookie.remove("token");
+                Cookie.remove("a_s_token");
+                Cookie.set("token", response.token, null);
+                //Cookie.set("deviceBind", response.token, null);
+                if (o.mobile && parseInt(o.mobile) > 0) {
+                    Cookie.set("mobile", o.mobile, null);
+                } else {
+                    Cookie.set("mobile", '', null);
+                }
+                Cookie.set("UserSN", o.id, null);
+                Tools.alert("UserSN: " + Cookie.get("UserSN"));
+                Tools.alert("deviceBind: " + response.token + " " + Cookie.get("deviceBind"));
+                location.href = Tools.removeParamFromUrl(["auth_code"]);
+                location.href = Tools.removeParamFromUrl(["code"]);
+            }, function (e) {
+                if (e.message.substring(0, 4) == "http") {
+                    location.href = e.message;
+                    return;
+                }
+                location.href = Tools.removeParamFromUrl(["auth_code"]);
+                location.href = Tools.removeParamFromUrl(["code"]);
+                Tools.showToast(e.message || '服务器异常');
+                common.isLogining = false;
+            })
+        }
+    }
+
+    //检查当前登录状态
+    common.checkLoginStatus = function (fn) {
+
+        common.init = fn;
+        var auth_code= Tools._GET().auth_code || 0;//判断关爱通的登录凭证
+        Tools.alert(auth_code);
+        if(Tools.isGatApp() && auth_code && auth_code != Cookie.get("auth_code")){//如果关爱通登录凭证失效
+            Tools.alert(Cookie.get("auth_code"));
+            Cookie.remove("UserSN");//清除登录信息
+        }
+
+        var userSn = Cookie.get("UserSN");
+        if (userSn) {
+            Tools.alert("good token & app id");
+            //确保登录后在加载数据
+            fn && fn();
+        } else {
+            //获取APPID
+            Tools.alert('check login '+Cookie.get("deviceId"));
+            Ajax.custom({
+                url: config.API_GET_CONFIG,
+                data: {
+                    device_id: Cookie.get("deviceId")
+                },
+                showLoading: true
+            }, function (response) {
+                Cookie.set("alipayAppId", response.app_id, null);
+                Cookie.set("wechatAppId", response.wechat_id, null);
+                common.login();
+            },function (e) {
+                common.login();
+            });
+        }
+    }
+
+
+    var onlyFirst = false; // 倒计时标志，确保只初始化一次
+
+    /**
+     * 自定义倒计时
+     * @return {[type]} [description]
+     */
+    common.initCountDown = function (serverTime, sel) {
+        if (onlyFirst) {
+            return;
+        }
+        onlyFirst = true;
+
+        var tick = 0,
+            serverTime = parseInt(serverTime);
+        setInterval(function () {
+            $(sel).each(function (i, d) {
+                var endTime = $(this).attr('data-end');
+                $(this).text(Tools.getRunTime(serverTime + tick, endTime));
+            })
+            tick++;
+        }, 1000)
+    }
+
+    /**
+     * 自定义延迟加载图片
+     * @param  {[type]} sel 图片选择器
+     * @return {[type]}
+     */
+    common.lazyload = function (sel) {
+        var dh = $(document).height(), //内容的高度
+            wh = $(window).height(), //窗口的高度
+            st = 0; //滚动的高度
+
+        $(window).scroll(function () {
+            st = $(window).scrollTop();
+            init();
+        })
+
+        setTimeout(init, 200);
+
+        function init() {
+            $(sel).each(function (i, d) {
+                if ($(this).hasClass('loaded')) return;
+
+                var d = $(d).offset();
+                if (d.top > st && d.top < (st + wh)) {
+                    $(this).attr('src', $(this).attr('data-src')).addClass('loaded');
+                }
+            })
+        }
+    }
+
+    //点击加载下一页
+    $(document).on('click', '.nextpage', function (response) {
+        if ($(this).hasClass('disabled')) return;
+        config.page++;
+        common.getList && common.getList();
+    })
+
+    //滚动到底自动加载下一页
+    $(window).scroll(function () {
+        if ($('.nextpage').length == 0 || $('.nextpage').hasClass('disabled')) return;
+
+        var st = $(window).scrollTop(),
+            wh = $(window).height(), //窗口的高度
+            d = $('.nextpage').offset();
+
+        if (d.top < (st + wh)) {
+            config.page++;
+            common.getList && common.getList();
+        }
+    })
+
+    function general_sign(data,token){
+        console.log(data);
+        var query = '';
+
+        var arr = new Array();
+        for(var i in data){
+            arr.push(i);
+        }
+        var data_sort = arr.sort();
+        for(i=0;i<data_sort.length;i++){
+            query += data_sort[i]+'='+data[data_sort[i]]+'&';
+        }
+        var platform = config.platformKey;
+        var tmp = md5(query+platform);
+        return md5(tmp.substring(0,tmp.length-1)+"q");
+    }
+
+    function getWeChatJsSdkSignature(e, t, r) {
+
+        var n = $.ajax({
+                url: config.HOST_API + "/account/getjsapisign",
+                data: {
+                    noncestr: e,
+                    timestamp: t,
+                    url: (r) //签名需要是未编码的地址，如果接口没有解析直接传值
+                },
+                beforeSend: function(request) {
+                    request.setRequestHeader("platform", 'wap');
+                    request.setRequestHeader("sign", general_sign({
+                        noncestr: e,
+                        timestamp: t,
+                        url: (r) //签名需要是未编码的地址，如果接口没有解析直接传值
+                    }));
+                },
+                timeout: 3e3,
+                async: !1
+            }).responseText,
+            a = JSON.parse(n);
+        return a.signature
+    }
+
+    function getShareIdUrl(e) {
+        var t = Cookie.get("UserSN"),
+            r = e;
+        return r = r.indexOf("?") <= 0 ? r + "?share_id=" + t : r.indexOf("share_id=") <= 0 ? r + "&share_id=" + t : changeURLArg(r, "share_id", t)
+    }
+
+    function changeURLArg(url, arg, arg_val) {
+        var pattern = arg + "=([^&]*)",
+            replaceText = arg + "=" + arg_val;
+        if (url.match(pattern)) {
+            var tmp = "/(" + arg + "=)([^&]*)/gi";
+            return tmp = url.replace(eval(tmp), replaceText)
+        }
+        return url.match("[?]") ? url + "&" + replaceText : url + "?" + replaceText
+    }
+
+    function wechat_share_config() {
+        var e = config.wechatAppId,
+            t = "734618974",
+            r = Math.floor(Date.now() / 1000), //签名需要10位的时间戳
+            n = getWeChatJsSdkSignature(t, r, document.URL, e);
+        wx.config({
+            debug: !1,
+            appId: e,
+            timestamp: r,
+            nonceStr: t,
+            signature: n,
+            jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage","scanQRCode"]
+        }), wx.error(function () {
+        })
+    }
+
+    function wechat_share_override(e, t, r) {
+        if (typeof wx == 'undefined') return;
+
+        wechat_share_config();
+        var n = getShareIdUrl(r);
+        wx.ready(function () {
+            wx.onMenuShareTimeline({
+                title: e.title,
+                link: n,
+                imgUrl: e.imgUrl,
+                success: function () {
+                },
+                cancel: function () {
+                }
+            }), wx.onMenuShareAppMessage({
+                title: t.title,
+                desc: t.desc,
+                link: n,
+                imgUrl: t.imgUrl,
+                type: "link",
+                success: function () {
+                },
+                cancel: function () {
+                }
+            })
+        })
+
+        common.share.timeline = e;
+        common.share.app = t;
+        common.share.url = r;
+    }
+
+    common.wx_scanQRCode = function (succFn) {
+        if (typeof wx == 'undefined') return;
+        var qr = '';
+        wechat_share_config();
+        wx.ready(function () {
+            wx.scanQRCode({
+                needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                success: function (res) {
+                    Tools.alert("bar:"+res.resultStr);
+                    succFn(res.resultStr);
+                }
+            });
+        });
+    }
+    common.aliScan = function (succFn,failFn) {
+        if (typeof Ali == 'undefined') return;
+        if(Tools.isAlipayBrowser()){
+            if((Ali.alipayVersion).slice(0,3)>=8.1){
+                Ali.scan({
+                    type: 'qr'
+                }, function(result) {
+                    Tools.alert(result);
+                    if(result.errorCode){
+                        //没有扫码的情况
+                        //errorCode=10，用户取消
+                        //errorCode=11，操作失败
+                        if(failFn){
+                            failFn(result);
+                        }
+                    }else{
+                        //成功扫码的情况
+                        if(result.barCode !== undefined){
+                            Tools.alert('条码是：'+result.barCode);
+                            succFn(result.barCode);
+                        }else if(result.qrCode !== undefined){
+                            Tools.alert('二维码是：'+result.qrCode);
+                            succFn(result.qrCode);
+                        }else if(result.cardNumber !== undefined){
+                            Tools.alert('银行卡号是：'+result.cardNumber);
+                        }else{
+                            Tools.alert(result);
+                        }
+                    }
+                });
+            }else{
+                alert('请在钱包8.1以上版本运行');
+            }
+        }else{
+            Tools.showAlert('请使用支付宝钱包扫一扫');
+        }
+    }
+
+
+    common.share = {
+        override: function (e, t, r) {
+            var n = void 0 == r ? document.URL : r;
+            wechat_share_override(e, t, n)
+        },
+        default_send: function () {
+            var e = {
+                    title: Config.C("share_text").default.title,
+                    imgUrl: "http://assets.yqphh.com/assets/images/logo.jpg"
+                },
+                t = {
+                    title: MasterConfig.C("shop_name") + "商城",
+                    desc: Config.C("share_text").default.desc,
+                    imgUrl: "http://assets.yqphh.com/assets/images/logo.jpg"
+                };
+            wechat_share_override(e, t, MasterConfig.C("baseMobileUrl"))
+        }
+    };
+
+    //获取您正在参与的活动
+    common.getJoiningActivity = function () {
+        if ($('#rby-join').length == 0 || Cookie.get('hasLoad') == '1') return;
+        Cookie.set('hasLoad', 1, 0);
+
+        Ajax.custom({
+            url: config.HOST_API + '/index/getPopList'
+        }, function (response) {
+            var data = response.body;
+            if (data && data.length > 0) {
+                Ajax.render('#rby-join-list', 'rby-join-list-tmpl', data);
+                $('#rby-join').css({
+                    'height': 310,
+                    'margin-top': -310 / 2
+                }).show();
+                $('#rby-cover-bg').show();
+            }
+        })
+    }
+
+    //关闭参与活动界面
+    function closeResult() {
+        $('#rby-cover-bg').hide();
+        $('#rby-join').hide();
+    }
+
+    $('.join-close').click(function (e) {
+        closeResult();
+    })
+
+    $('#rby-cover-bg').click(function (e) {
+        closeResult();
+    })
+
+    if (document.getElementById('rby-cover-bg')) {
+        //取消遮罩层的默认滑动
+        document.getElementById('rby-cover-bg').addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, true);
+    }
+
+    //测试用，团购加入购物车
+    common.abcLogin = function (id) {
+        Ajax.custom({
+            url: config.HOST_API + "/account/test_login",
+            data: {
+                id: id
+            }
+        }, function (response) {
+
+            console.log(response);
+            common.isLogining = false;
+            var o = response.user;
+            //Cookie.set("deviceBind", response.token, null);
+            //Cookie.set("OpenId", o.open_id, null);
+            Cookie.set("token", response.token, null);
+            Cookie.set("UserSN", o.id, 0);
+            Cookie.set("mobile", o.mobile, null);
+            Tools.alert("UserSN: " + Cookie.get("UserSN"));
+            location.href = 'person.html'
+        }, function (e) {
+            Tools.showAlert(e.message || '服务器异常');
+            common.isLogining = false;
+        })
+    }
+
+    /**
+     * 口碑网页支付
+     * @param tradeNO
+     * @param sucFn
+     * @param failFn
+     */
+    common.alipayPayForIsv = function (tradeNO,sucFn,failFn) {
+        // 通过传入交易号唤起快捷调用方式(注意tradeNO大小写严格)
+        AlipayJSBridge.call("tradePay", {
+            tradeNO: tradeNO
+        }, function (data) {
+            if ("9000" == data.resultCode) {
+                if(sucFn){
+                    sucFn(data);
+                } else if(failFn){
+                    failFn(data);
+                }
+            }
+        });
+    }
+
+    window.common = common;
+
+    if ('FastClick' in window)
+        FastClick.attach(document.body);
+
+    if (Tools.isFruitdayAppBrowser()) {
+        // 设置顶部导航
+        $('.back .icon-morehome').hide().click(function (e) {
+            e.preventDefault();
+        });
+        $('.back .icon-searchhomedel').hide().click(function (e) {
+            e.preventDefault();
+        });
+    }
+    if (Tools.isFruitdayiOSBrowser()) {
+        $('body').addClass('has-app');
+    }
+
+})();

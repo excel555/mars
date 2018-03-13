@@ -1,0 +1,210 @@
+<style>
+	.endtime-1,.endtime-2,.endtime-3,.endtime-4,.endtime-5{
+		color: #ffffff;padding: 0 3px;border-radius: 5px;
+	}
+	.endtime-1{background: green}
+	.endtime-2{background: dodgerblue}
+	.endtime-3{background: orange}
+	.endtime-4{background: red}
+	.endtime-5{background: purple}
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title pull-left"> 配送工单查询</h3>
+	    <div class="pull-right" id="notify">
+
+	    </div>
+	    <div style="clear: both"></div>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal" id="search">
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_box_name" placeholder="售货机名称">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" size='8' name="search_originator_name" placeholder="处理人/手机号">
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input1" id="begin_time" >
+                        <input class="form-control" type="text" name="search_time_begin"  placeholder="创建时间开始"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group date  col-md-10" data-link-field="dtp_input_end" id="to_time" >
+                        <input class="form-control" type="text" name="search_time_end"  placeholder="创建时间结束"  readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default" id="search-btn">搜索</button>
+                <button type="button" class="btn btn-info" id="export-btn">导出</button>
+                <input type="hidden" id="origin_url" value="/deliver/deliver_list_table">
+            </div>
+        </div>
+
+        <div class="table-toolbar">
+            <button type="button" class="btn btn-info btn-sm" id="deliver_show">查看</button>
+            <input type="hidden" id="curr_id" value="0">
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="config-body">
+            <table id="config-table" data-toggle="table" data-url="/deliver/deliver_list_table" data-click-to-select="true" data-select-item-name="radioName" data-pagination="true" data-side-pagination="server" data-page-list="[5,10,15,20]">
+                <thead>
+                <tr>
+                    <th data-field="state" data-radio="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="deliver_no" data-align="center">配送单号</th>
+                    <th data-field="name" data-align="center">售货机名称</th>
+                    <!--<th data-field="serial_num" data-align="center">售货机序列编号</th>-->
+                    <th data-field="user_name" data-align="center">处理人</th>
+                    <th data-field="mobile" data-align="center">处理人手机</th>
+                    <th data-field="time" data-align="center">创建时间</th>
+                    <th data-field="begin_time" data-align="center">配送开始时间</th>
+                    <th data-field="end_time" data-width="160" data-align="center">配送完成时间</th>
+                    <th data-field="open_permission_type" data-align="center">开门权限</th>
+                    <th data-field="result">配送结果</th>
+                    <!--<th data-field="pay_comment" data-align="center">操作</th>-->
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalMain">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">请分段导出</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped"></table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var modalMain = $('#modalMain');
+        $('#begin_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1
+        });
+        $('#to_time').datetimepicker({
+            language: 'zh', //汉化
+            autoclose: 1
+        });
+
+        $('#config-table').bootstrapTable({
+        }).on('check.bs.table', function (e, row, $element) {
+            $("#curr_id").val(row.id);
+        }).on('load-success.bs.table', function (e,data) {
+
+            if(data && data.notify){
+				var h = data.notify.day + '日需配送数:<span style="color: red">'+data.notify.total+'</span> 剩:<span style="color: red">'+data.notify.finish+'</span> 分时完成: ';
+                $.each(data.notify.list, function(k, item){
+                    if(k === '00:00-09:00'){
+                        h  += '<span class="endtime-1">'+k+'</span>';
+                    }else if(k === '09:00-11:30'){
+                        h  += '<span class="endtime-2">'+k+'</span>';
+                    }else if(k === '11:30-14:30'){
+                        h  += '<span class="endtime-3">'+k+'</span>';
+                    }else if(k === '14:30-18:00'){
+                        h  += '<span class="endtime-4">'+k+'</span>';
+                    }else if(k === '18:00-24:00'){
+                        h  += '<span class="endtime-5">'+k+'</span>';
+                    }
+
+                    h +='(<span style="color: red">'+item+'</span>) ';
+                });
+            };
+			$('#notify').html(h);
+        });
+        $("#config-body").delegate(".show_img","click",function(){
+            MessageBox.alert($(this).attr('data-content'));
+        });
+        $("#search-btn").on('click', function(){
+            var serverUrl = $('#origin_url').val();
+            var filterData = "";
+            $.each($("[name^='search_']"), function() {
+                field = $(this).attr('name');
+                data = $(this).val();
+                if(field && data!=-1 && data!=""){
+                    filterData += field+"="+data+"&";
+                }
+            });
+            if(filterData==""){
+                var url = serverUrl;
+            }else{
+                var url = serverUrl +'?'+filterData;
+            }
+            $('#config-table').bootstrapTable('refresh', {url: url});
+        });
+        $("#export-btn").on('click', function(){
+            var serverUrl = '/deliver/deliver_list_export/';
+            var filterData = "isTotal=1&";
+
+            $.each($("[name^='search_']"), function () {
+                var field = $(this).attr('name');
+                var data = $(this).val();
+                if (field && data != -1 && data != "") {
+                    filterData += field + "=" + data + "&";
+                }
+            });
+            var _this = $(this);
+            if(_this.attr('loading') == 1){
+                return;
+            }
+            _this.attr('loading', 1);
+            $.ajax({
+                url: serverUrl,
+                type: "GET",
+                data: filterData,
+                dataType: 'json',
+                success: function (resp) {
+                    _this.attr('loading', 0);
+                    if (resp.status != 'y') {
+                        alert(resp.msg);
+                        return;
+                    }
+
+                    var tr = [];
+                    $.each(resp.data, function(){
+                        tr.push('<tr><td data-offset="'+this.start+'">'+this.start+' - ' + this.end +'</td></tr>');
+                    });
+                    modalMain.find('table').html(tr);
+                    modalMain.modal('show');
+                }
+            });
+        });
+        modalMain.on('click', 'td', function(){
+            var filterData = "";
+
+            $.each($("[name^='search_']"), function () {
+                var field = $(this).attr('name');
+                var data = $(this).val();
+                if (field && data != -1 && data != "") {
+                    filterData += field + "=" + data + "&";
+                }
+            });
+            filterData += 'offset='+ $(this).data('offset');
+            window.location.href='/deliver/deliver_list_export/?' + filterData;
+        });
+
+        $("#deliver_show").click(function(){
+            var cur_id = $("#curr_id").val();
+            if (cur_id == 0) {
+                MessageBox.error('请选择查看项');
+                return;
+            }
+            window.location.href = "/deliver/show/" + cur_id;
+        });
+    });
+</script>
