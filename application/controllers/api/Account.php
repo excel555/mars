@@ -113,7 +113,7 @@ class Account extends REST_Controller
 
                 } else {
                     $user['mianmi'] = $mianmi;
-                    $this->login_user($user_id,$device_id);
+                    $this->login_user($user['id'],$device_id);
                 }
 
             } elseif (isset ($token->error_response)) {
@@ -157,8 +157,6 @@ class Account extends REST_Controller
     private function login_user($user_id,$device_id)
     {
         $user = $this->user_model->get_user_info_by_id($user_id);
-
-
         if($user['source'] === "alipay"  || $user['source'] === "wechat") {
             $partner_id = get_3rd_partner_id_by_device_id($device_id, $user['source']);
             $agreements = $this->user_agreement_model->get_user_agreement_3rd($user['id']);
@@ -170,10 +168,7 @@ class Account extends REST_Controller
                 }
             }
             write_log($partner_id.'_agreement_no=>'.var_export($user[$partner_id.'_agreement_no'],1));
-
         }
-
-
         write_log("login_user".var_export($user,1).",device_id=".$device_id);
         if ($user) {
             $session_id = session_id_2_user($user['id']);

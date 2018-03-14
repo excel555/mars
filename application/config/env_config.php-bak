@@ -80,5 +80,5 @@ $env_config['allow_host'] = array(
 $env_config['api_secret']= array(
     'wap'=>'ce6u8wD8Wf7fWufRp',
     'bjdevice'=>'3ZgtmpTCdV4GJzOr',
-    'client'=>'cletmpTCdV4GJzOr'
+    'client'=>'clienteDDSSSFFKKr'
 );
