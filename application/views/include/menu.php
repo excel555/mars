@@ -8,7 +8,7 @@
    		 <?php foreach($menuArr as $key=>$val){ ?>
             <li class="dropdown">
                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:20px;">
-                  <?php echo $val['name']; ?> 
+                  <?php echo $val['name']; ?>
                   <b class="caret"></b>
                </a>
                <ul class="dropdown-menu">
