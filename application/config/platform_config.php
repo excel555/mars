@@ -65,8 +65,8 @@ $config['mapi_box_host'] = $env_config['mapi_box_host'];
 
 $config['mapi_qr_code_go_url'] = $config['mapi_box_host']."/mars/index.html"; //二维码跳转页面
 
-$config['mapi_agreement_return_url'] = $env_config['mapi_box_host']."/public/open.html";
-$config['mapi_isv_agreement_return_url'] = $env_config['mapi_box_host']."/public/index.html";
+$config['mapi_agreement_return_url'] = $env_config['mapi_box_host']."/public/p.html";
+$config['mapi_isv_agreement_return_url'] = $env_config['mapi_box_host']."/public/p.html";
 
 //免密签约异步提醒
 $config['mapi_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/api/account/notify_agree";
