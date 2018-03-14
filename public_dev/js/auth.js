@@ -1,10 +1,12 @@
 (function() {
     var container = $('#index-content');
     var deviceId = Tools._GET().deviceId || 0;
+    if(!deviceId){
+        deviceId = Tools._GET().device_id || 0;
+    }
     if(deviceId)
     {
         Cookie.set("deviceId", deviceId, null);
-        Tools.alert('auth'+Cookie.get("deviceId"));
     }
     var type = "";
     if(Tools.isAlipayBrowser()){

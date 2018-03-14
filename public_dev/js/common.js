@@ -99,11 +99,6 @@
         common.init = fn;
         var auth_code= Tools._GET().auth_code || 0;//判断关爱通的登录凭证
         Tools.alert(auth_code);
-        if(Tools.isGatApp() && auth_code && auth_code != Cookie.get("auth_code")){//如果关爱通登录凭证失效
-            Tools.alert(Cookie.get("auth_code"));
-            Cookie.remove("UserSN");//清除登录信息
-        }
-
         var userSn = Cookie.get("UserSN");
         if (userSn) {
             Tools.alert("good token & app id");
