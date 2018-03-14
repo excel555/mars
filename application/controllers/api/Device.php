@@ -100,7 +100,7 @@ class Device extends REST_Controller {
                 'thirdpart_id'=>$partner_id,
                 'agreement_no'=>$agreement_no,
                 'scene'=>urldecode($scene),
-                'sign_time'=>($sign_time),
+                'sign_time'=>urldecode($sign_time),
             );
             $ret = $this->user_agreement_model->update_agreement_sign($alipay_user_id,$data,'alipay',$partner_id);
             if($ret){

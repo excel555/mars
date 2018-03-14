@@ -1,6 +1,46 @@
 var deviceId = Cookie.get("deviceId");
-history.replaceState(null,null,'index.html');//修改history.back
 (function() {
+
+    function ready(callback) {
+        // 如果jsbridge已经注入则直接调用
+        if (window.AlipayJSBridge) {
+            callback && callback();
+        } else {
+            // 如果没有注入则监听注入的事件
+            document.addEventListener('AlipayJSBridgeReady', callback, false);
+        }
+    }
+
+    document.addEventListener('resume', function (event) {
+        AlipayJSBridge.call('closeWebview');
+    });
+
+    document.addEventListener('pause', function (e) {
+        AlipayJSBridge.call('closeWebview');
+    }, false);
+
+    pushHistory();
+    window.addEventListener("popstate", function(e) {
+        pushHistory();
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            WeixinJSBridge.call('closeWindow');
+        } else if(ua.indexOf("alipay")!=-1){
+            AlipayJSBridge.call('closeWebview');
+        } else{
+            window.close();
+        }
+    }, false);
+    function pushHistory() {
+        var state = {
+            title: "",
+            url: "#"
+        };
+        window.history.pushState(state, "", "#");
+    }
+
+    history.replaceState(null,null,'index.html');//修改history.back
+
     common.checkLoginStatus(function() {
     })
 })()
