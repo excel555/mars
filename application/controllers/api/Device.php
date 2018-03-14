@@ -106,9 +106,6 @@ class Device extends REST_Controller {
             if($ret){
                 update_user_cache($ret['user_id'],$ret);
             }
-            echo "success";
-        }else{
-            echo "fail";
         }
 
         if($user['source'] != 'alipay' && $user['source'] != 'wechat'){
