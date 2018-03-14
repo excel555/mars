@@ -127,49 +127,38 @@ class User_model extends MY_Model
     }
 
     //增加用户
-    function adUser($user_data,$open_id,$refer){
+    //增加用户
+    function adUser($user_data,$device_id = ""){
+        $platform_id = 0;//默认是0
         $this->db->trans_start();
+        if($device_id){
+            $this->load->model('equipment_model');
+            $equipment_info = $this->equipment_model->get_info_by_equipment_id($device_id);
+            if($equipment_info && isset($equipment_info['platform_id'])){
+                $platform_id = $equipment_info['platform_id'];
+            }
+        }
+        $user_data['platform_id'] = $platform_id;
+        $user_data['register_device_id'] = $device_id;
         $this->db->insert('user',$user_data);
         $last_id = $this->db->insert_id();
-
-        $this->db->set('invite_code',random_code(''.$last_id));
-        $this->db->where(array('id'=>$last_id));
-        $this->db->update('user');
-
-        $thrid['user_id']           = $last_id;
-        $thrid['refer']          = $refer;
-        $thrid['open_id']    = $open_id;
-        $this->db->insert('user_thrid', $thrid);
-
-
-        $user_energy_log['user_id']           = $last_id;
-        $user_energy_log['create_time']          = date("Y-m-d H:i:s");
-        $user_energy_log['obj_type']    = '注册';
-        $user_energy_log['obj_id']    = $last_id;
-        $user_energy_log['energy']    = self::REG_GIFT;
-        $user_energy_log['energy_type']    = 'add';
-        $this->db->insert('user_energy_log', $user_energy_log);
-
-        $user_data_land = array('user_id'=>$last_id,'obj_type'=>'新用户礼物','obj_id'=>$last_id,'fin_type'=>'add','land'=>self::SIGN_GIFT_LAND,'create_time'=>date("Y-m-d H:i:s"));
-        $this->db->insert('user_fin_log',$user_data_land);
-        $this->db->insert_id();
-
-
-        $user_fin['user_id']           = $last_id;
-        $user_fin['lastupdate_time']          = date("Y-m-d H:i:s");
-        $user_fin['land']    = self::SIGN_GIFT_LAND;
-        $user_fin['energy']    = self::REG_GIFT;;
-        $this->db->insert('user_fin', $user_fin);
-
+        if ($platform_id){
+            $this->db->insert('user_daily_info',array(
+                'uid' => $last_id,
+                'register_device_id'=>$device_id,
+                'platform_id'=>$platform_id
+            ));
+            $this->load->model('user_platform_relations_model');
+            $this->user_platform_relations_model->add_platform_relation($last_id,$platform_id);
+        }
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
-            return false;
+            return 0;
         } else {
             $this->db->trans_commit();
             return $last_id;
         }
-
     }
     function update_agreement_sign($open_id,$data,$refer = 'alipay',$is_program = ''){
         if(!$open_id)
