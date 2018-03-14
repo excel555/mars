@@ -9,12 +9,6 @@
         Cookie.set("deviceId", deviceId, null);
     }
     var type = "";
-    if(Tools.isAlipayBrowser()){
-        type = "alipay";
-    }else if(Tools.isWeChatBrowser()){
-        type = "wechat";
-    }
-
     function ready(callback) {
         // 如果jsbridge已经注入则直接调用
         if (window.AlipayJSBridge) {
@@ -33,6 +27,10 @@
         AlipayJSBridge.call('closeWebview');
     }, false);
 
+    var agreement_no = Tools._GET().agreement_no;
+    var alipay_user_id = Tools._GET().alipay_user_id;
+    var scene = Tools._GET().scene;
+    var sign_time = Tools._GET().sign_time;
 
     function open(){
         // history.replaceState(null,null,'index.html');//修改history.back
@@ -40,7 +38,11 @@
             url: config.API_OPEN_DOOR,
             data:{
                 device_id: deviceId,
-                type:type
+                type:type,
+                agreement_no:agreement_no,
+                alipay_user_id:alipay_user_id,
+                scene:scene,
+                sign_time:sign_time
             },
             type: 'POST',
             showLoading: false

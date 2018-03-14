@@ -83,10 +83,33 @@ class Device extends REST_Controller {
 
         $device_id = $this->post('device_id');
         $type = $this->post('type');
+        $agreement_no = $this->post('agreement_no');
+        $alipay_user_id = $this->post('alipay_user_id');
+        $scene = $this->post('scene');
+        $sign_time = $this->post('sign_time');
 
         $this->check_null_and_send_error($device_id,"缺少参数，请重新扫码");
 //        $this->check_null_and_send_error($type,"缺少参数，请重新扫码");
         $user = $this->get_curr_user();
+
+        if ($agreement_no && $alipay_user_id) {
+            $this->load->model('user_agreement_model');
+            $partner_id = get_3rd_partner_id_by_device_id($device_id, $user['source']);
+            $data = array(
+                'principal_id'=>$alipay_user_id,
+                'thirdpart_id'=>$partner_id,
+                'agreement_no'=>$agreement_no,
+                'scene'=>$scene,
+                'sign_time'=>$sign_time,
+            );
+            $ret = $this->user_agreement_model->update_agreement_sign($alipay_user_id,$data,'alipay',$partner_id);
+            if($ret){
+                update_user_cache($ret['user_id'],$ret);
+            }
+            echo "success";
+        }else{
+            echo "fail";
+        }
 
         if($user['source'] != 'alipay' && $user['source'] != 'wechat'){
             write_log('用户信息异常:'.var_export($user,1),'info');
