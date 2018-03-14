@@ -112,21 +112,7 @@
             //确保登录后在加载数据
             fn && fn();
         } else {
-            //获取APPID
-            Tools.alert('check login '+Cookie.get("deviceId"));
-            Ajax.custom({
-                url: config.API_GET_CONFIG,
-                data: {
-                    device_id: Cookie.get("deviceId")
-                },
-                showLoading: true
-            }, function (response) {
-                Cookie.set("alipayAppId", response.app_id, null);
-                Cookie.set("wechatAppId", response.wechat_id, null);
-                common.login();
-            },function (e) {
-                common.login();
-            });
+            common.login();
         }
     }
 

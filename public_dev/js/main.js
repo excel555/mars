@@ -732,7 +732,7 @@ if (typeof define === 'function') {
         HOST_API: location.protocol + '//' + location.host + '/index.php/api',
         alipayAuthUrl: "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=auth_user&redirect_uri=REDIRECT_URI", //授权跳转地址
         wechatAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&connect_redirect=1#wechat_redirect", //微信授权跳转地址
-        alipayAppId: "2017052207307682", //2017052207307682 2017032806445211
+        alipayAppId: "2017032806445211", //2017052207307682 2017032806445211
         wechatAppId: "wx3450e6a290582989", //
         platformKey: "ce6u8wD8Wf7fWufRp",
         page:1,
@@ -2351,21 +2351,7 @@ var log = function(m) {
             //确保登录后在加载数据
             fn && fn();
         } else {
-            //获取APPID
-            Tools.alert('check login '+Cookie.get("deviceId"));
-            Ajax.custom({
-                url: config.API_GET_CONFIG,
-                data: {
-                    device_id: Cookie.get("deviceId")
-                },
-                showLoading: true
-            }, function (response) {
-                Cookie.set("alipayAppId", response.app_id, null);
-                Cookie.set("wechatAppId", response.wechat_id, null);
-                common.login();
-            },function (e) {
-                common.login();
-            });
+            common.login();
         }
     }
 
