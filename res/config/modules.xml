@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu>
     <ModulesList>
-        <name value="2" menu = "2" workgroup="showlog">日志管理</name>
+
         <name value="10" menu = "10" workgroup="employee">店员管理</name>
         <name value="6" menu = "6" workgroup="equipment">设备管理</name>
         <name value="9" menu = "9" workgroup="products">商品管理</name>
         <name value="3" menu = "3" workgroup="order">交易管理</name>
         <name value="4" menu = "4" workgroup="user">用户管理</name>
+        <name value="2" menu = "20" workgroup="showlog">日志管理</name>
     </ModulesList>
     <OptionList>
         <name type ="10" value ="101" url="/employee/adduser">添加店员</name>
