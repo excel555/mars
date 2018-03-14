@@ -746,7 +746,7 @@ if (typeof define === 'function') {
     config.API_GLOBAL_AD = config.HOST_API + '/global/get';
 
     //auto login
-    config.API_ALIPAY_ACCOUNT_AUTOLOGIN = config.HOST_API + '/dalang/auth_alipay_login';
+    config.API_ALIPAY_ACCOUNT_AUTOLOGIN = config.HOST_API + '/account/auth_alipay_login';
     config.API_WECHAT_ACCOUNT_AUTOLOGIN = config.HOST_API + '/dalang/auth_wechat_login';
     config.API_GET_CONFIG = config.HOST_API + '/dalang/get_config_by_device_id';
 
