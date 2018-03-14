@@ -74,9 +74,9 @@ class MY_Controller extends CI_Controller
 
 		// $workgroup = isset($this->workgroup) ? $this->workgroup : strtolower(get_class($this));
 		if(self::IS_OPEN_LOCK==true){
-			$this->load->model('Admin_model');
+			$this->load->model('admin_model');
 			$adminid =  $this->session->userdata('sess_admin_data')['adminid'];
-			$adminres = $this->Admin_model->getUser($adminid);
+			$adminres = $this->admin_model->getUser($adminid);
 			$is_lock = $adminres->is_lock;
 			if($is_lock == 1){
 				$this->commonData['menuArr'] = array();
@@ -128,9 +128,9 @@ class MY_Controller extends CI_Controller
 		}
 		unset($this->_pagedata);
 		if(self::IS_OPEN_LOCK==true){
-			$this->load->model('Admin_model');
+			$this->load->model('admin_model');
 			$adminid =  $this->session->userdata('sess_admin_data')['adminid'];
-			$adminres = $this->Admin_model->getUser($adminid);
+			$adminres = $this->admin_model->getUser($adminid);
 			$is_lock = $adminres->is_lock;
 			if($is_lock == 1){
 				$this->commonData['menuArr'] = array();
