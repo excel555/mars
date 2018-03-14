@@ -34,7 +34,7 @@ class User_model extends MY_Model
 
     function get_user_info($where,$field=NULL){
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
 
         }
         $this->db->select($field);
@@ -49,7 +49,7 @@ class User_model extends MY_Model
 
     function get_user_info_by_open_id($open_id,$type,$field=NULL){
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
 
         }
         $where = array('open_id'=>$open_id,'source'=>$type);
@@ -65,7 +65,7 @@ class User_model extends MY_Model
 
     function get_user_info_by_program_id($open_id,$type,$field=NULL){
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
 
         }
         $where = array('program_openid'=>$open_id,'source'=>$type);
@@ -96,7 +96,7 @@ class User_model extends MY_Model
             return false;
         }
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
 
         }
         $where = array('unionid'=>$union_id,'source'=>'wechat');
@@ -268,7 +268,7 @@ class User_model extends MY_Model
     function get_no_unionid_user($field=NULL){
         $where = array('unionid'=>'','source'=>'wechat');
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
         }
         $this->db->select($field);
         $this->db->where($where);
@@ -279,7 +279,7 @@ class User_model extends MY_Model
     function get_agreement_is_null($source,$limit = 100,$field=NULL){
         $where = array('agreement_no'=>'','source'=>$source);
         if($field === NULL){
-            $field = rtrim(join(",",$this->return_field()),",");
+            $field = "*";
         }
 
         $this->db->select($field);
