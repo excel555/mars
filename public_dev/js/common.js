@@ -46,13 +46,11 @@
             Tools.alert("url : " + f_url);
             var no_mianmi = 0;
             for(var c = 0;c <config.NO_MIANMI.length;c++){
-                Tools.alert("no  : " + config.NO_MIANMI[c]);
                 if(f_url.indexOf(config.NO_MIANMI[c]) > 0){
                     no_mianmi = 1;
                     break;
                 }
             }
-            Tools.alert("MIANMI : " + no_mianmi);
             Cookie.set('hasLoad', '', -1);//若有登录，需清空弹出窗口的记录标志
             Cookie.remove("BoxToken", -1);
             Ajax.custom({
