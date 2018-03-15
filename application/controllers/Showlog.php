@@ -446,13 +446,13 @@ class Showlog extends MY_Controller
                 $list[$k]['opreate'] = '';
             }
         }
-        $this->db->select('count(op.id) as total');
+        $this->db->select('op.id');
         $this->db->from('order_pay op');
         $this->db->join('order o' , 'o.order_name=op.order_name');
         $this->db->where($where);
         $total = $this->db->get()->num_rows();
         $result = array(
-            'total' => $total['total'],
+            'total' => $total,
             'rows' => $list
         );
         echo json_encode($result);
