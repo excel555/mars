@@ -273,9 +273,8 @@ class Device extends REST_Controller {
         if(!$device){
             $this->send_error_response("设备不存在");
         }
-        $qr = $this->equipment_model->get_eq_qr($deviceId);
         $device_ret = array(
-            'qrImg'=>$qr['qr'],
+            'qrImg'=>$device['qr'],
             'address'=>$device['address'],
             'name'=>$device['name'],
             'createTime'=>date("Y-m-d H:i:s",$device['created_time']),
