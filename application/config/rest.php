@@ -112,173 +112,17 @@ $config['rest_realm'] = 'REST API';
 */
 $config['rest_auth'] = $env_config['rest_auth'];
 
-/**
- * 运行请求的host
- */
-$config['allow_host'] = $env_config['allow_host'];
 //API加密串
 $config['api_secret']= $env_config['api_secret'];
 //不验证授权uri
 $config['no_auth_uri'] = [
-//    'api/account/test_login',// 测试环境登录调试
-    'api/account/get_vcode',//获取短信验证码
+    'api/account/test_login',//支付宝授权
     'api/account/auth_alipay_login',//支付宝授权
-    'api/account/auth_wechat_login',//微信授权
     'api/account/goto_sign', //生成支付宝签约url
-    'api/order/notify', //支付宝支付-退款notify
-    'api/account/zmxy_return', //芝麻信用回调
-    'api/account/auth_platform_login', //天天果园授权登录
+    'api/dalang/notify', //支付宝支付-退款notify
     'api/account/notify_agree',// 支付宝签约notify
-    'api/order/notify_alipay_wap',// 支付宝wap pay notify
-    'api/account/get_config_by_device_id',// 获取配置信息
-    'api/account/log_platform_access',// 记录第三方访问日志
-    'api/account/platform_login',// 第三方平台登录
-    'api/account/wecht_notify_entrust',// 微信开通免密协议的回调
-    'api/account/program_notify_entrust',// 微信小程序签约回调
-    'api/account/wechat_deletecontract',// 微信免密协议解约
+    'api/dalang/notify_alipay_wap',// 支付宝wap pay notify
     'api/account/delete_sign',// 支付宝免密协议解约
-    'api/account/getjsapisign',// 微信签名
-    'api/order/wecht_notify_pay',// 微信支付的回调
-    'api/order/notify_gat',// 关爱通支付的回调
-    'api/cart/scan_status',// 扫码
-    'api/public_tool/del_wx_token',// 删除微信token扫码
-    'api/public_tool/wx_token',// 微信token扫码
-    'api/public_tool/test_wx_msg',// 微信token扫码
-    'api/gat/open_door', //关爱通扫码开门
-    'api/account/wx_jscode2session', //微信小程序根据code获取用户信息
-    'api/account/program_entrust', //微信小程序签约
-    'api/account/gat_only_login',//关爱通只登录
-    'api/account/update_wechat_unioid',//微信根据open_id获取unionid
-    'api/account/wx_program_user_info', //微信小程序用户信息补全
-    'api/account/program_jscode2session', //微信小程序用户信息补全
-    'api/account/ge_user_unionid_by_open_id', //微信小程序用户open_id
-    'api/account/program_update_agreement', //更新用户协议号
-    'api/account/login_user_program', //更新用户协议号
-    'api/koubei/notify_agree', //口碑签约
-    'api/koubei/delete_sign', //口碑解约
-    'api/koubei/notify', //口碑免密支付回调
-    'api/koubei/notify_alipay_wap', //口碑手动支付回调
-    'api/koubei/auth_koubei_login', //口碑第三方APP授权
-    'api/koubei/gateway', //口碑推送
-    'api/open/sodexo_open_door', //索迪斯开门
-    'api/open/open_door',//沙丁鱼开门
-    'api/open/equipment_list',//沙丁鱼获取设备列表
-    'api/order/notify_sdy',//沙丁鱼支付回调
-    'api/cmb/dotest',//招商银行app相关api
-    'api/cmb/cmb_open',//招商银行app相关api
-    'api/cmb/cmb_balance',//招商银行app相关api
-    'api/cmb/notifyhandler',//招商银行app相关api
-    'api/cmb/returnhandler',//招商银行app相关api
-    'api/account/cmb_login',//招商银行app相关api
-    'api/device/barcode',//生成条码
-];
-
-$config['wap_auth_uri'] = [
-    'api/account/get_info',
-    'api/account/bind',
-    'api/account/zmxy_auth',
-    'api/account/coupon_list',//优惠券列表
-    'api/account/thirdpartycoupon_list',
-    'api/account/rec_admin',
-    'api/order/list_order',
-    'api/order/get_detail',
-    'api/order/refund',
-    'api/order/list_deliver',
-    'api/order/pay_by_manual',//前台手动发起支付
-    'api/device/open_door',
-    'api/device/index_ad',
-    'api/device/order_and_ad',
-    'api/fruitday/get_info',
-    'api/fruitday/recharge',
-    'api/fruitday/open_door',
-    'api/fruitday/box_status',
-    'api/fruitday/get_order_and_amount',
-    'api/cart/car_goods_pay',
-    'api/cart/car_goods',
-    'api/cart/del_car_goods',
-    'api/cart/add_product_cart',
-    'api/cart/car_goods_pay_wx',
-    'api/deliver/deliver_open',//补货员开门
-    'api/deliver/fix_product',//商品增减
-    'api/deliver/init_goods',//补货员开门
-    'api/deliver/confirm_stock',//手动盘点提交
-    'api/deliver/init_eq_goods',//手动盘点初始化
-    'api/deliver/open_scan',//补货员开门
-    'api/deliver/confirm_deliver',//补货员确认商品
-    'api/device/buy_box_address', //获取最近开过门的盒子地址
-    'api/device/box_info', //获取盒子中的商品信息
-    'api/device/qr_card', //扫码领券
-    'api/device/new_index', //首页
-    'api/device/exist_thirdparty', //是否有第三方优惠券
-    'api/device/thirdparty_card', //第三方领券接口
-    'api/device/thirdparty_detail', //第三方券点击详情接口
-    'api/order/program_wap_pay', //微信小程序发起支付
-    'api/account/amount_info', //获取余额信息
-    'api/account/recharge_money', //充值金额
-    'api/account/recharge_card', //卡券充值
-    'api/account/amount_detail', //账号明细
-    'api/account/warn_user_info', //账号绑定
-    'api/device/index_card', //优惠券
-    'api/device/order_card', //结算页优惠券
-    'api/koubei/koubei_shop_discount_query', //口碑请求券
-    'api/koubei/koubei_benefit_send', //领取优惠券
-];
-
-$config['admin_auth_uri'] = [
-    'api/device/list_device',
-    'api/device/stock',//发起盘点
-    'api/device/get_info',//发起获取设备信息请求
-    'api/public_tool/create_qr_code',
-    'api/public_tool/create_short_url',
-    'api/public_tool/general_qr_code',
-    'api/order/refund_approval',
-    'api/permission/add_shipping_permission',
-    'api/permission/update_shipping_permission',
-    'api/permission/update_shipping_order_car_info',
-    'api/shipping/confirm_status',
-    'api/shipping/confirm_num',
-    'api/order/update_pay_order',
-    'api/order/pay_by_manual',//后台手动发起支付
-    'api/order/refund_against',//申请驳回
-    'api/fruitday/get_detail',
-    'api/message_tpl/send_wechat_warn_tpl',
-    'api/account/update_user_black',
-    'api/order/check_order'
-];
-
-$config['device_auth_uri'] = [
-    'api/device/receive_msg',
-    'api/device/receive_heart_msg',
-    'api/device/receive_power_msg',
-    'api/device/receive_door_msg',
-    'api/device/receive_stock_msg',
-];
-$config['bjdevice_auth_uri'] = [
-    /*以下是北京新设备*/
-    'api/device/query_device_info',
-    'api/device/query_sim_info',
-    'api/device/receive_new_msg',
-    'api/device/receive_heart_new_msg',
-    'api/device/receive_power_new_msg',
-    'api/device/receive_door_new_msg',
-    'api/device/receive_stock_new_msg',
-    'api/device/receive_exception_new_msg',
-    'api/cart/add_product_use_code',
-    'api/cart/banner',
-];
-//一体机
-$config['client_auth_uri'] = [
-    'api/device/label_product_table',
-    'api/device/bind_lable_product',
-    'api/device/ajax_search_proudct_by_name',
-    'api/device/bind_user_check',//检测用户是否有权限
-    'api/device/ajax_warehouse',//仓库
-
-    'api/client/label_product_table',
-    'api/client/bind_lable_product',
-    'api/client/ajax_search_proudct_by_name',
-    'api/client/bind_user_check',//检测用户是否有权限
-    'api/client/ajax_warehouse',//仓库
 ];
 
 /*

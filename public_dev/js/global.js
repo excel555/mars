@@ -26,6 +26,7 @@
         for(i=0;i<data_sort.length;i++){
             query += data_sort[i]+'='+data[data_sort[i]]+'&';
         }
+        console.log(query);
         var platform = config.platformKey;
         var tmp = md5(query+platform);
         return md5(tmp.substring(0,tmp.length-1)+"q");

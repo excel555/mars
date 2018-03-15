@@ -28,13 +28,13 @@
         AlipayJSBridge.call('closeWebview');
     }, false);
 
-    var agreement_no = Tools._GET().agreement_no;
-    var alipay_user_id = Tools._GET().alipay_user_id;
-    var scene = Tools._GET().scene;
-    var sign_time = Tools._GET().sign_time;
+    var agreement_no = Tools._GET().agreement_no || '';
+    var alipay_user_id = Tools._GET().alipay_user_id || '';
+    var scene = Tools._GET().scene || ''
+    var sign_time = Tools._GET().sign_time || '';
 
     function open(){
-        history.replaceState(null,null,'index.html?device_id='+deviceId);//修改history.back
+        // history.replaceState(null,null,'index.html?device_id='+deviceId);//修改history.back
         Ajax.custom({
             url: config.API_OPEN_DOOR,
             data:{
