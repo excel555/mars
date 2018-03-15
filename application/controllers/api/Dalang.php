@@ -129,4 +129,60 @@ class Dalang extends REST_Controller
         $this->send_ok_response($return_result);
     }
 
+    /**
+     * 支付宝支付异步通知
+     */
+    public function notify_post()
+    {
+        $this->load->model("order_pay_model");
+        $this->load->model("order_model");
+        $this->load->model("receive_alipay_log_model");
+        $this->load->library("Device_lib");
+        $msg_data = array(
+            'msg_type'=>'alipay-notify',
+            'param'=>json_encode($_REQUEST),
+            'receive_time'=>date('Y-m-d H:i:s')
+        );
+        $this->receive_alipay_log_model->insert_log($msg_data);
+        write_log(" notify para:" . var_export($_REQUEST, 1),'info');
+        $config = get_platform_config_by_device_id($_REQUEST['device_id']);
+        unset($_REQUEST['device_id']);
+        write_log('config=>'.var_export($config,1),'info');
+        if (verifyNotify($config)) {
+            //验证通过
+            write_log(" notify verify:验证通过",'info');
+            if($_POST['trade_status'] === 'TRADE_SUCCESS' && $_POST['refund_status'] === 'REFUND_SUCCESS') {
+                $pay_info['pay_no'] = $_POST['out_biz_no'];
+                $notify_data = array('pay_status'=>5,'trade_number'=>$_POST['trade_no'],'pay_money'=>$_POST['refund_fee']);
+                $lib = new Device_lib();
+                $lib->update_order_and_pay($pay_info,$notify_data,'wechat');
+
+            }else if ($_POST['trade_status'] === 'TRADE_SUCCESS') {
+                $pay = $this->order_pay_model->get_pay_info_by_pay_no($_POST['out_trade_no']);
+                $pay_info = array('subject'=>'魔盒CITYBOX购买商品','pay_no'=> $_POST['out_trade_no']);
+                if($pay && $pay['pay_status'] != "1"){
+                    $comment = '支付成功';
+                    $pay_status = 1;
+                    $open_id = $_POST['buyer_id'];
+                    $pay_money = $_POST['total_fee'];
+                    $uid = $pay['uid'];
+                    $pay_user = $_POST['buyer_email'];
+                    $trade_number = $_POST['trade_no'];
+                    $notify_data = array('comment'=>$comment,'pay_status'=>$pay_status,'pay_money'=>$pay_money,'open_id'=>$open_id,'uid'=>$uid,'trade_number'=>$trade_number,'pay_user'=>$pay_user);
+                    $lib = new Device_lib();
+                    $lib->update_order_and_pay($pay_info,$notify_data,'alipay');
+                }else{
+                    if(!$pay){
+                        write_log("[notify_post]支付单找不到,支付单号".$_POST['out_trade_no'],'crit');
+                    }else{
+                        write_log("[notify_post]支付单已经更改状态".$_POST['out_trade_no'],'info');
+                    }
+                }
+            }
+            echo "success";
+        } else {
+            write_log("[notify_post]验证不通过".var_export($_REQUEST,1),'info');
+            echo "fail";
+        }
+    }
 }

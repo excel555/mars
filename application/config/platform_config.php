@@ -73,11 +73,11 @@ $config['mapi_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/ap
 $config['mapi_isv_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/api/koubei/notify_agree";//isv
 
 //支付异步提醒
-$config['mapi_notify_url'] = $config['mapi_box_host'] . "/index.php/api/order/notify";
+$config['mapi_notify_url'] = $config['mapi_box_host'] . "/api/dalang/notify";
 
-$config['mapi_isv_notify_url'] = $config['mapi_box_host'] . "/index.php/api/koubei/notify";//isv
+$config['mapi_isv_notify_url'] = $config['mapi_box_host'] . "/api/koubei/notify";//isv
 
-$config['mapi_return_url'] = $config['mapi_box_host'] . "/index.php/api/order/notify";
+$config['mapi_return_url'] = $config['mapi_box_host'] . "/api/dalang/notify";
 //签约跳转页面
 $config['mapi_sign_url'] = $config['mapi_box_host'] . "/public/sign.html";
 

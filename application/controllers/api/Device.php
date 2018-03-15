@@ -360,6 +360,15 @@ class Device extends REST_Controller {
         $this->heart_msg($deviceId);
 
     }
+    private function heart_msg($deviceId){
+
+        active_device_helper($deviceId);
+        $ret = array(
+            "status"=>true,
+            "message"=>"接收成功"
+        );
+        $this->send_ok_response($ret);;
+    }
     /**
      * 接收售货机电源变化
      */

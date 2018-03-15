@@ -94,7 +94,7 @@ class Order_pay_model extends MY_Model
                 $rs_code = $this->product_model->getSerialCodeByid($v['product_id']);//获取69码
                 $goods[$k]['goodsId']   = $rs_code ? $rs_code['serial_number'] : "citybox-".$v['product_id'];
                 if(!$goods[$k]['goodsId']){
-                    $goods[$k]['goodsId'] = "citybox-".$v['product_id'];
+                    $goods[$k]['goodsId'] = "dlkj-".$v['product_id'];
                 }
                 $goods[$k]['goodsName'] = $v['product_name'];
                 $goods[$k]['quantity']  = $v['qty'];
