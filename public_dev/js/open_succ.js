@@ -66,6 +66,6 @@ function get_order_status() {
     });
 }
 if(deviceId && deviceId !=0) {
-    self.setInterval("get_order_status()",2000)
+    var int = self.setInterval("get_order_status()",2000)
 }
 
