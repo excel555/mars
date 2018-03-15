@@ -26,6 +26,7 @@
         <name type ="2" value ="23" url="/showlog/log_abnormal">异常记录</name>
         <name type ="2" value ="23" url="/showlog/log_device_receive">设备推送消息</name>
         <name type ="2" value ="23" url="/showlog/log_request">请求开门日志</name>
+        <name type ="2" value ="23" url="/showlog/device_status">设备运行状态</name>
 
         <name type ="3" value ="31" url="/order/index">交易订单管理</name>
 

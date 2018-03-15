@@ -88,7 +88,7 @@ class User extends MY_Controller
             $search_box = implode("','", $search_box);
             $where .= " and u.register_device_id in('{$search_box}')";
         }
-        $sql = " SELECT u.is_black, u.id, u.mobile, u.user_name, u.reg_time,u.source, u.open_id, u.register_device_id, u.acount_id, i.buy_times, i.total_money, i.open_times from cb_user u LEFT JOIN cb_user_daily_info i ON u.id=i.uid WHERE  i.platform_id = {$this->platform_id} and u.id is not null {$where} {$time_where} ORDER BY {$sort} {$order} LIMIT {$offset}, {$limit}";
+        $sql = " SELECT u.is_black, u.id, u.mobile, u.user_name,u.city, u.reg_time,u.source, u.open_id, u.register_device_id, u.acount_id, i.buy_times, i.total_money, i.open_times from cb_user u LEFT JOIN cb_user_daily_info i ON u.id=i.uid WHERE  i.platform_id = {$this->platform_id} and u.id is not null {$where} {$time_where} ORDER BY {$sort} {$order} LIMIT {$offset}, {$limit}";
         $list = $this->db->query($sql)->result_array();
 
         $sql = " SELECT count(u.id) as total from cb_user u LEFT JOIN cb_user_daily_info i ON u.id=i.uid WHERE  i.platform_id = {$this->platform_id} and u.id is not null {$where} {$time_where}";
