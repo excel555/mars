@@ -1,6 +1,6 @@
 (function() {
     var container = $('#index-content');
-    var deviceId = Tools._GET().deviceId || 0;
+    var deviceId = Tools._GET().d || 0;
     if(!deviceId){
         deviceId = Tools._GET().device_id || 0;
     }
