@@ -591,7 +591,7 @@ class Showlog extends MY_Controller
         $this->db->limit($limit,$offset);
         $list = $this->db->get()->result_array();
         foreach ($list as &$value){
-            $value['heart_status'] = get_device_heart_status_by_redis($value['box_id']);
+            $value['heart_status'] = device_last_status_helper($value['box_id']);
         }
         $this->db->select("id");
         $this->db->from('box_status');
