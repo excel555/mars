@@ -28,7 +28,7 @@
         AlipayJSBridge.call('closeWebview');
     }, false);
 
-    var agreement_no = Tools._GET().agreement_no || '';
+    var agreement_no = Tools._GET().agreement_no;
     var alipay_user_id = Tools._GET().alipay_user_id || '';
     var scene = Tools._GET().scene || ''
     var sign_time = Tools._GET().sign_time || '';

@@ -39,7 +39,7 @@ var deviceId = Cookie.get("deviceId");
         window.history.pushState(state, "", "#");
     }
 
-    history.replaceState(null,null,'index.html');//修改history.back
+    // history.replaceState(null,null,'index.html');//修改history.back
 
     common.checkLoginStatus(function() {
     })
@@ -53,6 +53,7 @@ function get_order_status() {
         type: 'GET',
         showLoading: false
     }, function(response) {
+        Tools.alert(response.status);
         console.log(response);
         if(response.status == "stock"){
             $('#rby-loading1').show();
