@@ -40,7 +40,7 @@ var flag = false;
         window.history.pushState(state, "", "#");
     }
 
-    // history.replaceState(null,null,'index.html');//修改history.back
+    history.replaceState(null,null,'index.html?device_id='+deviceId);//修改history.back
     function check() {
         timer = setInterval("check_status()",3000);
     }
@@ -52,7 +52,6 @@ var flag = false;
 })()
 
 function check_status() {
-    Tools.showToast('Flag'+flag);
     console.log("flag = "+flag);
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
@@ -67,10 +66,8 @@ function check_status() {
             $('#rby-loading1').show();
             flag = false;
         }else if(response.status == "pay_succ"){
-            Tools.showToast('status'+flag);
             if(flag == false){
                 flag = true;
-                Tools.showToast('in'+flag);
                 clearInterval(timer);
                 location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
             }else{

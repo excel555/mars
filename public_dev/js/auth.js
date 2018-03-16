@@ -34,7 +34,7 @@
     var sign_time = Tools._GET().sign_time || '';
 
     function open(){
-        // history.replaceState(null,null,'index.html?device_id='+deviceId);//修改history.back
+        history.replaceState(null,null,'index.html?device_id='+deviceId);//修改history.back
         Ajax.custom({
             url: config.API_OPEN_DOOR,
             data:{
