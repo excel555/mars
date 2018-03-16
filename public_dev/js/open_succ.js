@@ -52,6 +52,9 @@ var flag = false;
 })()
 
 function check_status() {
+    console.log("flag = "+flag);
+    if(flag == true) return;
+    flag = true;
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
         data:{
@@ -63,6 +66,7 @@ function check_status() {
         console.log(response);
         if(response.status == "stock"){
             $('#rby-loading1').show();
+            flag = false;
             setTimeout("check_status()",3000);
         }else if(response.status == "pay_succ"){
             location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
@@ -70,6 +74,7 @@ function check_status() {
             location.href='index.html';
         }
     }, function(e) {
+        flag = false;
         setTimeout("check_status()",3000);
         // Tools.showAlert(e.message || '服务器异常');
     });
