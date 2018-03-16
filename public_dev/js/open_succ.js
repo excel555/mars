@@ -43,6 +43,7 @@ var flag = false;
 
     // history.replaceState(null,null,'index.html');//修改history.back
     function check() {
+        clearTimeout(timer);
         timer = setTimeout("check_status()",3000);
     }
 
@@ -67,6 +68,7 @@ function check_status() {
         if(response.status == "stock"){
             $('#rby-loading1').show();
             flag = false;
+            clearTimeout(timer);
             setTimeout("check_status()",3000);
         }else if(response.status == "pay_succ"){
             location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
@@ -75,7 +77,9 @@ function check_status() {
         }
     }, function(e) {
         flag = false;
+        clearTimeout(timer);
         setTimeout("check_status()",3000);
         // Tools.showAlert(e.message || '服务器异常');
     });
+
 }
