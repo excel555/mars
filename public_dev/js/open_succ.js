@@ -43,8 +43,7 @@ var flag = false;
 
     // history.replaceState(null,null,'index.html');//修改history.back
     function check() {
-        clearTimeout(timer);
-        timer = setTimeout("check_status()",3000);
+        timer = setInterval("check_status()",3000);
     }
 
     common.checkLoginStatus(function() {
@@ -54,8 +53,6 @@ var flag = false;
 
 function check_status() {
     console.log("flag = "+flag);
-    if(flag == true) return;
-    flag = true;
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
         data:{
@@ -68,18 +65,20 @@ function check_status() {
         if(response.status == "stock"){
             $('#rby-loading1').show();
             flag = false;
-            clearTimeout(timer);
-            setTimeout("check_status()",3000);
         }else if(response.status == "pay_succ"){
-            clearTimeout(timer);
-            location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
+            if(flag == false){
+                flag = true;
+                clearInterval(timer);
+                location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
+            }else{
+                flag = true;
+                clearInterval(timer);
+                alert('不跳转了');
+            }
         }else if(response.status == "free"){
             location.href='index.html';
         }
     }, function(e) {
-        flag = false;
-        clearTimeout(timer);
-        setTimeout("check_status()",3000);
         // Tools.showAlert(e.message || '服务器异常');
     });
 
