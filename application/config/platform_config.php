@@ -8,7 +8,7 @@ $config['merchant_public_key'] ='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1bP
 $config['alipay_public_key'] = $env_config['alipay_public_key'];//支付宝公钥
 $config['charset'] = 'GBK';
 $config['gatewayUrl'] = "https://openapi.alipay.com/gateway.do";
-$config['sign_type'] = 'RSA';
+$config['sign_type'] = 'RSA2';
 $config['notify_url'] = $env_config['base_url'].'/index.php/api/order/notify_alipay_wap';
 $config['retrun_url'] = $env_config['base_url'].'/mars/order.html?orderId=';
 $config['recharge_retrun_url'] = $env_config['base_url'].'/mars/recharge.mars';
