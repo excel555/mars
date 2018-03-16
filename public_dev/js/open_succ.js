@@ -1,4 +1,6 @@
 var deviceId = Cookie.get("deviceId");
+var timer;
+var flag = false;
 (function() {
 
     function ready(callback) {
@@ -42,10 +44,12 @@ var deviceId = Cookie.get("deviceId");
     // history.replaceState(null,null,'index.html');//修改history.back
 
     common.checkLoginStatus(function() {
-        var timer = setInterval(function(){ajax_wx_pay_status(timer)},3000);
+        timer = setInterval(function(){ajax_wx_pay_status(timer)},3000);
     })
 })()
 function ajax_wx_pay_status(timer) {
+    if(flag == true)
+        return;
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
         data:{
@@ -63,7 +67,9 @@ function ajax_wx_pay_status(timer) {
         }else if(response.status == "free"){
             location.href='index.html';
         }
+        flag = false;
     }, function(e) {
+        flag = false;
         // Tools.showAlert(e.message || '服务器异常');
     });
 }
