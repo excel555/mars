@@ -44,10 +44,10 @@ var flag = false;
     // history.replaceState(null,null,'index.html');//修改history.back
 
     common.checkLoginStatus(function() {
-        timer = setInterval(function(){ajax_wx_pay_status(timer)},3000);
+        timer = setInterval(function(){ajax_wx_pay_status()},3000);
     })
 })()
-function ajax_wx_pay_status(timer) {
+function ajax_wx_pay_status() {
     if(flag == true)
         return;
     Ajax.custom({
