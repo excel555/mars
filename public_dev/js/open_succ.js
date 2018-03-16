@@ -2,7 +2,6 @@ var deviceId = Tools._GET().deviceId || 0;
 var timer;
 var flag = false;
 (function() {
-    clearInterval(timer);
     function ready(callback) {
         // 如果jsbridge已经注入则直接调用
         if (window.AlipayJSBridge) {
@@ -53,7 +52,7 @@ var flag = false;
 })()
 
 function check_status() {
-    alert(flag);
+    Tools.showToast('Flag'+flag);
     console.log("flag = "+flag);
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
@@ -68,8 +67,10 @@ function check_status() {
             $('#rby-loading1').show();
             flag = false;
         }else if(response.status == "pay_succ"){
+            Tools.showToast('status'+flag);
             if(flag == false){
                 flag = true;
+                Tools.showToast('in'+flag);
                 clearInterval(timer);
                 location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
             }else{
