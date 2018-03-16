@@ -42,9 +42,10 @@ var deviceId = Cookie.get("deviceId");
     // history.replaceState(null,null,'index.html');//修改history.back
 
     common.checkLoginStatus(function() {
+        var timer = setInterval(function(){ajax_wx_pay_status(timer)},3000);
     })
 })()
-function get_order_status() {
+function ajax_wx_pay_status(timer) {
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
         data:{
@@ -53,11 +54,11 @@ function get_order_status() {
         type: 'GET',
         showLoading: false
     }, function(response) {
-        Tools.alert(response.status);
         console.log(response);
         if(response.status == "stock"){
             $('#rby-loading1').show();
         }else if(response.status == "pay_succ"){
+            clearInterval(timer);
             location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
         }else if(response.status == "free"){
             location.href='index.html';
@@ -66,7 +67,3 @@ function get_order_status() {
         // Tools.showAlert(e.message || '服务器异常');
     });
 }
-if(deviceId && deviceId !=0) {
-    var int = self.setInterval("get_order_status()",2000)
-}
-
