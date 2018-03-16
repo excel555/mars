@@ -42,34 +42,39 @@ var flag = false;
     }
 
     // history.replaceState(null,null,'index.html');//修改history.back
-
+    function check() {
+        timer = setInterval(function(){
+            if(flag == true)
+                return;
+            flag = true;
+            Ajax.custom({
+                url: config.API_FD_BOX_STATUS,
+                data:{
+                    device_id: deviceId,
+                },
+                type: 'GET',
+                showLoading: false
+            }, function(response) {
+                console.log(response);
+                if(response.status == "stock"){
+                    $('#rby-loading1').show();
+                }else if(response.status == "pay_succ"){
+                    clearInterval(timer);
+                    location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
+                }else if(response.status == "free"){
+                    location.href='index.html';
+                }
+                flag = false;
+            }, function(e) {
+                flag = false;
+                // Tools.showAlert(e.message || '服务器异常');
+            });
+        },3000);
+    }
     common.checkLoginStatus(function() {
-        timer = setInterval(function(){ajax_wx_pay_status()},3000);
+        check();
     })
 })()
 function ajax_wx_pay_status() {
-    if(flag == true)
-        return;
-    Ajax.custom({
-        url: config.API_FD_BOX_STATUS,
-        data:{
-            device_id: deviceId,
-        },
-        type: 'GET',
-        showLoading: false
-    }, function(response) {
-        console.log(response);
-        if(response.status == "stock"){
-            $('#rby-loading1').show();
-        }else if(response.status == "pay_succ"){
-            clearInterval(timer);
-            location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
-        }else if(response.status == "free"){
-            location.href='index.html';
-        }
-        flag = false;
-    }, function(e) {
-        flag = false;
-        // Tools.showAlert(e.message || '服务器异常');
-    });
+
 }
