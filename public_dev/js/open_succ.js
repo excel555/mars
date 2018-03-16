@@ -43,10 +43,9 @@ var flag = false;
 
     // history.replaceState(null,null,'index.html');//修改history.back
     function check() {
-        timer = setInterval(function(){
-            if(flag == true)
-                return;
-            flag = true;
+        timer = setTimeout("check_status()",3000);
+    }
+    function check_status() {
             Ajax.custom({
                 url: config.API_FD_BOX_STATUS,
                 data:{
@@ -58,18 +57,16 @@ var flag = false;
                 console.log(response);
                 if(response.status == "stock"){
                     $('#rby-loading1').show();
+                    check();
                 }else if(response.status == "pay_succ"){
-                    clearInterval(timer);
                     location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
                 }else if(response.status == "free"){
                     location.href='index.html';
                 }
-                flag = false;
             }, function(e) {
-                flag = false;
+                check();
                 // Tools.showAlert(e.message || '服务器异常');
             });
-        },3000);
     }
     common.checkLoginStatus(function() {
         check();
