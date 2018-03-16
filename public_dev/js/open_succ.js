@@ -71,6 +71,7 @@ function check_status() {
             clearTimeout(timer);
             setTimeout("check_status()",3000);
         }else if(response.status == "pay_succ"){
+            clearTimeout(timer);
             location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
         }else if(response.status == "free"){
             location.href='index.html';
