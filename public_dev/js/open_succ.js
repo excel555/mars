@@ -45,33 +45,32 @@ var flag = false;
     function check() {
         timer = setTimeout("check_status()",3000);
     }
-    function check_status() {
-            Ajax.custom({
-                url: config.API_FD_BOX_STATUS,
-                data:{
-                    device_id: deviceId,
-                },
-                type: 'GET',
-                showLoading: false
-            }, function(response) {
-                console.log(response);
-                if(response.status == "stock"){
-                    $('#rby-loading1').show();
-                    check();
-                }else if(response.status == "pay_succ"){
-                    location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
-                }else if(response.status == "free"){
-                    location.href='index.html';
-                }
-            }, function(e) {
-                check();
-                // Tools.showAlert(e.message || '服务器异常');
-            });
-    }
+
     common.checkLoginStatus(function() {
         check();
     })
 })()
-function ajax_wx_pay_status() {
 
+function check_status() {
+    Ajax.custom({
+        url: config.API_FD_BOX_STATUS,
+        data:{
+            device_id: deviceId,
+        },
+        type: 'GET',
+        showLoading: false
+    }, function(response) {
+        console.log(response);
+        if(response.status == "stock"){
+            $('#rby-loading1').show();
+            check();
+        }else if(response.status == "pay_succ"){
+            location.href='buy_succ.html?order_name='+response.order_name+'&deviceId='+deviceId;//只显示关闭按钮
+        }else if(response.status == "free"){
+            location.href='index.html';
+        }
+    }, function(e) {
+        check();
+        // Tools.showAlert(e.message || '服务器异常');
+    });
 }
