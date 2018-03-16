@@ -8,7 +8,7 @@
         HOST_API: location.protocol + '//' + location.host + '/index.php/api',
         alipayAuthUrl: "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=auth_user&redirect_uri=REDIRECT_URI", //授权跳转地址
         wechatAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&connect_redirect=1#wechat_redirect", //微信授权跳转地址
-        alipayAppId: "2017032806445211", //2017052207307682 2017032806445211
+        alipayAppId: "2018031602387886", //2017052207307682 2017032806445211
         wechatAppId: "wx3450e6a290582989", //
         platformKey: "ce6u8wD8Wf7fWufRp",
         page:1,
