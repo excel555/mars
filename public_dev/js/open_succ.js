@@ -2,7 +2,7 @@ var deviceId = Cookie.get("deviceId");
 var timer;
 var flag = false;
 (function() {
-
+    clearInterval(timer);
     function ready(callback) {
         // 如果jsbridge已经注入则直接调用
         if (window.AlipayJSBridge) {
