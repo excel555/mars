@@ -1,4 +1,4 @@
-var deviceId = Cookie.get("deviceId");
+var deviceId = Tools._GET().deviceId || 0;
 var timer;
 var flag = false;
 (function() {
@@ -47,6 +47,7 @@ var flag = false;
     }
 
     common.checkLoginStatus(function() {
+        clearInterval(timer);
         check();
     })
 })()
