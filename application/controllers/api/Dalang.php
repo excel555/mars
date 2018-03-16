@@ -78,9 +78,11 @@ class Dalang extends REST_Controller
         } else {
             if ($rs['user_id'] != $user['id'] || strtotime($rs['last_update']) < time() - 15 * 60) {
                 $this->send_ok_response(array('status' => 'free', 'message' => '跳转余额页'));
-            } else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'stock') {
+            } else if($rs['user_id'] == $user['id'] && $rs['status'] == 'scan'){
+                $this->send_error_response("购物中");
+            }else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'stock') {
                 $this->send_ok_response(array('status' => 'stock', 'message' => '结算中...'));
-            } else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'free') {
+            }else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'free') {
                 $this->load->model('log_open_model');
                 $log = $this->log_open_model->get_open_log($rs['open_log_id']);
                 $order_name = time();// "";
