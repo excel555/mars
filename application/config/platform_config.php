@@ -107,7 +107,7 @@ $config['zmxy_charset'] = "UTF-8";
 
 //支付宝网关
 $config['zmxy_gatewayUrl'] = "https://zmopenapi.zmxy.com.cn/openapi.do";
-$config['zmxy_sign_type'] ="RSA";
+$config['zmxy_sign_type'] ="RSA2";
 
 //-------------other 配置------------------
 $config['refers'] = array("alipay","wechat","fruitday-app","gat","cmb","sodexo","sdy");
