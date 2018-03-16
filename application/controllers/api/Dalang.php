@@ -83,13 +83,17 @@ class Dalang extends REST_Controller
             }else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'stock') {
                 $this->send_ok_response(array('status' => 'stock', 'message' => '结算中...'));
             }else if ($rs['user_id'] == $user['id'] && $rs['status'] == 'free') {
-                $this->load->model('log_open_model');
-                $log = $this->log_open_model->get_open_log($rs['open_log_id']);
-                $order_name = time()."";
-                if ($log && $log['order_name']) {
-                    $order_name = $log['order_name'];
+                $p_s = $this->cache->get('pay_succ_'.$device_id);
+                if($p_s != 'pay'){
+                    $this->load->model('log_open_model');
+                    $log = $this->log_open_model->get_open_log($rs['open_log_id']);
+                    $order_name = "";
+                    if ($log && $log['order_name']) {
+                        $order_name = $log['order_name'];
+                    }
+                    $this->cache->save('pay_succ_'.$device_id,'pay',6);
+                    $this->send_ok_response(array('status' => 'pay_succ', 'message' => '支付成功', 'order_name' => $order_name));
                 }
-                $this->send_ok_response(array('status' => 'pay_succ', 'message' => '支付成功', 'order_name' => $order_name));
             }
             $this->send_error_response("购物中");
         }
