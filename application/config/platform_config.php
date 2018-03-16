@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require('env_config.php');
 //-------alipay config----------
 $config['app_id'] = $env_config['alipay_app_id'];
-$config['merchant_private_key'] = 'MIICXAIBAAKBgQCxH2skFUet0s34gLhYn7uJAK0XIy3kDEpP5FxYPQq4wFiMMf4c9I13XR4fjLavqfT9bCJrE1ASqPSgmroSqQYvyd0sm5HLMxWTHvhInkSWTN3ueJfIRax7LzTQexqFUy/JThO6hCblzTS0wN5yrA6LeAysX3N9UfdSab4fz00RdQIDAQABAoGBAJjq/DBB4wmSV1s1nnJ9LYbBu66fI66gYcQJ7yQLR2dsQMaBHtfW1w/3p9srPEn63NWydyCkotwJXHIQQ5d6sChAVgMSu2efa6In6LP5Cx2C+/eIvpOY6yXs0gxrJaWVZtBHjfYrXTrJtSOciMmGkGjDCCKaij7s0EZPVPKnR6whAkEA1xxqyohdk7QidZjTRDr3PrJuphjDV3RsZJSJP4zHN6BTovLrmMBPolCLCqf54Tcdb4R29b5thlMKReHydiAsvQJBANLKcTIky5QwvrThGVxpnD2cjOGYCJoo4PsxKjGPDSjGTWmV2VVbnlkdHslfRyXpIx6RGKzCxyCepxxgGinaLxkCQBrOcMRyf+7TKOQsuk8rZfpLNBzAwz8XxBY4qG3h9kWJVkLdMNzlQkdA8ELQsgQN4T4vbL+tDmsJ2CLjSFrOIaUCQHqZ8Li/mgD5URKXkk6jxpI3SeG0sdwoRqMTd30XvQmoPUJaO+xfu3wNaeiqGBG+xgRzVCy3pWYdoQjqBI2vL5ECQHbERmix55rnapCBNb91IU3lsp/H9mHiDQDzpchVj5GIuyal8kFJep6J6yJJFZHvb1ldirlEjBcYro/IhIyDiYg=';
-$config['merchant_public_key'] = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxH2skFUet0s34gLhYn7uJAK0XIy3kDEpP5FxYPQq4wFiMMf4c9I13XR4fjLavqfT9bCJrE1ASqPSgmroSqQYvyd0sm5HLMxWTHvhInkSWTN3ueJfIRax7LzTQexqFUy/JThO6hCblzTS0wN5yrA6LeAysX3N9UfdSab4fz00RdQIDAQAB';//
+$config['merchant_private_key'] ='MIIEogIBAAKCAQEA1bPhH/goUmhtlgGBY8oU88aFpEm0IaPp6vSEYW4yicRDgJpxi8VhcEE2fcaaQemVw4zEZlpmPFjAo4DQP5l8EUv4l7pU6M6Q87xkzSGjuYrplXgk3AcchbPORtotnZeC5fMWTH5PYJZ71i20n2Sx75hrHLtqLIve1MZ1cPU7x9R1UyPReg6ry4G/NdoSgkXsq+OVpzXZQK/Hm3UxpkxM23+1StzJNxFRqHIaeK73HZOGcnOHYTPAAIWzbN4QVFNtTNrb7U7MHX6xjQNGeLAGTCGLtSngf6PpwKyOvAZ13C/EQxNUcMdUh2JQpgIfPsWrCVhlKrAtveQtWpR8bZDYpwIDAQABAoIBAGEOum9voLiUzziy5FYzIML65hWQl+wzavkYJsutZeymI9ZTzsAhXDjElYAYZFUNRsSyuTyXUBmWYZ+g0HQiPHQKohQfP5Mgxjq81LdJ0Pdi/OWy1GLOJAkhec06KD+L4ZqYhgcl0t1WW1YSGhfOfvYHrpY1FGq49/KBVDOCXa1KnxL9/cYgTclEAIjGOy25gkOxw9q3H3NfQkNNOyIdmVr4NOKhoFhAK8azUytT7PcCqC/0fAxVvP2+rYnih++2LANkr+uSBKzrQb4ZjEMtW9v/vhRmKG/yKl5Y5XnVBKsv76hz9dKitpR/z7f2//0IyUKyLt+VkXwAwtAkW42G/FECgYEA/CO1XKFjU1Z5e69pSNSC09uzaJV96ReZycoVWsGqekbEHi17Ghvb/n+YlJ83NffOyHXzNguGK1emaJY4rUAzqB6plKzvR0kjQfMvOXfnSkNnj897vp7z88as1vN3DWoap0sUKMZ25vWtS4GErG7UkRGYbScWJloxuE0ZO/NwJ3kCgYEA2PmDWXyL5vCthy4jn2gbkFpKGjrC4qlm/v3Iv0FgNlyKHsrT3f+WRZJRvGyHytLpnslLo2vepRmc9hUPjkCHUzmOfXWhFHY7TEq71jFxCpk0Xw/mJm9m+yzye6HnhJXbMFEld5ZST0jFDvvR2P0FIUP/+p0NOeNLiL/FycebWR8CgYBWZgIKiL7ZWsNsD5J7Q17FK/6RMtCfY9ft3pJss/ovxjoDwT/ylWNQFPb6zogDtTOlW02I0nAaQAGkyv0G2P4aeM9RQ+UGP1iWi7c98QlPWEOPcuCLVDpx6T1mtqyv6xDRDJgO1Nr/j2XffrUwxRWP1ECv/nnHkJaC+eBQu71NuQKBgBclLrTKC2Z8QBaOfnBPu7j/WK5JnGZvabRDwDlesPO7lWRJgKZK0G3leOCftzCUpSUyFeZ96Ec2Xz8E6h7jlUv0dNW/SYqUPikaQ8VKiuN1ilelq4hoE9Uxa0By+e5zyejyjwudtnQMsDCz/iOmgfiVd2X1gOau72zMAD5RE6pDAoGAGdwtfBUArsaehNZO0ttNjgtfH/diZ2ta6UicywVHFusmpRyupyXo0hUlFRcWVCbV+ocMMEtYcN6nvFIXD36zpzTosCReiuGqy6+SqC14DdzaVCg4uw6Z9C1dlw8WnYGcCeYxs7iCqox89PxlSrRVbP8/KRd/okOG7eSNte3pR0Y=';
+$config['merchant_public_key'] ='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1bPhH/goUmhtlgGBY8oU88aFpEm0IaPp6vSEYW4yicRDgJpxi8VhcEE2fcaaQemVw4zEZlpmPFjAo4DQP5l8EUv4l7pU6M6Q87xkzSGjuYrplXgk3AcchbPORtotnZeC5fMWTH5PYJZ71i20n2Sx75hrHLtqLIve1MZ1cPU7x9R1UyPReg6ry4G/NdoSgkXsq+OVpzXZQK/Hm3UxpkxM23+1StzJNxFRqHIaeK73HZOGcnOHYTPAAIWzbN4QVFNtTNrb7U7MHX6xjQNGeLAGTCGLtSngf6PpwKyOvAZ13C/EQxNUcMdUh2JQpgIfPsWrCVhlKrAtveQtWpR8bZDYpwIDAQAB';
 $config['alipay_public_key'] = $env_config['alipay_public_key'];//支付宝公钥
 $config['charset'] = 'GBK';
 $config['gatewayUrl'] = "https://openapi.alipay.com/gateway.do";
@@ -73,11 +73,11 @@ $config['mapi_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/ap
 $config['mapi_isv_agreement_notify_url'] = $config['mapi_box_host'] . "/index.php/api/koubei/notify_agree";//isv
 
 //支付异步提醒
-$config['mapi_notify_url'] = $config['mapi_box_host'] . "/api/dalang/notify";
+$config['mapi_notify_url'] = $config['mapi_box_host'] . "/api/order/notify";
 
 $config['mapi_isv_notify_url'] = $config['mapi_box_host'] . "/api/koubei/notify";//isv
 
-$config['mapi_return_url'] = $config['mapi_box_host'] . "/api/dalang/notify";
+$config['mapi_return_url'] = $config['mapi_box_host'] . "/index.php/api/order/notify";
 //签约跳转页面
 $config['mapi_sign_url'] = $config['mapi_box_host'] . "/public/sign.html";
 
@@ -98,8 +98,12 @@ $config['zmxy_app_id'] = $env_config['zmxy_app_id'];
 $config['zmxy_merchant_id'] = $env_config['zmxy_merchant_id'];
 $config['zmxy_type_id'] = $env_config['zmxy_type_id'];
 
-$config['merchant_private_key'] ='MIIEogIBAAKCAQEA1bPhH/goUmhtlgGBY8oU88aFpEm0IaPp6vSEYW4yicRDgJpxi8VhcEE2fcaaQemVw4zEZlpmPFjAo4DQP5l8EUv4l7pU6M6Q87xkzSGjuYrplXgk3AcchbPORtotnZeC5fMWTH5PYJZ71i20n2Sx75hrHLtqLIve1MZ1cPU7x9R1UyPReg6ry4G/NdoSgkXsq+OVpzXZQK/Hm3UxpkxM23+1StzJNxFRqHIaeK73HZOGcnOHYTPAAIWzbN4QVFNtTNrb7U7MHX6xjQNGeLAGTCGLtSngf6PpwKyOvAZ13C/EQxNUcMdUh2JQpgIfPsWrCVhlKrAtveQtWpR8bZDYpwIDAQABAoIBAGEOum9voLiUzziy5FYzIML65hWQl+wzavkYJsutZeymI9ZTzsAhXDjElYAYZFUNRsSyuTyXUBmWYZ+g0HQiPHQKohQfP5Mgxjq81LdJ0Pdi/OWy1GLOJAkhec06KD+L4ZqYhgcl0t1WW1YSGhfOfvYHrpY1FGq49/KBVDOCXa1KnxL9/cYgTclEAIjGOy25gkOxw9q3H3NfQkNNOyIdmVr4NOKhoFhAK8azUytT7PcCqC/0fAxVvP2+rYnih++2LANkr+uSBKzrQb4ZjEMtW9v/vhRmKG/yKl5Y5XnVBKsv76hz9dKitpR/z7f2//0IyUKyLt+VkXwAwtAkW42G/FECgYEA/CO1XKFjU1Z5e69pSNSC09uzaJV96ReZycoVWsGqekbEHi17Ghvb/n+YlJ83NffOyHXzNguGK1emaJY4rUAzqB6plKzvR0kjQfMvOXfnSkNnj897vp7z88as1vN3DWoap0sUKMZ25vWtS4GErG7UkRGYbScWJloxuE0ZO/NwJ3kCgYEA2PmDWXyL5vCthy4jn2gbkFpKGjrC4qlm/v3Iv0FgNlyKHsrT3f+WRZJRvGyHytLpnslLo2vepRmc9hUPjkCHUzmOfXWhFHY7TEq71jFxCpk0Xw/mJm9m+yzye6HnhJXbMFEld5ZST0jFDvvR2P0FIUP/+p0NOeNLiL/FycebWR8CgYBWZgIKiL7ZWsNsD5J7Q17FK/6RMtCfY9ft3pJss/ovxjoDwT/ylWNQFPb6zogDtTOlW02I0nAaQAGkyv0G2P4aeM9RQ+UGP1iWi7c98QlPWEOPcuCLVDpx6T1mtqyv6xDRDJgO1Nr/j2XffrUwxRWP1ECv/nnHkJaC+eBQu71NuQKBgBclLrTKC2Z8QBaOfnBPu7j/WK5JnGZvabRDwDlesPO7lWRJgKZK0G3leOCftzCUpSUyFeZ96Ec2Xz8E6h7jlUv0dNW/SYqUPikaQ8VKiuN1ilelq4hoE9Uxa0By+e5zyejyjwudtnQMsDCz/iOmgfiVd2X1gOau72zMAD5RE6pDAoGAGdwtfBUArsaehNZO0ttNjgtfH/diZ2ta6UicywVHFusmpRyupyXo0hUlFRcWVCbV+ocMMEtYcN6nvFIXD36zpzTosCReiuGqy6+SqC14DdzaVCg4uw6Z9C1dlw8WnYGcCeYxs7iCqox89PxlSrRVbP8/KRd/okOG7eSNte3pR0Y=';
-$config['merchant_public_key'] ='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1bPhH/goUmhtlgGBY8oU88aFpEm0IaPp6vSEYW4yicRDgJpxi8VhcEE2fcaaQemVw4zEZlpmPFjAo4DQP5l8EUv4l7pU6M6Q87xkzSGjuYrplXgk3AcchbPORtotnZeC5fMWTH5PYJZ71i20n2Sx75hrHLtqLIve1MZ1cPU7x9R1UyPReg6ry4G/NdoSgkXsq+OVpzXZQK/Hm3UxpkxM23+1StzJNxFRqHIaeK73HZOGcnOHYTPAAIWzbN4QVFNtTNrb7U7MHX6xjQNGeLAGTCGLtSngf6PpwKyOvAZ13C/EQxNUcMdUh2JQpgIfPsWrCVhlKrAtveQtWpR8bZDYpwIDAQAB';
+//商户私钥，您的原始格式RSA私钥,一行字符串 *** 去掉换行
+$config['zmxy_merchant_private_key'] = "MIICXQIBAAKBgQDNYhLB5gvYHFJqIiVxn8sMieUE+jHB5dZJ2lmU7d2q2N2MCA+rW3XAv2M/eQCtZ+WKGtgdUuOu1EN/6g2tdd8mxgW1I4Bm7S60cWuGKtkc2myyD8N3Hssk9KDhA5gloc3q5IBgBf9wWqCcXAT7clitlK5M083roI1PJQHxQS5gxQIDAQABAoGBALTjkPO34mynnSqfAm2NuG9FsDDvDw3gmRiYuFeEHLzRnmcr3mkk95QYvJf1wdP4cuFs/TTugVvE1eJ+SSeibjOLFM57no2RPI2lDGTGpulYvgYbQiVvrrrlaIxpw8oINoLygIC6d4lunj1QrWdnIwLqhZRIMqURVu47UL1YR2ThAkEA7ChhmgB4idhj7ZBbE8/XpDmonA4HCNb9HeU9CKdhNjpt301KLosfk/5OvQI1GE3jDrea3lqso716H6HWbYNqnQJBAN6jvzqe7pIgkfYpmZLARKZlx6az5VDY2JGz4mGPQMW2l3iqhbRcyaHofUkrkZo0C+LGfrvrA/cGJYa+Z+5ywkkCQGLWn8rZqZlfxKr4APZwxbsJGsV9pXoQqM1rVTka/Le6iqOr8IE8XxIMnJ3En741UvOk6p9nadv6AHPewyUAnI0CQBU3+fO2TfpzTDXvxQktdd19+cczgflwkUNhp4OwyXWOb2U6qz+DUFwz8izVEC1oJHHahR2XymrylQUAhJs/KLECQQC0BiTAt6qhGP1/i+5IhfOVys3fmlLq6lEOYkky/pVBJQ4CfQBrgLq0lx1g9kU4xvnKhL5QjdW/aUd8Dq0QSb9c";
+
+//商户公钥，您的原始格式RSA私钥,一行字符串 *** 去掉换行
+$config['zmxy_merchant_public_key'] = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNYhLB5gvYHFJqIiVxn8sMieUE+jHB5dZJ2lmU7d2q2N2MCA+rW3XAv2M/eQCtZ+WKGtgdUuOu1EN/6g2tdd8mxgW1I4Bm7S60cWuGKtkc2myyD8N3Hssk9KDhA5gloc3q5IBgBf9wWqCcXAT7clitlK5M083roI1PJQHxQS5gxQIDAQAB";
+
 
 //芝麻信用公钥,查看地址：https://b.zmxy.com.cn/technology/myApps.htm 对应APPID下的芝麻信用宝公钥。 *** 去掉换行
 $config['zmxy_zm_public_key'] = $env_config['zm_public_key'];
@@ -107,7 +111,7 @@ $config['zmxy_charset'] = "UTF-8";
 
 //支付宝网关
 $config['zmxy_gatewayUrl'] = "https://zmopenapi.zmxy.com.cn/openapi.do";
-$config['zmxy_sign_type'] ="RSA2";
+$config['zmxy_sign_type'] ="RSA";
 
 //-------------other 配置------------------
 $config['refers'] = array("alipay","wechat","fruitday-app","gat","cmb","sodexo","sdy");
