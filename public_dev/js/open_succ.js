@@ -47,12 +47,12 @@ var flag = false;
     }
 
     common.checkLoginStatus(function() {
-        clearInterval(timer);
         check();
     })
 })()
 
 function check_status() {
+    alert(flag);
     console.log("flag = "+flag);
     Ajax.custom({
         url: config.API_FD_BOX_STATUS,
@@ -82,5 +82,4 @@ function check_status() {
     }, function(e) {
         // Tools.showAlert(e.message || '服务器异常');
     });
-
 }
