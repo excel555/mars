@@ -780,6 +780,7 @@ abstract class REST_Controller extends \CI_Controller
             $this->_log_response_code($http_code);
         }
         // Output the data
+        write_log('response------'.var_export($output,1));
         $this->output->set_output($output);
         $this->output->_display();
 
