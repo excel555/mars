@@ -47,6 +47,7 @@ var flag = false;
     }
 
     common.checkLoginStatus(function() {
+        clearInterval(timer);
         check();
     })
 })()
