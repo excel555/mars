@@ -422,22 +422,6 @@ class Showlog extends MY_Controller
                 $list[$k]['pay_type'] = '支付宝免密';
             }elseif($v['pay_type'] == 2){
                 $list[$k]['pay_type'] = '微信免密';
-            }elseif($v['pay_type'] == 3){
-                $list[$k]['pay_type'] = '天天果园';
-            }elseif($v['pay_type'] == 4){
-                $list[$k]['pay_type'] = '支付宝手动';
-            } elseif($v['pay_type'] == 5){
-                $list[$k]['pay_type'] = '微信手动';
-            }elseif($v['pay_type'] == 6){
-                $list[$k]['pay_type'] = '关爱通免密';
-            }elseif($v['pay_type'] == 7){
-                $list[$k]['pay_type'] = '关爱通手动';
-            }elseif($v['pay_type'] == 8){
-                $list[$k]['pay_type'] = '招商银行';
-            }elseif($v['pay_type'] == 9){
-                $list[$k]['pay_type'] = '索迪斯';
-            }elseif($v['pay_type'] == 10){
-                $list[$k]['pay_type'] = '沙丁鱼';
             }
 
             if($v['pay_status'] == 0){
@@ -605,30 +589,6 @@ class Showlog extends MY_Controller
     }
 
 
-
-    public function send_device_info($device_id){
-        $params['box_id'] = htmlspecialchars($device_id);
-        $rs = $this->get_api_content( $params, '/api/device/get_info?box_id='.$device_id, 0);
-
-        if(strpos($rs,'timed out')){
-            //请求超时
-            $rs =  array('state'=>array('tips'=>'请求接口返回超时'));
-        }else{
-            $rs = json_decode(json_decode($rs));
-        }
-        $this->showJson($rs);
-    }
-    public function send_pandian($device_id){
-        $params['box_id'] = htmlspecialchars($device_id);
-        $rs = $this->get_api_content( $params, '/api/device/stock?box_id='.$device_id, 0);
-        if(strpos($rs,'timed out')){
-            //请求超时
-            $rs =  array('state'=>array('tips'=>'请求接口返回超时'));
-        }else{
-            $rs = json_decode(json_decode($rs));
-        }
-        $this->showJson($rs);
-    }
     public function send_update_status($device_id){
         $this->load->model('box_status_model');
         $set = array('status'=>'free','use_scene'=>'custom');
@@ -641,63 +601,4 @@ class Showlog extends MY_Controller
         $this->showJson($ret);
     }
 
-    public function download_html($num){
-        $limit = 5000;
-        $page = ceil($num/$limit);
-        $result = array();
-        for($i=1;$i<=$page; $i++){
-            $start = ($i-1)*$limit;
-            $next = $i*$limit;
-            $next = $next>$num?$num:$next;
-            $result[$i]['text'] = '导出第'.$start.'-'.$next.'条日志';
-            $result[$i]['url']  = '/showlog/open_log_table?is_explore=1&page='.$i.'&limit='.$limit.'&offset='.$start;
-        }
-        $this->Smarty->assign('list',$result);
-        $html = $this->Smarty->fetch('order/download_model.html');
-        $this->showJson(array('status'=>'success', 'html' => $html));
-    }
-
-    public function explore($list){
-        $list = array_values($list);
-        $page       = $this->input->get('page');
-        $equipment_list = $this->equipment_admin_model->get_all_box();//所有开启的盒子
-        include(APPPATH . 'libraries/Excel/PHPExcel.php');
-        $objPHPExcel = new PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', '用户id')
-            ->setCellValue('B1', '用户名')
-            ->setCellValue('C1', '手机')
-            ->setCellValue('D1', '设备id')
-            ->setCellValue('E1', '设备名称')
-            ->setCellValue('F1', '开启时间')
-            ->setCellValue('G1', '关闭时间')
-            ->setCellValue('H1', '生成订单编号')
-            ->setCellValue('I1', '开门方式')
-            ->setCellValue('J1', '操作类型');
-        $objPHPExcel->getActiveSheet()->setTitle('开门日志'.$page);
-        $key = 2;
-        foreach ($list as $k => $v) {
-            $tmp = $this->showlog_model->get_user_info($v['uid']);
-            $operation_id = $v['operation_id']==1?'下单':'上下架';
-            $objPHPExcel->getActiveSheet()
-                ->setCellValue('A'.$key, $v['uid'])
-                ->setCellValue('B'.$key, $tmp['user_name'])
-                ->setCellValue('C'.$key, $tmp['mobile'])
-                ->setCellValue('D'.$key, $v['box_no'])
-                ->setCellValue('E'.$key, $equipment_list[$v['box_no']]['name'])
-                ->setCellValue('F'.$key, $v['open_time'])
-                ->setCellValue('G'.$key, $v['close_time'])
-                ->setCellValue('H'.$key, $v['order_name'])
-                ->setCellValue('I'.$key, $v['refer'])
-                ->setCellValue('J'.$key, $operation_id);
-            $key++;
-        }
-
-        @set_time_limit(0);
-        // Redirect output to a client’s web browser (Excel2007)
-        $objPHPExcel->initHeader("开门日志{$page}");
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
-        exit;
-    }
 }

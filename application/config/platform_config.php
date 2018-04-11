@@ -87,7 +87,7 @@ $config['mapi_agreement_scene'] = "INDUSTRY|SUPERMARKET"; //签约scene
 $config['mapi_pay_product_code'] = "GENERAL_WITHHOLDING"; //支付product_code
 $config['mapi_isv_pay_product_code'] = "FACE_TO_FACE_PAYMENT"; //isv支付product_code
 $config['mapi_pay_scene'] = "deduct_pay"; //支付scene
-$config['mapi_pay_subject'] = "魔盒CITYBOX购买商品"; //订单标题
+$config['mapi_pay_subject'] = "大朗科技购买商品"; //订单标题
 
 $config['ajax_pay'] = $env_config['ajax_pay'];//是否需要异步支付1.异步、0.同步
 $config['ajax_pay_key'] = 'city_box_pay_mq';
@@ -120,6 +120,3 @@ $config['error_url'] = "";
 $config['use_yue'] = 1;
 $config['common_pr'] = $env_config['base_url'].'/public/p.html?d=DEVICEID';//二维码是前缀
 
-//-------------支付宝设备入驻配置------------------
-$config['product_user_id'] = '';//厂商支付宝id
-$config['merchant_user_id'] = '';//设备使用商户支付宝id

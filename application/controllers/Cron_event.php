@@ -45,9 +45,7 @@ class Cron_event extends CI_Controller
                     $this->order_model->update_order_last_update($o1['order_name']);
                 }
                 foreach ($order as $o) {
-                    if($o['refer'] == 'gat' || $o['refer'] == 'sodexo' || $o['refer'] == 'cmb' || $o['refer'] == 'sdy'){
-                        continue;
-                    }
+
                     if(strtotime($o['order_time']) > strtotime("-6min")){
                         //离现在6分钟前产生的订单，不发起支付，可能是异步没有返回的，可能是刚刚发起支付，避免2次支付
                         continue;

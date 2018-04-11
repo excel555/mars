@@ -28,7 +28,7 @@ class Device_lib
         $this->CI->load->model('equipment_model');
         $this->CI->config->load("tips", TRUE);
         $this->CI->load->driver('cache',
-            array('adapter' => 'redis', 'key_prefix' => 'citybox_')
+            array('adapter' => 'redis', 'key_prefix' => 'dalangkji_')
         );
         $this->CI->load->model("user_model");
         $this->CI->load->helper("mapi_send");
@@ -449,21 +449,13 @@ class Device_lib
         $this->CI->stock_log_model->insert_stock_log($data_stock);
 
         if ($order) {
-            //是否异步处理订单
-            $this->CI->config->load("platform_config", TRUE);
-            $ajax_pay = $this->CI->config->item("ajax_pay", "platform_config");
-            if ($ajax_pay) {
+            $rs_pay = $this->pay($order, $box_status['user_id'], $box_status['refer'], $box_status['box_id']);
+            write_log('rs_pay:' . var_export($rs_pay, 1));
+            if ($rs_pay['code'] == 408) {
+                //返回失败，则直接进异步处理
+                $order['pay_info'] = $rs_pay['pay_info'];
                 $this->ajax_pay($order, $box_status);
-            } else {
-                $rs_pay = $this->pay($order, $box_status['user_id'], $box_status['refer'], $box_status['box_id']);
-                write_log('rs_pay:' . var_export($rs_pay, 1));
-                if ($rs_pay['code'] == 408) {
-                    //返回失败，则直接进异步处理
-                    $order['pay_info'] = $rs_pay['pay_info'];
-                    $this->ajax_pay($order, $box_status);
-                }
             }
-
         }
     }
 
@@ -505,20 +497,7 @@ class Device_lib
 
     private function ajax_pay($order, $box_status)
     {
-        $this->CI->load->helper('mq');
-        $this->CI->config->load("platform_config", TRUE);
-        $ajax_pay_key = $this->CI->config->item("ajax_pay_key", "platform_config");
-        $data_ajax_pay = array(
-            'order' => $order,
-            'user_id' => $box_status['user_id'],
-            'refer' => $box_status['refer'],
-            'box_id' => $box_status['box_id'],
-        );
-        $rs_pay = push_mq_for_redis($ajax_pay_key, $data_ajax_pay);
-        if (!$rs_pay) {
-            write_log('支付单进入队列失败:' . var_export($rs_pay, 1) . var_export($data_ajax_pay, 1), 'crit');
-        }
-        return $rs_pay;
+        return array();
     }
 
     /**
@@ -713,7 +692,6 @@ class Device_lib
         } else {
             if ($type == "alipay") {
                 //支付宝支付
-                //todo 口碑 支付
                 $platform_config = get_platform_config_by_device_id($device_id);
                 $partner_id = $platform_config['mapi_partner'];
                 $this->CI->load->model('user_agreement_model');
@@ -724,46 +702,7 @@ class Device_lib
                     $pay_info['agreement_no'] = '';
                 }
 
-                $is_isv = get_isv_platform($device_id);
-                if ($is_isv) {
-                    $this->CI->load->helper("koubei_send");
-                    $rs = koubei_createandpay_request($pay_info, $platform_config, KOUBEI_SHOP_ID);
-                    if ($rs['code'] != 10000) {
-                        //异常
-                        if ($rs['code'] == 10003) {
-                            //10003(ORDER_SUCESS_PAY_INPROCESS)支付等待中状态。
-                            //下单成功支付处理中
-                            $comment = '下单成功支付处理中';
-                            $error_code = 'ORDER_SUCCESS_PAY_INPROCESS';
-                            $detail_error_des = $rs['sub_msg'];
-                            $notify_data = array('comment' => $comment, 'pay_status' => 4, 'pay_money' => 0, 'open_id' => $user['open_id'], 'uid' => $user['id'], 'trade_number' => '', 'pay_user' => '', 'error_code' => $error_code, 'detail_error_des' => $detail_error_des);
-                            $this->update_order_and_pay($pay_info, $notify_data, $type);
-                            //---------start zmxy feedback-----//
-                            $this->CI->load->helper('zmxy_send');
-                            $pay = $this->CI->order_pay_model->get_pay_info_by_pay_no($pay_info['pay_no']);
-                            $feed_data = general_zmxy_order_data($pay['order_name'], 0);//未支付
-                            send_single_feedback($feed_data, $platform_config);
-                            //---------end zmxy feedback-----//
-                        } else {
-                            //支付失败
-                            $comment = $rs['sub_msg'];
-                            $detail_error_des = $rs['sub_msg'];
-                            $error_code = $rs['sub_code'];
-                            $notify_data = array('comment' => $comment, 'pay_status' => 2, 'pay_money' => 0, 'open_id' => $user['open_id'], 'uid' => $user['id'], 'trade_number' => '', 'pay_user' => '', 'error_code' => $error_code, 'detail_error_des' => $detail_error_des);
-                            $this->update_order_and_pay($pay_info, $notify_data, $type);
-                        }
-                    } else if ($rs['code'] == 10000) {
-                        //下单成功并支付 ---- 此处不做处理，在异步通知处理
-                        $rs_pay['code'] = 200;
-                        return $rs_pay;
-                    } else {
-                        //curl错误，则直接返回
-                        $rs_pay['code'] = 408;//超时
-                        $rs_pay['message'] = "支付宝扣款异常";
-                        $rs_pay['pay_info'] = $pay_info;
-                        return $rs_pay;
-                    }
-                } else {
+
                     //普通信用代扣，1.0版本
                     $this->CI->load->helper("mapi_send");
                     $pay_info['seller_id'] = $platform_config['pay_sell_id'];
@@ -779,12 +718,6 @@ class Device_lib
                         $detail_error_des = $rs['response']['alipay']['detail_error_des'];
                         $notify_data = array('comment' => $comment, 'pay_status' => 4, 'pay_money' => 0, 'open_id' => $user['open_id'], 'uid' => $user['id'], 'trade_number' => '', 'pay_user' => '', 'error_code' => $error_code, 'detail_error_des' => $detail_error_des);
                         $this->update_order_and_pay($pay_info, $notify_data, $type);
-                        //---------start zmxy feedback-----//
-                        $this->CI->load->helper('zmxy_send');
-                        $pay = $this->CI->order_pay_model->get_pay_info_by_pay_no($pay_info['pay_no']);
-                        $feed_data = general_zmxy_order_data($pay['order_name'], 0);//未支付
-                        send_single_feedback($feed_data, $platform_config);
-                        //---------end zmxy feedback-----//
                     } else if ($rs) {
                         //支付失败
                         $comment = $rs['response']['alipay']['display_message'];
@@ -792,12 +725,6 @@ class Device_lib
                         $error_code = $rs['response']['alipay']['detail_error_code'];
                         $notify_data = array('comment' => $comment, 'pay_status' => 2, 'pay_money' => 0, 'open_id' => $user['open_id'], 'uid' => $user['id'], 'trade_number' => '', 'pay_user' => '', 'error_code' => $error_code, 'detail_error_des' => $detail_error_des);
                         $this->update_order_and_pay($pay_info, $notify_data, $type);
-                        //---------start zmxy feedback-----//
-                        $this->CI->load->helper('zmxy_send');
-                        $pay = $this->CI->order_pay_model->get_pay_info_by_pay_no($pay_info['pay_no']);
-                        $feed_data = general_zmxy_order_data($pay['order_name'], 0);//未支付
-                        send_single_feedback($feed_data, $platform_config);
-                        //---------end zmxy feedback-----//
                         $rs_pay['code'] = -100;
                         $rs_pay['message'] = $comment ? $comment : "";
                         return $rs_pay;
@@ -808,7 +735,7 @@ class Device_lib
                         $rs_pay['pay_info'] = $pay_info;
                         return $rs_pay;
                     }
-                }
+
             }
         }
         return array('code' => -100);
@@ -838,12 +765,6 @@ class Device_lib
             //更新订单
             if ($pay_status == 1) {
                 $this->CI->order_model->update_order($pay['order_name'], $pay_status);
-                //支付成功, 赠送魔力值， 魔豆
-                if ($pay_status == 1) {
-                    $this->CI->load->model('user_acount_model');
-                    $this->CI->user_acount_model->update_user_acount($notify_data['uid'], $notify_data['pay_money'], $pay['order_name']);
-                }
-
             } elseif ($pay_status == 4) {
                 //支付确认中
                 $this->CI->order_model->update_order($pay['order_name'], 2);//下单成功支付处理中
@@ -927,38 +848,13 @@ class Device_lib
         }
     }
 
-    /**
-     * 更新用户协议字段
-     */
-    private function update_user_sign($agreement_no, $open_id, $refer)
-    {
-        $data['agreement_no'] = $agreement_no;
-        $data["sign_time"] = date("Y-m-d H:i:s");
-        $this->CI->user_model->update_agreement_sign($open_id, $data, $refer);
-    }
-
 
     private function get_agreement_sign_url($refer = 'alipay', $device_id)
     {
         $platform_config = get_platform_config_by_device_id($device_id);
         if (empty($refer) || $refer === 'alipay') {
-            //todo 口碑获取签约URL
-            $is_isv = get_isv_platform($device_id);
-            if ($is_isv) {
-                $this->CI->load->helper("koubei_send");
-                return koubei_request_agreement_url($platform_config, $device_id);
-            } else {
-                $this->CI->load->helper("mapi_send");
-                return mapiClient_request_get_agreement_url($platform_config, $device_id);
-            };
-        } elseif ($refer === 'wechat') {
-            $this->CI->load->helper('wechat_send');
-            $data = array(
-                'contract_code' => time() . rand(1000, 99999),
-                'contract_display_account' => '魔盒CITYBOX微信免密支付',
-                'request_serial' => time() . rand(1000, 99999),
-            );
-            return entrustweb($data, $platform_config);
+            $this->CI->load->helper("mapi_send");
+            return mapiClient_request_get_agreement_url($platform_config, $device_id);
         }
     }
 

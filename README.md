@@ -57,13 +57,7 @@
     * API restful配置文件rest.php
         * allow_host【允许调用API的域名，简单防止跨域请求】
         * api_secret【不同入口平台的秘钥配置】
-    * 微信配置文件wechat.php
-        * APPID【微信APPID】
-        * APPSECRET【微信秘钥】
-        * MCHID【支付商家号】
-        * KEY【支付商家秘钥】
-    * 短信配置文件sms.php
-        * sms_bind_content 【绑定短信验证码内容】
+    
     * 设置配置日志文件 log.php
         * crit_log_email_rec 【告警邮件】
 * 3.修改index.php文件
@@ -76,52 +70,8 @@
 * 6.设置定时任务
     * crontab -e
     * 然后 插入
-    * */1 *  *  *  *  php /mnt/www/cityboxapi.fruitday.com/index.php cron_event pay_order
-    * */1 *  *  *  *  php /mnt/www/cityboxapi.fruitday.com/index.php cron_event fix_box_status
-    * */5 *  *  *  *  php /mnt/www/cityboxapi.fruitday.com/index.php cron_event box_heart_check
-    * 0   1  *  *  *  php /mnt/www/cityboxapi.fruitday.com/index.php cron_event not_bind_label
+    * */1 *  *  *  *  php /mnt/www/dalangkji/index.php cron_event pay_order
+    * */1 *  *  *  *  php /mnt/www/dalangkji/index.php cron_event fix_box_status
+    * */5 *  *  *  *  php /mnt/www/dalangkji/index.php cron_event box_heart_check
     * service crond restart|start|stop
-* 7.nginx 配置文件参考 【 rewrite 增加了 public_dev 以及public_dev/css public_dev/js public_dev/img】
-   ```C++
-   server{
-           listen 80;
-           server_name  box.guantest.fruitday.com; #服务器host
-
-           root /mnt/www/box_wap;
-           index index.html index.htm index.shtml index.php;
-
-
-           #rewrite ^/(.* )$ index.php last;
-           rewrite .*/(public|public_dev|css|js|statics|uploads|img|doc)/(css|js|statics|uploads|img|doc)/(.*)$ /$1/$2/$3 last;
-           rewrite .*/(public|public_dev|css|js|statics|uploads|img|doc)/(.* )$ /$1/$2 last;
-           rewrite /.*  /index.php break;
-           error_page  404               /404.html;
-
-       location = /500.html {
-           root   /usr/share/nginx/html;
-       }
-
-       location ~ \.php$ {
-           fastcgi_pass   127.0.0.1:9000;
-           include        fastcgi_params;
-           set $path_info "";
-           set $real_script_name $fastcgi_script_name;
-           if ($fastcgi_script_name ~ "^(.+?\\.php)(/.+)$"){
-             set $real_script_name $1;
-             set $path_info $2;
-           }
-           include fastcgi.conf;
-           fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
-           fastcgi_param SCRIPT_NAME $real_script_name;
-           fastcgi_param PATH_INFO $path_info;
-   #       log_format main '$remote_addr | $remote_user | [$time_local] | "$request" | '
-   #                      '$status | $body_bytes_sent | "$http_referer"  | '
-   #                      '"$http_user_agent" | "$http_x_forwarded_for" |  "$request_body" | "$resp_body"';
-
-
-           access_log /mnt/logs/nginx/box_wap.access.log main;
-           error_log /mnt/logs/nginx/box_wap.error.log;
-       }
-
-   }
 

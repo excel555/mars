@@ -514,6 +514,3 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 $config['memcache_enable'] = true;
-$config['yue_refer'] = array('' , 'gat', 'fruitday', 'cmb');//不使用余额的 扫码来源
-$config['yue_platform_id'] = array(0,14);//不使用余额的商户id
-

@@ -782,7 +782,7 @@ class Order extends REST_Controller {
                 }
             }else {
                 $pay = $this->order_pay_model->get_pay_info_by_pay_no($notify->data['out_trade_no']);
-                $pay_info = array('subject' => '魔盒CITYBOX购买商品', 'pay_no' => $notify->data['out_trade_no']);
+                $pay_info = array('subject' => '大朗科技购买商品', 'pay_no' => $notify->data['out_trade_no']);
                 if ($pay) {
                     if ($notify->data["result_code"] == "FAIL") {
                         $pay_status = 2;//支付失败
@@ -839,7 +839,7 @@ class Order extends REST_Controller {
 
             }else if ($_POST['trade_status'] === 'TRADE_SUCCESS') {
                 $pay = $this->order_pay_model->get_pay_info_by_pay_no($_POST['out_trade_no']);
-                $pay_info = array('subject'=>'魔盒CITYBOX购买商品','pay_no'=> $_POST['out_trade_no']);
+                $pay_info = array('subject'=>'大朗科技购买商品','pay_no'=> $_POST['out_trade_no']);
                 if($pay && $pay['pay_status'] != "1"){
                     $comment = '支付成功';
                     $pay_status = 1;
@@ -909,7 +909,7 @@ class Order extends REST_Controller {
                     write_log("wap recharge notify result:" . var_export($rs_recharge,1),'info');
                 }else{
                     $pay = $this->order_pay_model->get_pay_info_by_pay_no($_POST['out_trade_no']);
-                    $pay_info = array('subject'=>'魔盒CITYBOX购买商品','pay_no'=> $_POST['out_trade_no']);
+                    $pay_info = array('subject'=>'大朗科技购买商品','pay_no'=> $_POST['out_trade_no']);
                     if($pay && $pay['pay_status'] != "1"){
                         $comment = '支付成功';
                         $pay_status = 1;

@@ -48,8 +48,8 @@ function pay_wap_alipay_request($order,$config,$device_id){
     $aop->format='json';
     $request = new AlipayTradeWapPayRequest ();
     $biz = array(
-        'body'=>"魔盒CITYBOX购买商品",
-        'subject'=>"魔盒CITYBOX购买商品",
+        'body'=>"大朗科技购买商品",
+        'subject'=>"大朗科技购买商品",
         'out_trade_no'=>$order['pay_no'],
         'timeout_express'=>'90m',
         'total_amount'=>$order['money'],

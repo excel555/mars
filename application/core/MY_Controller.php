@@ -16,7 +16,7 @@ class MY_Controller extends CI_Controller
         $this->load->library('function_class');
         $this->load->library('session');
         $this->load->driver('cache',
-            array('adapter' => 'redis', 'key_prefix' => 'citybox_')
+            array('adapter' => 'redis', 'key_prefix' => 'dalangkji_')
         );
         $this->load->helper('device');
         $this->load->helper('url');

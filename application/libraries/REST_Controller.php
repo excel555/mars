@@ -405,7 +405,7 @@ abstract class REST_Controller extends \CI_Controller
         $this->load->library('format');
         $this->load->helper("utils");
         $this->load->driver('cache',
-            array('adapter' => 'redis', 'key_prefix' => 'citybox_')
+            array('adapter' => 'redis', 'key_prefix' => 'dalangkji_')
         );
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');

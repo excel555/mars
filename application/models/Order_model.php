@@ -527,19 +527,7 @@ class Order_model extends MY_Model
         return true;
     }
 
-    /**
-     * 推送订单到五芳斋
-     * @param $last_update_time 最后拉取的时间
-     * @return array
-     */
-    public function wfz_pos_order($last_update_time,$order_status){
-        //增加15天前的数据不发起支付
-        $where = array('last_update_time >='=>$last_update_time,'order_status'=>$order_status,'platform_id'=>KOUBEI_PLATFORM_ID);
-        $this->db->where($where);
-        $this->db->from($this->table_name());
-        $res = $this->db->get()->result_array();
-        return $res;
-    }
+
 
 }
 

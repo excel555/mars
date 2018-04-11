@@ -9,8 +9,7 @@ class Admin extends MY_Controller {
 
     const LOCK_LIMIT_MAX = 5;
     const RESET_PWD = "123456##!";
-    const SERVER_USER_PWD = "123456##_fday2015";
-    private $com_redis_pre = 'comercial_';
+    const SERVER_USER_PWD = "123456##_day2015";
     public $redis;
 
     private $stockNum = 20; //小于50显示库存警告

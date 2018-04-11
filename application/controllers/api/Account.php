@@ -279,7 +279,7 @@ class Account extends REST_Controller
             $this->load->helper('wechat_send');
             $data= array(
                 'contract_code'=>uuid_32(),
-                'contract_display_account'=>'魔盒CITYBOX微信免密支付',
+                'contract_display_account'=>'大朗科技微信免密支付',
                 'request_serial'=>uuid_32(),
             );
             return entrustweb($data,$platform_config);

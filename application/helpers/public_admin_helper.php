@@ -92,13 +92,9 @@ function upload_pic2($id,$t_file,$o_file,$n,$i='01',$path='uploads/',$tag='tag')
             }
         }
         $file_name = $n."-1000x1000-".$id."-".$tag.".".$p_type;
-        if(OPEN_S3){
-            uploadS3('fdaycdn.fruitday.com',$path.$file_name,$t_file,$p_type);
-            $upload_file = $t_file;
-        }else{
-            move_uploaded_file($t_file,$path.$file_name);
-            $upload_file = $path.$file_name;
-        }
+
+        move_uploaded_file($t_file,$path.$file_name);
+        $upload_file = $path.$file_name;
 
         if ($i == '01'){
             $thum_name370 = $path.$n."-370x370-".$id."-".$tag.".".$p_type;
@@ -116,72 +112,6 @@ function upload_pic2($id,$t_file,$o_file,$n,$i='01',$path='uploads/',$tag='tag')
         }
         return $res;
     }
-}
-
-function uploadS3($bucket = 'fdaycdn.fruitday.com',$s3_key,$t_file,$p_type){
-    require_once APPPATH.'plugins/aws/aws-autoloader.php';
-    if($p_type=='jpg'){
-        $p_type = 'jpeg';
-    }
-    $client = S3Client::factory ( array (
-        'region'=>'cn-north-1',
-        'version'=>'latest',
-        'key' => 'AKIAPFZ5G3A3XR6EETHQ',
-        'secret' => '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'
-    ) );
-
-    $result = $client->putObject(array(
-        'Bucket' => $bucket,
-        'Key' => $s3_key,
-        'SourceFile' => $t_file,
-        'ContentType'=>'image/'.$p_type
-    ));
-}
-
-function uploadApk($bucket = 'fdaycdn.fruitday.com', $s3_key, $t_file) {
-    require_once APPPATH.'plugins/aws/aws-autoloader.php';
-    $client = S3Client::factory ( array (
-        'region'=>'cn-north-1',
-        'version'=>'latest',
-        'key' => 'AKIAPFZ5G3A3XR6EETHQ',
-        'secret' => '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'
-    ) );
-    $result = $client->putObject(array(
-        'Bucket' => $bucket,
-        'Key' => 'apk/'.$s3_key,
-        'SourceFile' => $t_file,
-        'ContentType'=>'string'
-    ));
-
-    return $result;
-}
-
-
-function downloadFile($key ,$bucket = 'fdaycdn.fruitday.com'){
-    require_once APPPATH.'plugins/aws/aws-autoloader.php';
-    $client = S3Client::factory ( array (
-        'region'=>'cn-north-1',
-        'version'=>'latest',
-        'key' => 'AKIAPFZ5G3A3XR6EETHQ',
-        'secret' => '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'
-    ) );
-
-    $object = $client->getObject(array(
-        'Bucket' => $bucket,
-        'Key' => $key
-    ));
-
-    header('Content-Description: File Transfer');
-    //this assumes content type is set when uploading the file.
-    header('Content-Type: ' . $object->ContentType);
-    header('Content-Disposition: attachment; filename=' . 'aa.apk');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-
-    //send file to browser for download.
-    echo $object->body;
-    die;
 }
 
 function watermark($src){

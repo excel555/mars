@@ -83,8 +83,8 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
-defined('IMG_HOST')      OR define('IMG_HOST', 'http://fdaycdn.fruitday.com'); // 图片的host
-defined('DEFALUT_BANNER_IMG')      OR define('DEFALUT_BANNER_IMG', 'https://huodongcdnws.fruitday.com/sale/citybox622/images/boxlogo2.png'); // 默认轮播图片
+defined('IMG_HOST')      OR define('IMG_HOST', ''); // 图片的host
+defined('DEFALUT_BANNER_IMG')      OR define('DEFALUT_BANNER_IMG', ''); // 默认轮播图片
 defined('RFID_1')      OR define('RFID_1', 'rfid-1');
 defined('SCAN_1')      OR define('SCAN_1', 'scan-1');
 defined('SCAN_2')      OR define('SCAN_2', 'scan-2');
@@ -92,10 +92,4 @@ defined('SCAN_2')      OR define('SCAN_2', 'scan-2');
 defined('HEART_DEVICES_SET')      OR define('HEART_DEVICES_SET', 'heart_devices_set');
 defined('DEVICES_LAST_STATUS_KEY')      OR define('DEVICES_LAST_STATUS_KEY', 'last_device_status');//替换device就是某个设备
 defined('HEART_DEVICES_STATUS_KEY')      OR define('HEART_DEVICES_STATUS_KEY', 'heart_device_status');//替换device就是某个设备
-define('SINA_APPKEY', '31641035');
-define('APP_AUTH_TOKEN_KEY', 'koubei_app_token_');//ISV模式
-define('APP_REFRESH_AUTH_TOKEN_KEY', 'koubei_app_refresh_token_');//ISV模式,刷新token
-define('KOUBEI_PLATFORM_ID', '14');//浙江五芳斋商户id
-define('KOUBEI_SHOP_ID', '2015070700077000000001343615');//浙江五芳斋店铺id
-define('WFZ_SHOP_ID', '1040101004');//浙江五芳斋ERP系统店铺id
 define('LAND_COLLECT_TIME_KEY', 'land_collect_time_');

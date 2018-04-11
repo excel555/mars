@@ -64,9 +64,6 @@ function send_device_request($type, $req_data,$is_new=0)
     $ci = get_instance();
     $ci->load->config('device', TRUE);
     $pre = '';
-    if($is_new > 0){
-        $pre = 'new_'.$is_new."_";
-    }
     $app_key = $ci->config->item($pre.'app_key', 'device');
     $secret = $ci->config->item($pre.'secret', 'device');
     $url = $ci->config->item($pre.$type, 'device');
